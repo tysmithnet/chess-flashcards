@@ -70,6 +70,7 @@ export class Pgn {
     public white: string;
     public black: string;
     public result: string;
+    public otherTags: Map<string, string> = new Map<string, string>();
 }
 
 export enum Piece {
