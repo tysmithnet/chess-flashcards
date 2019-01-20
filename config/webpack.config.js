@@ -79,7 +79,7 @@ const cleanPlugin = new CleanWebpackPlugin([distPath]);
 // plugin to generate the index.html file
 const htmlPlugin = new HtmlWebpackPlugin({
     title: "react-starter",
-    template: "src/index.html"
+    template: "src/client/index.html"
 });
 
 // plugin to generate statistics 
@@ -90,7 +90,7 @@ const statsPlugin = new StatsPlugin("stats.json", {
 
 const common = {
     entry: [
-        "./src/index.ts",
+        "./src/client/index.ts",
     ],
     output: {
         path: distPath,
