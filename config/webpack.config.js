@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const webpack = require("webpack");
-const distPath = path.resolve(__dirname, "../", "dist");
+const distPath = path.resolve(__dirname, "../", "dist/client");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const StatsPlugin = require("stats-webpack-plugin")
 
@@ -66,7 +66,7 @@ const workerPlugin = new CopyWebpackPlugin([{
     from: "**/*.worker.js",
     to: "",
     ignore: "node_modules/**/*.*",
-    context: "src"
+    context: "src/client"
 }]);
 
 // plugin for hot module replacement
