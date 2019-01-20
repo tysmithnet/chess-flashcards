@@ -13,29 +13,29 @@
 <path fill="none" stroke="black" stroke-width="2" d="M20,-26C20,-26 847,-26 847,-26 853,-26 859,-32 859,-38 859,-38 859,-492 859,-492 859,-498 853,-504 847,-504 847,-504 20,-504 20,-504 14,-504 8,-498 8,-492 8,-492 8,-38 8,-38 8,-32 14,-26 20,-26"/>
 <text text-anchor="middle" x="433.5" y="-492.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">src</text>
 </g>
-<g id="clust2" class="cluster"><title>cluster_/src/admin</title>
-<path fill="none" stroke="black" stroke-width="2" d="M392.5,-371C392.5,-371 567,-371 567,-371 573,-371 579,-377 579,-383 579,-383 579,-411 579,-411 579,-417 573,-423 567,-423 567,-423 392.5,-423 392.5,-423 386.5,-423 380.5,-417 380.5,-411 380.5,-411 380.5,-383 380.5,-383 380.5,-377 386.5,-371 392.5,-371"/>
-<text text-anchor="middle" x="479.75" y="-411.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">admin</text>
-</g>
 <g id="clust3" class="cluster"><title>cluster_/src/app</title>
 <path fill="none" stroke="black" stroke-width="2" d="M28,-338C28,-338 309,-338 309,-338 315,-338 321,-344 321,-350 321,-350 321,-466 321,-466 321,-472 315,-478 309,-478 309,-478 28,-478 28,-478 22,-478 16,-472 16,-466 16,-466 16,-350 16,-350 16,-344 22,-338 28,-338"/>
 <text text-anchor="middle" x="168.5" y="-466.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">app</text>
 </g>
-<g id="clust4" class="cluster"><title>cluster_/src/auth</title>
-<path fill="none" stroke="black" stroke-width="2" d="M520,-105C520,-105 839,-105 839,-105 845,-105 851,-111 851,-117 851,-117 851,-203 851,-203 851,-209 845,-215 839,-215 839,-215 520,-215 520,-215 514,-215 508,-209 508,-203 508,-203 508,-117 508,-117 508,-111 514,-105 520,-105"/>
-<text text-anchor="middle" x="679.5" y="-203.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">auth</text>
+<g id="clust2" class="cluster"><title>cluster_/src/admin</title>
+<path fill="none" stroke="black" stroke-width="2" d="M392.5,-371C392.5,-371 567,-371 567,-371 573,-371 579,-377 579,-383 579,-383 579,-411 579,-411 579,-417 573,-423 567,-423 567,-423 392.5,-423 392.5,-423 386.5,-423 380.5,-417 380.5,-411 380.5,-411 380.5,-383 380.5,-383 380.5,-377 386.5,-371 392.5,-371"/>
+<text text-anchor="middle" x="479.75" y="-411.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">admin</text>
 </g>
 <g id="clust5" class="cluster"><title>cluster_/src/home</title>
 <path fill="none" stroke="black" stroke-width="2" d="M368,-223C368,-223 725,-223 725,-223 731,-223 737,-229 737,-235 737,-235 737,-351 737,-351 737,-357 731,-363 725,-363 725,-363 368,-363 368,-363 362,-363 356,-357 356,-351 356,-351 356,-235 356,-235 356,-229 362,-223 368,-223"/>
 <text text-anchor="middle" x="546.5" y="-351.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">home</text>
 </g>
-<g id="clust6" class="cluster"><title>cluster_/src/menu</title>
-<path fill="none" stroke="black" stroke-width="2" d="M132,-192C132,-192 324,-192 324,-192 330,-192 336,-198 336,-204 336,-204 336,-292 336,-292 336,-298 330,-304 324,-304 324,-304 132,-304 132,-304 126,-304 120,-298 120,-292 120,-292 120,-204 120,-204 120,-198 126,-192 132,-192"/>
-<text text-anchor="middle" x="228" y="-292.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">menu</text>
+<g id="clust4" class="cluster"><title>cluster_/src/auth</title>
+<path fill="none" stroke="black" stroke-width="2" d="M520,-105C520,-105 839,-105 839,-105 845,-105 851,-111 851,-117 851,-117 851,-203 851,-203 851,-209 845,-215 839,-215 839,-215 520,-215 520,-215 514,-215 508,-209 508,-203 508,-203 508,-117 508,-117 508,-111 514,-105 520,-105"/>
+<text text-anchor="middle" x="679.5" y="-203.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">auth</text>
 </g>
 <g id="clust7" class="cluster"><title>cluster_/src/root</title>
 <path fill="none" stroke="black" stroke-width="2" d="M138,-34C138,-34 449.5,-34 449.5,-34 455.5,-34 461.5,-40 461.5,-46 461.5,-46 461.5,-148 461.5,-148 461.5,-154 455.5,-160 449.5,-160 449.5,-160 138,-160 138,-160 132,-160 126,-154 126,-148 126,-148 126,-46 126,-46 126,-40 132,-34 138,-34"/>
 <text text-anchor="middle" x="293.75" y="-148.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">root</text>
+</g>
+<g id="clust6" class="cluster"><title>cluster_/src/menu</title>
+<path fill="none" stroke="black" stroke-width="2" d="M132,-192C132,-192 324,-192 324,-192 330,-192 336,-198 336,-204 336,-204 336,-292 336,-292 336,-298 330,-304 324,-304 324,-304 132,-304 132,-304 126,-304 120,-298 120,-292 120,-292 120,-204 120,-204 120,-198 126,-192 132,-192"/>
+<text text-anchor="middle" x="228" y="-292.8" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="9.00">menu</text>
 </g>
 <!-- ./app.styles -->
 <g id="node1" class="node"><title>./app.styles</title>
@@ -437,10 +437,8 @@
 </g>
 <!-- src/menu/Menu.spec.tsx&#45;&gt;src/root/index.ts -->
 <g id="edge35" class="edge"><title>src/menu/Menu.spec.tsx&#45;&gt;src/root/index.ts</title>
-<path fill="none" stroke="black" d="M130.36,-234.878C119.026,-231.618 107.871,-225.915 101.333,-216 83.1061,-188.358 118.031,-157.537 143.852,-139.792"/>
-<polygon fill="black" stroke="black" points="146.082,-142.514 152.504,-134.087 142.229,-136.67 146.082,-142.514"/>
-<path fill="none" stroke="black" d="M130.216,-234.23C122.432,-231.373 115.227,-226.916 110.667,-220 92.5328,-192.499 124.206,-159.351 147.238,-140.369"/>
-<polygon fill="black" stroke="black" points="149.551,-143.002 155.224,-134.054 145.209,-137.512 149.551,-143.002"/>
+<path fill="none" stroke="black" d="M130.379,-234.63C120.758,-231.555 111.568,-226.444 106,-218 87.8444,-190.466 121.124,-158.5 145.545,-140.123"/>
+<polygon fill="black" stroke="black" points="147.66,-142.914 153.715,-134.219 143.56,-137.24 147.66,-142.914"/>
 </g>
 <!-- src/menu/Menu.tsx&#45;&gt;src/auth/index.ts -->
 <g id="edge37" class="edge"><title>src/menu/Menu.tsx&#45;&gt;src/auth/index.ts</title>

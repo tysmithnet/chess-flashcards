@@ -110,7 +110,9 @@
     },
     "dependencies": {
         "axios": "0.18.0",
+        "chess.js": "^0.10.2",
         "connected-react-router": "4.3.0",
+        "enhanced-pgn-parser": "^0.0.2",
         "gsap": "2.0.2",
         "i": "0.3.6",
         "loglevel": "1.6.1",
