@@ -55,7 +55,7 @@ export class Home extends React.Component<IBaseProps> {
         return (
             <div className={"home"} ref={this.ref}>
                 hi
-      </div>
+            </div>
         );
     }
 }
