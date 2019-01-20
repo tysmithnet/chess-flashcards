@@ -20,6 +20,7 @@
         "cosmos:export": "cosmos-export",
         "build": "webpack --mode production --config ./config/webpack.config.js",
         "build:dev": "webpack --mode development --config ./config/webpack.config.js && tsc --p config/tsconfig.server.json",
+        "build:client:dev": "webpack --mode development --config ./config/webpack.config.js",
         "build:server:dev": "tsc --p config/tsconfig.server.json",
         "build-storybook": "build-storybook",
         "clean": "rimraf dist",
