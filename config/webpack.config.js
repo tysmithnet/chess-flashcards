@@ -10,7 +10,7 @@ const StatsPlugin = require("stats-webpack-plugin")
 const compileTypeScript = {
     loader: "awesome-typescript-loader",
     options: {
-        configFileName: "config/tsconfig.json",
+        configFileName: "config/tsconfig.client.json",
         useCache: true,
         useBabel: true,
         cacheDirectory: ".cache",

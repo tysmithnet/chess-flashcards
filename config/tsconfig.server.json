@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "target": "es6",
+        "sourceMap": true,
+        "module": "commonjs",
+        "outDir": "../dist/server",
+        "baseUrl": "../",
+        "esModuleInterop": true,
+        "lib": [
+            "es6"
+        ],
+        "types": [
+            "node"
+        ]
+    },
+    "files": [
+        "../src/server/index.ts"
+    ]
+}

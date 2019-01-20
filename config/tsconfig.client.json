@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "../declarations",
+        "declarationDir": "../client/declarations",
         "noImplicitAny": true,
         "removeComments": true,
         "jsx": "react",
