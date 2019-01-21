@@ -1,6 +1,5 @@
 import { Color } from "csstype";
 import * as React from "react";
-import "./board.styles";
 import { Pawn } from "./Pawn";
 
 export interface IProps {
@@ -19,13 +18,9 @@ export const Board = (props: IProps) => {
         }
     }
     return (
-        <div className="container">
-            <svg className="board" viewBox="0 0 512 512">
-                {rects}
-            </svg>
-            <svg className="pieces" viewBox="0 0 512 512">
-                <Pawn strokeColor="blue" fillColor="green" />
-            </svg>
-        </div>
+        <svg className="board" viewBox="0 0 512 512">
+            {rects}
+            <Pawn strokeColor="black" fillColor="white" />
+        </svg>
     );
 };
