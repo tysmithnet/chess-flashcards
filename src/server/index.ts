@@ -19,7 +19,7 @@ app.use(morgan("short"));
 
 (() => {
     // setup webpack middleware and hot module replacement
-    const webpackConfig = clientWebpackConfig({mode: "development"});
+    const webpackConfig = clientWebpackConfig({ mode: "development" });
     const compiler = webpack(webpackConfig);
 
     app.use(webpackHotMiddleware(compiler, {
@@ -36,6 +36,10 @@ app.use(morgan("short"));
 
 app.post(/metrics/, (req, res) => {
     console.log(req.param("data"));
+});
+
+app.use((req, res, next) => {
+    res.sendFile(path.resolve(__dirname, "../client/index.html"));
 });
 
 if (require.main === module) {
