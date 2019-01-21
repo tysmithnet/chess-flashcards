@@ -64,6 +64,14 @@ export enum Location {
     G6 = "g6",
     G7 = "g7",
     G8 = "g8",
+    H1 = "h1",
+    H2 = "h2",
+    H3 = "h3",
+    H4 = "h4",
+    H5 = "h5",
+    H6 = "h6",
+    H7 = "h7",
+    H8 = "h8",
 }
 
 export enum Side {
@@ -81,6 +89,176 @@ export interface IPosition {
     whoseTurn: Side;
     pieces: IPieceLocation[];
 }
+
+export const DEFAULT_POSITION: IPosition = {
+    pieces: [
+        // 1st Rank
+        {
+            location: Location.A1,
+            piece: Piece.Rook,
+            side: Side.White,
+        },
+        {
+            location: Location.B1,
+            piece: Piece.Knight,
+            side: Side.White,
+        },
+        {
+            location: Location.C1,
+            piece: Piece.Bishop,
+            side: Side.White,
+        },
+        {
+            location: Location.D1,
+            piece: Piece.Queen,
+            side: Side.White,
+        },
+        {
+            location: Location.E1,
+            piece: Piece.King,
+            side: Side.White,
+        },
+        {
+            location: Location.F1,
+            piece: Piece.Bishop,
+            side: Side.White,
+        },
+        {
+            location: Location.G1,
+            piece: Piece.Knight,
+            side: Side.White,
+        },
+        {
+            location: Location.H1,
+            piece: Piece.Rook,
+            side: Side.White,
+        },
+        // 2nd Rank
+        {
+            location: Location.A2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.B2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.C2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.D2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.E2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.F2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.G2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        {
+            location: Location.H2,
+            piece: Piece.Pawn,
+            side: Side.White,
+        },
+        // 2nd Rank
+        {
+            location: Location.A7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.B7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.C7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.D7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.E7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.F7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.G7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        {
+            location: Location.H7,
+            piece: Piece.Pawn,
+            side: Side.Black,
+        },
+        // 8th Rank
+        {
+            location: Location.A8,
+            piece: Piece.Rook,
+            side: Side.Black,
+        },
+        {
+            location: Location.B8,
+            piece: Piece.Knight,
+            side: Side.Black,
+        },
+        {
+            location: Location.C8,
+            piece: Piece.Bishop,
+            side: Side.Black,
+        },
+        {
+            location: Location.D8,
+            piece: Piece.Queen,
+            side: Side.Black,
+        },
+        {
+            location: Location.E8,
+            piece: Piece.King,
+            side: Side.Black,
+        },
+        {
+            location: Location.F8,
+            piece: Piece.Bishop,
+            side: Side.Black,
+        },
+        {
+            location: Location.G8,
+            piece: Piece.Knight,
+            side: Side.Black,
+        },
+        {
+            location: Location.H8,
+            piece: Piece.Rook,
+            side: Side.Black,
+        },
+    ],
+    whoseTurn: Side.White,
+};
 
 export interface IMove {
     whoMoved: Side;
