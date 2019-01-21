@@ -1,6 +1,6 @@
 import { Color } from "csstype";
 import * as React from "react";
-import { Bishop, Knight, Pawn } from "./Pieces";
+import { Bishop, King, Knight, Pawn, Queen, Rook } from "./Pieces";
 
 export interface IProps {
     darkcolor: Color;
@@ -20,7 +20,7 @@ export const Board = (props: IProps) => {
     return (
         <svg className="board" viewBox="0 0 512 512">
             {rects}
-            <Bishop strokeColor="black" fillColor="white" />
+            <King strokeColor="black" fillColor="white" />
         </svg>
     );
 };
