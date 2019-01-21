@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "declaration": true,
-        "declarationDir": "../client/declarations",
+        "declarationDir": "../declarations/client",
         "noImplicitAny": true,
         "removeComments": true,
         "jsx": "react",
@@ -22,7 +22,7 @@
         ]
     },
     "files": [
-        "src/client/index.ts",
+        "src/client/*.ts",
     ],
     "exclude": [
         "node_modules"

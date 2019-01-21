@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "declaration": true,
+        "declarationDir": "../declarations/server",
         "target": "es6",
         "sourceMap": true,
         "module": "commonjs",
