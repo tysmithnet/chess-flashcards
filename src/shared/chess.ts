@@ -288,23 +288,13 @@ export function createArrayRep(pieces: IPieceLocation[]): Piece[][] {
         const col = piece.location.charCodeAt(0) - 97;
         const row = parseInt(piece.location.charAt(1), 10) - 1;
         if (result[row][col] !== null) {
-            throw new Error("Multiple pieces attempted to be set at ")
+            throw new Error(`Multiple pieces attempted to be set at ${piece.location}`);
         }
         result[row][col] = piece.piece;
     }
     return result;
 }
-// -> '  +------------------------+
-//     8 | .  r  .  .  .  k  r  . |
-//     7 | p  b  p  B  B  p  .  p |
-//     6 | .  b  .  .  .  P  .  . |
-//     5 | .  .  .  .  .  .  .  . |
-//     4 | .  .  .  .  .  .  .  . |
-//     3 | .  .  P  .  .  q  .  . |
-//     2 | P  .  .  .  .  P  P  P |
-//     1 | .  .  .  R  .  .  K  . |
-//       +------------------------+
-//         a  b  c  d  e  f  g  h'
+
 export function boardToAscii(pieces: IPieceLocation[]): string {
     const rep = createArrayRep(pieces);
     const lines: string[] = [
@@ -328,4 +318,9 @@ export function boardToAscii(pieces: IPieceLocation[]): string {
         lines[row] = lines[row].substr(0, col) + newChar + lines[row].substr(col + 1);
     }
     return lines.join("\n");
+}
+
+// ignores illegal moves due to check
+export function getCandidateSquares(pieces: IPieceLocation[], pieceIndex: number): IMove {
+    return null;
 }

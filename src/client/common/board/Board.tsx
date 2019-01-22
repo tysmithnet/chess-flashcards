@@ -1,6 +1,6 @@
 import { Color } from "csstype";
 import * as React from "react";
-import { IPieceLocation, Location, Piece, Side } from "../../../shared/domain";
+import { IPieceLocation, Location, Piece, Side } from "../../../shared/chess";
 import { Bishop, King, Knight, Pawn, Queen, Rook } from "./Pieces";
 
 export interface IProps {

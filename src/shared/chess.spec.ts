@@ -1,4 +1,4 @@
-import { isWhitePiece, Location, locationToZeroBasedIndices, Piece, zeroBasedIndicesToLocation, getDefaultPosition, boardToAscii } from "./chess";
+import { boardToAscii, createArrayRep, getDefaultPosition, isWhitePiece, Location, locationToZeroBasedIndices, Piece, zeroBasedIndicesToLocation } from "./chess";
 
 test("sanity", () => {
     expect(1).toBeTruthy();
@@ -39,6 +39,45 @@ test("isWhitePiece", () => {
     expect(isWhitePiece(Piece.BlackRook)).toBeFalsy();
     expect(isWhitePiece(Piece.BlackQueen)).toBeFalsy();
     expect(isWhitePiece(Piece.BlackKing)).toBeFalsy();
+});
+
+test("createArrayRep", () => {
+    const emptyExpected = [
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+    ];
+
+    const singlePieceExpected = [
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, "K", null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+    ];
+
+    expect(createArrayRep([])).toEqual(emptyExpected);
+    expect(createArrayRep([{
+        location: Location.C4,
+        piece: Piece.WhiteKing,
+    }])).toEqual(singlePieceExpected);
+    expect(() => {
+        createArrayRep([{
+            location: Location.C4,
+            piece: Piece.WhiteKing,
+        }, {
+            location: Location.C4,
+            piece: Piece.WhiteKing,
+        }]);
+    }).toThrow();
 });
 
 test("boardToAscii", () => {
