@@ -32,7 +32,8 @@
         "start": "dist/bundle.js",
         "test:client": "jest --coverage --config config/jest.client.config.js",
         "test:server": "jest --coverage --config config/jest.server.config.js",
-        "test:shared": "jest --coverage --config config/jest.shared.config.js"
+        "test:shared": "jest --coverage --config config/jest.shared.config.js",
+        "test": "npm run test:client && npm run test:shared && npm run test:server"
     },
     "pre-commit": [
         "test",
