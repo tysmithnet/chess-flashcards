@@ -25,7 +25,7 @@ module.exports = {
   // collectCoverageFrom: null,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: "coverage/client",
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -148,7 +148,9 @@ module.exports = {
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   testPathIgnorePatterns: [
-    `..${path.sep}cypress${path.sep}**`
+    `..${path.sep}cypress${path.sep}**`,
+    `..${path.sep}server${path.sep}**`,
+    `..${path.sep}shared${path.sep}**`,
   ],
 
   // The regexp pattern Jest uses to detect test files
