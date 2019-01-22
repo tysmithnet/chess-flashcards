@@ -276,6 +276,9 @@ export function locationToZeroBasedIndices(location: Location): number[] {
 }
 
 export function createArrayRep(pieces: IPieceLocation[]): Piece[][] {
+    if (pieces == null) {
+        throw new Error("pieces cannot be null or undefined");
+    }
     const result: Piece[][] = [];
     for (let i = 0; i < 8; i++) {
         const row: Piece[] = [];
@@ -296,7 +299,6 @@ export function createArrayRep(pieces: IPieceLocation[]): Piece[][] {
 }
 
 export function boardToAscii(pieces: IPieceLocation[]): string {
-    const rep = createArrayRep(pieces);
     const lines: string[] = [
         "  +------------------------+",
         "8 | .  .  .  .  .  .  .  . |",
@@ -321,6 +323,27 @@ export function boardToAscii(pieces: IPieceLocation[]): string {
 }
 
 // ignores illegal moves due to check
-export function getCandidateSquares(pieces: IPieceLocation[], pieceIndex: number): IMove {
-    return null;
+export function getCandidateSquares(pieces: IPieceLocation[], pieceIndex: number): IMove[] {
+    if (pieces == null) {
+        throw new Error("pieces cannot be null");
+    }
+    if (pieceIndex == null) {
+        throw new Error("pieceIndex cannot be null");
+    }
+    if (pieceIndex >= pieces.length) {
+        throw new Error("pieceIndex must be a valid index into the pieces array");
+    }
+    const results: IMove[] = [];
+    const rep = createArrayRep(pieces);
+    const pieceLocation = pieces[pieceIndex];
+    const piece = pieceLocation.piece;
+    const location = pieceLocation.location;
+    const indices = locationToZeroBasedIndices(location);
+    const isWhite = isWhitePiece(pieceLocation.piece);
+    return results;
+}
+
+
+function getPawnCandidateSquares(rep: Piece[][], indices: number[]): IMove[] {
+    
 }

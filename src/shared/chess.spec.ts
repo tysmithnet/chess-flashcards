@@ -57,12 +57,12 @@ test("createArrayRep", () => {
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
         [null, null, "K", null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null],
-        [null, null, null, null, null, null, null, null],
-    ];
+    ].reverse();
 
     expect(createArrayRep([])).toEqual(emptyExpected);
     expect(createArrayRep([{
@@ -78,6 +78,7 @@ test("createArrayRep", () => {
             piece: Piece.WhiteKing,
         }]);
     }).toThrow();
+    expect(() => createArrayRep(null)).toThrow();
 });
 
 test("boardToAscii", () => {
