@@ -60,7 +60,7 @@ module.exports = {
     "window": {},
     "isTest": true,
     "ts-jest": {
-      "tsConfigFile": "config/tsconfig.json",
+      "tsConfigFile": "config/tsconfig.client.json",
       "__TEST__": true
     }
   },
