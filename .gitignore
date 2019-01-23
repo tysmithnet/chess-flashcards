@@ -6,3 +6,4 @@ publish
 *.log
 coverage
 colony
+__pycache__
