@@ -1,34 +1,98 @@
 swagger: "2.0"
 info:
-  description: This is the swagger file that goes with our server code
+  description: "This is an API for chess games, openings, and moves"
   version: "1.0.0"
-  title: Swagger REST Article
-consumes:
-  - "application/json"
-produces:
-  - "application/json"
-
-basePath: "/api"
-
-# Paths supported by the server application
+  title: "chess-flashcards"
+host: "localhost:5000"
+basePath: "/api/v1"
+schemes:
+- "https"
+- "http"
 paths:
-  /people:
+  /openings:
     get:
-      operationId: "people.read"
-      tags:
-        - "People"
-      summary: "The people data structure supported by the server application"
-      description: "Read the list of people"
+      summary: "Get all ECO openings"
+      produces:
+      - "application/json"
       responses:
         200:
-          description: "Successful read people list operation"
+          description: "Successfully got all ECO openings"
           schema:
             type: "array"
             items:
-              properties:
-                fname:
-                  type: "string"
-                lname:
-                  type: "string"
-                timestamp:
-                  type: "string"
+              $ref: "#/definitions/Opening"
+  /openings/{id}:
+    get:
+      summary: "Get an opening and its variants by id"
+      produces: 
+      - "application/json"
+      parameters: 
+      - name: "id"
+        in: "path"
+        description: "ECO id e.g. C42"
+        required: true
+        type: "string"
+        pattern: "[A-E][0-9]{2}"
+      responses:
+        200:
+          description: "Successfully found requested opening"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
+        400:
+          description: "Invalid ECO id supplied"
+        404:
+          description: "Opening not found"
+definitions:
+  Move:
+    type: "object"
+    required:
+    - "piece"
+    - "to"
+    - "from"
+    properties:
+      piece:
+        type: "string"
+        format: "[PNBRQK]"
+      from:
+        type: "string"
+        format: "[a-h][1-8]"
+      to:
+        type: "string"
+        format: "[a-h][1-8]"
+      is_check:
+        type: "boolean"
+      is_mate:
+        type: "boolean"
+      is_stalemate:
+        type: "boolean"
+      captured_piece:
+        type: "string"
+        format: "[PNBRQK]"
+  Opening:
+    type: "object"
+    required:
+    - "name"
+    - "id"
+    - "moves"
+    properties:
+      name: 
+        type: "string"
+      id: 
+        type: "string"
+        pattern: "[A-E][0-9]{2}"
+      moves:
+        type: "array"
+        items:
+          $ref: "#/definitions/Move"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
