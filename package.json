@@ -27,6 +27,7 @@
         "doc": "typedoc --tsconfig config/tsconfig.json --out docs/ --ignoreCompilerErrors src/",
         "e2e": "cypress open",
         "graph": "dependency-cruise -x \"^node_modules\" -T dot src | dot -T svg > dependencies.svg",
+        "swagger": "cd src/server && java -jar ../../util/swagger-codegen-cli.jar generate -i swagger.yaml -l python-flask && python setup.py install",
         "pretty": "node tools/format.js",
         "server": "node dist/server/index.js",
         "start": "dist/bundle.js",

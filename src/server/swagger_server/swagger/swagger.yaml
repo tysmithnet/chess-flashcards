@@ -4,7 +4,7 @@ info:
   description: "This is an API for chess games, openings, and moves"
   version: "1.0.0"
   title: "chess-flashcards"
-host: "localhost:5000"
+host: "localhost:8080"
 basePath: "/api/v1"
 schemes:
 - "https"
@@ -44,7 +44,6 @@ paths:
           - "checkmate"
           - "stalemate"
           - "capture"
-        collectionFormat: "multi"
       responses:
         200:
           description: "Successfully found moves"

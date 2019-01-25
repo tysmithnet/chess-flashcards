@@ -97,7 +97,7 @@ class Opening(Model):
         """
         if id is None:
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
-        if id is not None and not re.search(r'[A-E][0-9]{2}', id):  # noqa: E501
+        if id is not None and not re.search('[A-E][0-9]{2}', id):  # noqa: E501
             raise ValueError("Invalid value for `id`, must be a follow pattern or equal to `/[A-E][0-9]{2}/`")  # noqa: E501
 
         self._id = id
