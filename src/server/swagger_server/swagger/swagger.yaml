@@ -1,0 +1,177 @@
+---
+swagger: "2.0"
+info:
+  description: "This is an API for chess games, openings, and moves"
+  version: "1.0.0"
+  title: "chess-flashcards"
+host: "localhost:5000"
+basePath: "/api/v1"
+schemes:
+- "https"
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /moves:
+    get:
+      summary: "Get moves for the given position"
+      operationId: "moves_get"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      parameters:
+      - name: "fen"
+        in: "formData"
+        description: "FEN of the position to find moves for"
+        required: true
+        type: "string"
+      - name: "legal"
+        in: "formData"
+        description: "Only allow legal moves"
+        required: false
+        type: "boolean"
+        default: true
+      - name: "flags"
+        in: "formData"
+        description: "Restrict the moves to certain types"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "check"
+          - "checkmate"
+          - "stalemate"
+          - "capture"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Successfully found moves"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Move"
+        400:
+          description: "Position is not valid"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /openings:
+    get:
+      summary: "Get all ECO openings"
+      operationId: "openings_get"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successfully got all ECO openings"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /openings/{id}:
+    get:
+      summary: "Get an opening and its variants by id"
+      operationId: "openings_id_get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ECO id e.g. C42"
+        required: true
+        type: "string"
+        pattern: "[A-E][0-9]{2}"
+        x-regex: "[A-E][0-9]{2}"
+        x-modifiers: []
+      responses:
+        200:
+          description: "Successfully found requested opening"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
+        400:
+          description: "Invalid ECO id supplied"
+        404:
+          description: "Opening not found"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
+definitions:
+  Move:
+    type: "object"
+    required:
+    - "dst"
+    - "piece"
+    - "src"
+    properties:
+      piece:
+        type: "string"
+        format: "[PNBRQK]"
+      src:
+        type: "string"
+        format: "[a-h][1-8]"
+      dst:
+        type: "string"
+        format: "[a-h][1-8]"
+      is_check:
+        type: "boolean"
+      is_mate:
+        type: "boolean"
+      is_stalemate:
+        type: "boolean"
+      captured_piece:
+        type: "string"
+        format: "[PNBRQK]"
+    example:
+      is_mate: true
+      is_stalemate: true
+      dst: "dst"
+      piece: "piece"
+      src: "src"
+      captured_piece: "captured_piece"
+      is_check: true
+  Opening:
+    type: "object"
+    required:
+    - "id"
+    - "moves"
+    - "name"
+    properties:
+      name:
+        type: "string"
+      id:
+        type: "string"
+        pattern: "[A-E][0-9]{2}"
+        x-regex: "[A-E][0-9]{2}"
+        x-modifiers: []
+      moves:
+        type: "array"
+        items:
+          $ref: "#/definitions/Move"
+    example:
+      moves:
+      - is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        is_check: true
+      - is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        is_check: true
+      name: "name"
+      id: "id"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"

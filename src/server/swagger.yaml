@@ -15,7 +15,6 @@ produces:
 paths:
   /moves:
     get:
-      operationId: app.moves
       summary: "Get moves for the given position"
       consumes:
       - "application/x-www-form-urlencoded"
@@ -52,7 +51,6 @@ paths:
           description: "Position is not valid"
   /openings:
     get:
-      operationId: app.openings
       summary: "Get all ECO openings"
       produces:
       - "application/json"
@@ -65,7 +63,6 @@ paths:
               $ref: "#/definitions/Opening"
   /openings/{id}:
     get:
-      operationId: app.openings_single
       summary: "Get an opening and its variants by id"
       parameters: 
       - name: "id"
@@ -90,16 +87,16 @@ definitions:
     type: "object"
     required:
     - "piece"
-    - "to"
-    - "from"
+    - "dst"
+    - "src"
     properties:
       piece:
         type: "string"
         format: "[PNBRQK]"
-      from:
+      src:
         type: "string"
         format: "[a-h][1-8]"
-      to:
+      dst:
         type: "string"
         format: "[a-h][1-8]"
       is_check:
