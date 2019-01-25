@@ -3,7 +3,7 @@ info:
   description: "This is an API for chess games, openings, and moves"
   version: "1.0.0"
   title: "chess-flashcards"
-host: "localhost:8080"
+host: "localhost:5000"
 basePath: "/api/v1"
 schemes:
 - "https"
@@ -16,21 +16,19 @@ paths:
   /moves:
     get:
       summary: "Get moves for the given position"
-      consumes:
-      - "application/x-www-form-urlencoded"
       parameters: 
       - name: "fen"
-        in: "formData"
+        in: "query"
         description: "FEN of the position to find moves for"
         type: "string"
         required: true
       - name: "legal"
-        in: "formData"
+        in: "query"
         description: "Only allow legal moves"
         type: "boolean"
         default: true
       - name: "flags"
-        in: "formData"
+        in: "query"
         description: "Restrict the moves to certain types"
         type: "array"
         items:

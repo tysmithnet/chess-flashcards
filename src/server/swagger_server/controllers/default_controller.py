@@ -20,7 +20,7 @@ def moves_get(fen, legal=None, flags=None):  # noqa: E501
 
     :rtype: List[Move]
     """
-    return 'do some magic!'
+    return {"a": 1}
 
 
 def openings_get():  # noqa: E501
