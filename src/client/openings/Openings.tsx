@@ -2,30 +2,20 @@ import {Chessground} from "chessground";
 import {Api as IChessground} from "chessground/api";
 import * as React from "react";
 import { connect } from "react-redux";
+import {Board} from "../common/board";
 import { IBaseProps, IRootState } from "../root";
 import "./openings.styles";
 export class Openings extends React.Component<IBaseProps> {
-    private ref: React.RefObject<HTMLDivElement>;
-    private ground: IChessground;
     constructor(props: IBaseProps) {
         super(props);
-        this.ref = React.createRef();
     }
 
     public render() {
         return (
-            <div className="board" ref={this.ref} />
+            <div className="board">
+                <Board />
+            </div>
         );
-    }
-
-    public componentDidMount() {
-        this.ground = Chessground(this.ref.current, {
-            fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-        });
-    }
-
-    public componentWillUnmount() {
-        this.ground.destroy();
     }
 }
 
