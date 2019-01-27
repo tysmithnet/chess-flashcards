@@ -1,4 +1,17 @@
-A01  Nimzovich-Larsen Attack
+import io
+import chess
+import chess.pgn
+from swagger_server.models.move_factory import create_move_models
+from swagger_server.models.opening import Opening
+
+class MoveVisitor(chess.pgn.BaseVisitor):
+    def __init__(self):
+        self.moves = []
+
+    def visit_move(self, board, move):
+        self.moves.append(move)
+
+TEXT = """A01  Nimzovich-Larsen Attack
 1. b3
 A02  Bird's Opening
 1. f4
@@ -995,4 +1008,20 @@ E97  King's Indian
 E98  King's Indian, Orthodox, Taimanov, 9.Ne1
 1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 e5 7. O-O Nc6 8. d5 Ne7 9. Ne1
 E99  King's Indian, Orthodox, Taimanov
-1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 e5 7. O-O Nc6 8. d5 Ne7 9. Ne1 Nd7 10. f3 f5
+1. d4 Nf6 2. c4 g6 3. Nc3 Bg7 4. e4 d6 5. Nf3 O-O 6. Be2 e5 7. O-O Nc6 8. d5 Ne7 9. Ne1 Nd7 10. f3 f5"""
+
+
+OPENINGS = []
+lines = TEXT.split("\n")
+for i in range(0, len(lines), 2):
+    groups = lines[i:i+2]
+    name = groups[0][4:]
+    id = groups[0][:3]
+    pgn = io.StringIO(groups[1])
+    game = chess.pgn.read_game(pgn)
+    visitor = MoveVisitor()
+    game.accept(visitor)
+    moves = visitor.moves
+    board = chess.Board()
+    models = create_move_models(board, moves)
+    OPENINGS.append(Opening(name, id, models))
