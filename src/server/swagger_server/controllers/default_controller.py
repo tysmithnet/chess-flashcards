@@ -8,6 +8,7 @@ from swagger_server.models.opening import Opening  # noqa: E501
 from swagger_server import util
 from swagger_server.openings import OPENINGS
 from flask import abort
+from fuzzywuzzy import process
 
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
@@ -50,3 +51,19 @@ def openings_id_get(id):  # noqa: E501
         abort(404)
     else:
         return first
+
+
+def openings_search_get(term):  # noqa: E501
+    """Fuzzy search for openings
+
+     # noqa: E501
+
+    :param term: Search term to use in search
+    :type term: str
+
+    :rtype: List[Opening]
+    """
+    choices = map(lambda x: x.name, OPENINGS)
+    results = process.extract(term, choices)
+    results = list(map(lambda x: x[0], results))
+    return list(filter(lambda x: x.name in results, OPENINGS))

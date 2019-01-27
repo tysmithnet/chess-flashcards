@@ -77,6 +77,22 @@ paths:
           description: "Invalid ECO id supplied"
         404:
           description: "Opening not found"
+  /openings/search:
+    get:
+      summary: "Fuzzy search for openings"
+      parameters:
+      - name: "term"
+        in: "query"
+        description: "Search term to use in search"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "Search completed successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
 definitions:
   Move:
     type: "object"

@@ -88,6 +88,24 @@ paths:
         404:
           description: "Opening not found"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
+  /openings/search:
+    get:
+      summary: "Fuzzy search for openings"
+      operationId: "openings_search_get"
+      parameters:
+      - name: "term"
+        in: "query"
+        description: "Search term to use in search"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Search completed successfully"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
 definitions:
   Move:
     type: "object"
