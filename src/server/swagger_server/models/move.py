@@ -15,7 +15,7 @@ class Move(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, piece: str=None, src: str=None, dst: str=None, is_check: bool=None, is_mate: bool=None, is_stalemate: bool=None, captured_piece: str=None):  # noqa: E501
+    def __init__(self, piece: str=None, src: str=None, dst: str=None, is_check: bool=None, is_mate: bool=None, is_stalemate: bool=None, is_enpessant: bool=None, is_castle: bool=None, captured_piece: str=None):  # noqa: E501
         """Move - a model defined in Swagger
 
         :param piece: The piece of this Move.  # noqa: E501
@@ -30,6 +30,10 @@ class Move(Model):
         :type is_mate: bool
         :param is_stalemate: The is_stalemate of this Move.  # noqa: E501
         :type is_stalemate: bool
+        :param is_enpessant: The is_enpessant of this Move.  # noqa: E501
+        :type is_enpessant: bool
+        :param is_castle: The is_castle of this Move.  # noqa: E501
+        :type is_castle: bool
         :param captured_piece: The captured_piece of this Move.  # noqa: E501
         :type captured_piece: str
         """
@@ -40,6 +44,8 @@ class Move(Model):
             'is_check': bool,
             'is_mate': bool,
             'is_stalemate': bool,
+            'is_enpessant': bool,
+            'is_castle': bool,
             'captured_piece': str
         }
 
@@ -50,6 +56,8 @@ class Move(Model):
             'is_check': 'is_check',
             'is_mate': 'is_mate',
             'is_stalemate': 'is_stalemate',
+            'is_enpessant': 'is_enpessant',
+            'is_castle': 'is_castle',
             'captured_piece': 'captured_piece'
         }
 
@@ -59,6 +67,8 @@ class Move(Model):
         self._is_check = is_check
         self._is_mate = is_mate
         self._is_stalemate = is_stalemate
+        self._is_enpessant = is_enpessant
+        self._is_castle = is_castle
         self._captured_piece = captured_piece
 
     @classmethod
@@ -203,6 +213,48 @@ class Move(Model):
         """
 
         self._is_stalemate = is_stalemate
+
+    @property
+    def is_enpessant(self) -> bool:
+        """Gets the is_enpessant of this Move.
+
+
+        :return: The is_enpessant of this Move.
+        :rtype: bool
+        """
+        return self._is_enpessant
+
+    @is_enpessant.setter
+    def is_enpessant(self, is_enpessant: bool):
+        """Sets the is_enpessant of this Move.
+
+
+        :param is_enpessant: The is_enpessant of this Move.
+        :type is_enpessant: bool
+        """
+
+        self._is_enpessant = is_enpessant
+
+    @property
+    def is_castle(self) -> bool:
+        """Gets the is_castle of this Move.
+
+
+        :return: The is_castle of this Move.
+        :rtype: bool
+        """
+        return self._is_castle
+
+    @is_castle.setter
+    def is_castle(self, is_castle: bool):
+        """Sets the is_castle of this Move.
+
+
+        :param is_castle: The is_castle of this Move.
+        :type is_castle: bool
+        """
+
+        self._is_castle = is_castle
 
     @property
     def captured_piece(self) -> str:

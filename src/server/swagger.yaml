@@ -22,11 +22,6 @@ paths:
         description: "FEN of the position to find moves for"
         type: "string"
         required: true
-      - name: "legal"
-        in: "query"
-        description: "Only allow legal moves"
-        type: "boolean"
-        default: true
       - name: "flags"
         in: "query"
         description: "Restrict the moves to certain types"
@@ -38,6 +33,8 @@ paths:
           - "checkmate"
           - "stalemate"
           - "capture"
+          - "enpessant"
+          - "castle"
       responses:
         200:
           description: "Successfully found moves"
@@ -90,22 +87,26 @@ definitions:
     properties:
       piece:
         type: "string"
-        format: "[PNBRQK]"
+        format: "[PNBRQKpnbrqk]"
       src:
         type: "string"
-        format: "[a-h][1-8]"
+        format: "[a-g][1-8]"
       dst:
         type: "string"
-        format: "[a-h][1-8]"
+        format: "[a-g][1-8]"
       is_check:
         type: "boolean"
       is_mate:
         type: "boolean"
       is_stalemate:
         type: "boolean"
+      is_enpessant:
+        type: "boolean"
+      is_castle:
+        type: "boolean"
       captured_piece:
         type: "string"
-        format: "[PNBRQK]"
+        format: "[PNBRQKpnbrqk]"
   Opening:
     type: "object"
     required:

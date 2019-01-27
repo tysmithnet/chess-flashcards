@@ -24,12 +24,6 @@ paths:
         description: "FEN of the position to find moves for"
         required: true
         type: "string"
-      - name: "legal"
-        in: "query"
-        description: "Only allow legal moves"
-        required: false
-        type: "boolean"
-        default: true
       - name: "flags"
         in: "query"
         description: "Restrict the moves to certain types"
@@ -42,6 +36,8 @@ paths:
           - "checkmate"
           - "stalemate"
           - "capture"
+          - "enpessant"
+          - "castle"
       responses:
         200:
           description: "Successfully found moves"
@@ -102,22 +98,26 @@ definitions:
     properties:
       piece:
         type: "string"
-        format: "[PNBRQK]"
+        format: "[PNBRQKpnbrqk]"
       src:
         type: "string"
-        format: "[a-h][1-8]"
+        format: "[a-g][1-8]"
       dst:
         type: "string"
-        format: "[a-h][1-8]"
+        format: "[a-g][1-8]"
       is_check:
         type: "boolean"
       is_mate:
         type: "boolean"
       is_stalemate:
         type: "boolean"
+      is_enpessant:
+        type: "boolean"
+      is_castle:
+        type: "boolean"
       captured_piece:
         type: "string"
-        format: "[PNBRQK]"
+        format: "[PNBRQKpnbrqk]"
     example:
       is_mate: true
       is_stalemate: true
@@ -125,7 +125,9 @@ definitions:
       piece: "piece"
       src: "src"
       captured_piece: "captured_piece"
+      is_castle: true
       is_check: true
+      is_enpessant: true
   Opening:
     type: "object"
     required:
@@ -152,14 +154,18 @@ definitions:
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        is_castle: true
         is_check: true
+        is_enpessant: true
       - is_mate: true
         is_stalemate: true
         dst: "dst"
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        is_castle: true
         is_check: true
+        is_enpessant: true
       name: "name"
       id: "id"
   ApiResponse:
