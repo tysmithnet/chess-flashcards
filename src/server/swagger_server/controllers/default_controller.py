@@ -7,6 +7,7 @@ from swagger_server.models.move_factory import create_move_model
 from swagger_server.models.opening import Opening  # noqa: E501
 from swagger_server import util
 from swagger_server.openings import OPENINGS
+from flask import abort
 
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
@@ -44,4 +45,8 @@ def openings_id_get(id):  # noqa: E501
 
     :rtype: List[Opening]
     """
-    return 'do some magic!'
+    first = next((o for o in OPENINGS if o.id == id), None)
+    if first is None:
+        abort(404)
+    else:
+        return first
