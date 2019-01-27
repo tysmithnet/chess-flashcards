@@ -1,22 +1,22 @@
 import { ConnectedRouter } from "connected-react-router";
 import * as React from "react";
 import { hot } from "react-hot-loader";
+import { observe } from "react-performance-observer";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
+import { isTest } from "../globals";
 import { Menu } from "../menu/Menu";
 import { getHistory, IRootState } from "../root";
 import { IProps } from "./app.domain";
 import "./app.styles";
 import { routes } from "./routes";
-import { observe } from "react-performance-observer";
-import { isTest } from "../globals";
 
 // register a metric tracking routine
 if (!isTest) {
     observe(measurements => {
         for (const measurement of measurements) {
-            if (measurement.entryType != "measure") {
+            if (measurement.entryType !== "measure") {
                 continue;
             }
             console.log(`${measurement.componentName} - ${measurement.duration}`);
@@ -27,7 +27,6 @@ if (!isTest) {
         }
     });
 }
-
 
 /**
  * 404 Page

@@ -33,7 +33,7 @@ const compileTypeScript = {
 
 // rule for compiling sass
 const stylesRule = {
-    test: /\.scss$/,
+    test: /\.s?css$/,
     use: [
         "style-loader",
         "css-loader",

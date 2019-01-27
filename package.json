@@ -121,6 +121,7 @@
         "@material-ui/icons": "^3.0.2",
         "axios": "0.18.0",
         "chess.js": "^0.10.2",
+        "chessground": "^7.3.5",
         "connected-react-router": "4.3.0",
         "enhanced-pgn-parser": "^0.0.2",
         "gsap": "2.0.2",
