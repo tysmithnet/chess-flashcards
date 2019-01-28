@@ -1,7 +1,6 @@
-import {Chessground} from "chessground";
-import {Api as IChessground} from "chessground/api";
 import * as React from "react";
 import { connect } from "react-redux";
+import {DefaultApi} from "../chess-api";
 import {Board} from "../common/board";
 import { IBaseProps, IRootState } from "../root";
 import "./openings.styles";
@@ -11,6 +10,10 @@ export class Openings extends React.Component<IBaseProps> {
     }
 
     public render() {
+        const api = new DefaultApi();
+        api.openingsGet().then(openings => {
+            console.dir(openings);
+        });
         return (
             <div className="board">
                 <Board />
