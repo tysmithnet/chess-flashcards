@@ -1,22 +1,31 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import {DefaultApi} from "../chess-api";
+import {Opening as IOpening} from "../chess-api/api";
 import {Board} from "../common/board";
 import { IBaseProps, IRootState } from "../root";
 import "./openings.styles";
+
 export class Openings extends React.Component<IBaseProps> {
+    private openings: IOpening[] = [];
+
     constructor(props: IBaseProps) {
         super(props);
     }
 
     public render() {
-        const api = new DefaultApi();
-        api.openingsGet().then(openings => {
-            console.dir(openings);
+        const options = this.openings.map(x => {
+            return <option key={x.id} value={x.id}>{x.name}</option>;
         });
         return (
-            <div className="board">
-                <Board />
+            <div>
+                <div className="board">
+                    <Board />
+                </div>
+                <div>
+                    <select>
+                        {options}
+                    </select>
+                </div>
             </div>
         );
     }
