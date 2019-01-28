@@ -1,19 +1,20 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import {Opening as IOpening} from "../chess-api/api";
+import { bindActionCreators } from "redux";
 import {Board} from "../common/board";
-import { IBaseProps, IRootState } from "../root";
+import { IState } from "../menu/menu.domain";
+import { IRootState } from "../root";
+import { getAllOpeningsRequestFactory } from "./openings.actions";
+import {IProps} from "./openings.domain";
 import "./openings.styles";
+export class Openings extends React.Component<IProps, IState> {
 
-export class Openings extends React.Component<IBaseProps> {
-    private openings: IOpening[] = [];
-
-    constructor(props: IBaseProps) {
+    constructor(props: IProps) {
         super(props);
     }
 
     public render() {
-        const options = this.openings.map(x => {
+        const options = (this.props.openings || []).map(x => {
             return <option key={x.id} value={x.id}>{x.name}</option>;
         });
         return (
@@ -29,16 +30,20 @@ export class Openings extends React.Component<IBaseProps> {
             </div>
         );
     }
+
+    public componentDidMount() {
+        getAllOpeningsRequestFactory();
+    }
 }
 
-/**
- * Mapping function for the root state
- *
- * @param {IRootState} state
- * @returns {IBaseProps}
- */
-function mapStateToProps(state: IRootState): IBaseProps {
-    return {};
+function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({getAllOpeningsRequestFactory}, dispatch);
+}
+
+function mapStateToProps(state: IRootState): IProps {
+    return {
+        openings: (state.openings.openings) || [],
+    };
 }
 
 export const connectedComponent = connect(mapStateToProps)(Openings);

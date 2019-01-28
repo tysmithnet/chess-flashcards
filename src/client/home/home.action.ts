@@ -26,7 +26,6 @@ export interface IAnimationStartRequest extends IAction {
     payload: HTMLElement;
 }
 
-
 /**
  * Factory method for animation start requests.
  *
@@ -37,6 +36,6 @@ export interface IAnimationStartRequest extends IAction {
 export function animationStartRequestFactory(homeContainer: HTMLElement): IAnimationStartRequest {
     return {
         type: ACTION_TYPES.START_ANIMATION_REQUEST,
-        payload: homeContainer
-    }
+        payload: homeContainer,
+    };
 }

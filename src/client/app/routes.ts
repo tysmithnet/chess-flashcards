@@ -1,7 +1,7 @@
 import { Admin } from "../admin";
 import { Permissions } from "../auth";
 import { connectedComponent as Home } from "../home";
-import {Openings} from "../openings";
+import { connectedComponent as Openings} from "../openings";
 import { IRoute } from "./app.domain";
 // Implementation note: I find it easier to debug applications when there is a
 // central place for all statically defined routes.

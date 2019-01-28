@@ -8,20 +8,29 @@ export const ACTION_TYPES = {
 };
 
 export interface IGetAllOpeningsRequest extends IAction { }
-
+export interface IGetAllOpeningsFailure extends IAction {
+    message: string;
+}
 export interface IGetAllOpeningsSuccess extends IAction {
     payload: IOpening[];
 }
 
-export function GetAllOpeningsRequestFactory(): IGetAllOpeningsRequest {
+export function getAllOpeningsRequestFactory(): IGetAllOpeningsRequest {
     return {
         type: ACTION_TYPES.GET_ALL_OPENINGS_REQUEST,
     };
 }
 
-export function GetAllOpeningsSuccessFactory(openings: IOpening[]): IGetAllOpeningsSuccess {
+export function getAllOpeningsSuccessFactory(openings: IOpening[]): IGetAllOpeningsSuccess {
     return {
         type: ACTION_TYPES.GET_ALL_OPENINGS_SUCCESS,
         payload: openings,
+    };
+}
+
+export function getAllOpeningsFailureFactory(error: string): IGetAllOpeningsFailure {
+    return {
+        type: ACTION_TYPES.GET_ALL_OPENINGS_SUCCESS,
+        message: error,
     };
 }
