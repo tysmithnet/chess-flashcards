@@ -1,13 +1,15 @@
 import {Chessground} from "chessground";
 import {Api as IChessground} from "chessground/api";
+import {Config as IConfig} from "chessground/config";
 import * as React from "react";
-import { connect } from "react-redux";
-import { IBaseProps, IRootState } from "../../root";
+import { IBaseProps } from "../../root";
 import "./3d.css";
 import "./board.css";
 import "./theme.css";
 
-export class Board extends React.Component<IBaseProps> {
+export interface IProps extends IConfig, IBaseProps { }
+
+export class Board extends React.Component<IProps> {
     private ref: React.RefObject<HTMLDivElement>;
     private ground: IChessground;
     constructor(props: IBaseProps) {
@@ -16,30 +18,23 @@ export class Board extends React.Component<IBaseProps> {
     }
 
     public render() {
+        // todo: allow for alternate themes
         return (
-            <div className="board" ref={this.ref} />
+            <div className="blue merida">
+                <div ref={this.ref} />
+            </div>
         );
     }
 
     public componentDidMount() {
-        this.ground = Chessground(this.ref.current, {
-            fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-        });
+        this.ground = Chessground(this.ref.current);
     }
 
     public componentWillUnmount() {
         this.ground.destroy();
     }
-}
 
-/**
- * Mapping function for the root state
- *
- * @param {IRootState} state
- * @returns {IBaseProps}
- */
-function mapStateToProps(state: IRootState): IBaseProps {
-    return {};
+    public componentWillReceiveProps(nextProps: IProps) {
+        this.ground.set(nextProps);
+    }
 }
-
-export const connectedComponent = connect(mapStateToProps)(Board);

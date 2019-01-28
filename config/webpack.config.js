@@ -6,6 +6,7 @@ const distPath = path.resolve(__dirname, "../", "dist/client");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const StatsPlugin = require("stats-webpack-plugin")
 
+
 // loader configuration for typescript
 const compileTypeScript = {
     loader: "awesome-typescript-loader",
@@ -40,6 +41,12 @@ const stylesRule = {
         "sass-loader"
     ]
 };
+
+// rule for images
+const imageRule = {
+    test: /\.(png|jpg|svg)$/,
+    loader: "url-loader",
+}
 
 // rule to transpile regular javascript files
 const regularJavaScriptRule = {
@@ -131,7 +138,7 @@ const common = {
     ],
     module: {
         rules: [
-            stylesRule, regularJavaScriptRule, regularTypeScriptRule
+            stylesRule, imageRule, regularJavaScriptRule, regularTypeScriptRule
         ]
     }
 }
