@@ -1,6 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import {Opening as IOpening} from "../chess-api";
 import {Board} from "../common/board";
 import { IState } from "../menu/menu.domain";
 import { IRootState } from "../root";
@@ -32,17 +33,17 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
-        getAllOpeningsRequestFactory();
+        this.props.dispatch(getAllOpeningsRequestFactory());
     }
 }
 
-function mapDispatchToProps(dispatch: any) {
-    return bindActionCreators({getAllOpeningsRequestFactory}, dispatch);
-}
-
 function mapStateToProps(state: IRootState): IProps {
+    let val: IOpening[] = [];
+    if (state.openings) {
+        val = state.openings.openings;
+    }
     return {
-        openings: (state.openings.openings) || [],
+       openings: val,
     };
 }
 
