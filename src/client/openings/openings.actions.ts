@@ -30,7 +30,7 @@ export function getAllOpeningsSuccessFactory(openings: IOpening[]): IGetAllOpeni
 
 export function getAllOpeningsFailureFactory(error: string): IGetAllOpeningsFailure {
     return {
-        type: ACTION_TYPES.GET_ALL_OPENINGS_SUCCESS,
+        type: ACTION_TYPES.GET_ALL_OPENINGS_FAILURE,
         message: error,
     };
 }

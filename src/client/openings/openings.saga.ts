@@ -4,7 +4,7 @@ import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactor
 
 function* getAllOpenings() {
     try {
-        const res = yield axios.post("localhost:5000/api/v1/openings");
+        const res = yield axios.post("/proxy/api/v1/openings");
         const result = yield res.data;
         yield put(getAllOpeningsSuccessFactory(result));
     } catch (err) {
