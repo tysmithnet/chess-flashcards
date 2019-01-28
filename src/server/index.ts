@@ -17,7 +17,7 @@ app.use(express.static(clientRoot));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(morgan("short"));
-app.use("/proxy", proxy("http://localhost:5000/"));
+app.use("/chess", proxy("http://localhost:5000/"));
 
 (() => {
     // setup webpack middleware and hot module replacement

@@ -3,8 +3,8 @@ import { IAction } from "../root";
 
 export const ACTION_TYPES = {
     GET_ALL_OPENINGS_REQUEST: "@openings/GetAllOpeningsRequest",
-    GET_ALL_OPENINGS_SUCCESS: "@openings/GetAllOpeningsRequest",
-    GET_ALL_OPENINGS_FAILURE: "@openings/GetAllOpeningsRequest",
+    GET_ALL_OPENINGS_SUCCESS: "@openings/GetAllOpeningsSuccess",
+    GET_ALL_OPENINGS_FAILURE: "@openings/GetAllOpeningsFailure",
 };
 
 export interface IGetAllOpeningsRequest extends IAction { }
