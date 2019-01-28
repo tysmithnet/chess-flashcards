@@ -43,7 +43,7 @@
             "type": "python",
             "request": "launch",
             "module": "flask",
-            "cwd": "${workspaceFolder}/src/server",
+            "cwd": "${workspaceFolder}/src/server/chess-api/",
             "env": {
                 "FLASK_APP": "swagger_server.debug:application"
             },
