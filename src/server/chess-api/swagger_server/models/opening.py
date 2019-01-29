@@ -7,6 +7,7 @@ from typing import List, Dict  # noqa: F401
 
 from swagger_server.models.base_model_ import Model
 from swagger_server.models.move import Move  # noqa: F401,E501
+from swagger_server.models.opening_variant import OpeningVariant  # noqa: F401,E501
 import re  # noqa: F401,E501
 from swagger_server import util
 
@@ -17,7 +18,7 @@ class Opening(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name: str=None, id: str=None, moves: List[Move]=None):  # noqa: E501
+    def __init__(self, name: str=None, id: str=None, moves: List[Move]=None, variants: List[OpeningVariant]=None):  # noqa: E501
         """Opening - a model defined in Swagger
 
         :param name: The name of this Opening.  # noqa: E501
@@ -26,22 +27,27 @@ class Opening(Model):
         :type id: str
         :param moves: The moves of this Opening.  # noqa: E501
         :type moves: List[Move]
+        :param variants: The variants of this Opening.  # noqa: E501
+        :type variants: List[OpeningVariant]
         """
         self.swagger_types = {
             'name': str,
             'id': str,
-            'moves': List[Move]
+            'moves': List[Move],
+            'variants': List[OpeningVariant]
         }
 
         self.attribute_map = {
             'name': 'name',
             'id': 'id',
-            'moves': 'moves'
+            'moves': 'moves',
+            'variants': 'variants'
         }
 
         self._name = name
         self._id = id
         self._moves = moves
+        self._variants = variants
 
     @classmethod
     def from_dict(cls, dikt) -> 'Opening':
@@ -58,6 +64,7 @@ class Opening(Model):
     def name(self) -> str:
         """Gets the name of this Opening.
 
+        The human friendly name for the opening  # noqa: E501
 
         :return: The name of this Opening.
         :rtype: str
@@ -68,6 +75,7 @@ class Opening(Model):
     def name(self, name: str):
         """Sets the name of this Opening.
 
+        The human friendly name for the opening  # noqa: E501
 
         :param name: The name of this Opening.
         :type name: str
@@ -81,6 +89,7 @@ class Opening(Model):
     def id(self) -> str:
         """Gets the id of this Opening.
 
+        The ECO id for the opening, e.g. E04  # noqa: E501
 
         :return: The id of this Opening.
         :rtype: str
@@ -91,6 +100,7 @@ class Opening(Model):
     def id(self, id: str):
         """Sets the id of this Opening.
 
+        The ECO id for the opening, e.g. E04  # noqa: E501
 
         :param id: The id of this Opening.
         :type id: str
@@ -106,6 +116,7 @@ class Opening(Model):
     def moves(self) -> List[Move]:
         """Gets the moves of this Opening.
 
+        The mainline moves that identify this opening  # noqa: E501
 
         :return: The moves of this Opening.
         :rtype: List[Move]
@@ -116,6 +127,7 @@ class Opening(Model):
     def moves(self, moves: List[Move]):
         """Sets the moves of this Opening.
 
+        The mainline moves that identify this opening  # noqa: E501
 
         :param moves: The moves of this Opening.
         :type moves: List[Move]
@@ -124,3 +136,26 @@ class Opening(Model):
             raise ValueError("Invalid value for `moves`, must not be `None`")  # noqa: E501
 
         self._moves = moves
+
+    @property
+    def variants(self) -> List[OpeningVariant]:
+        """Gets the variants of this Opening.
+
+        Variants of the opening if any exist  # noqa: E501
+
+        :return: The variants of this Opening.
+        :rtype: List[OpeningVariant]
+        """
+        return self._variants
+
+    @variants.setter
+    def variants(self, variants: List[OpeningVariant]):
+        """Sets the variants of this Opening.
+
+        Variants of the opening if any exist  # noqa: E501
+
+        :param variants: The variants of this Opening.
+        :type variants: List[OpeningVariant]
+        """
+
+        self._variants = variants

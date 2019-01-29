@@ -86,6 +86,7 @@ class Move(Model):
     def piece(self) -> str:
         """Gets the piece of this Move.
 
+        The piece being moved, white pieces are indicated by uppercase  # noqa: E501
 
         :return: The piece of this Move.
         :rtype: str
@@ -96,6 +97,7 @@ class Move(Model):
     def piece(self, piece: str):
         """Sets the piece of this Move.
 
+        The piece being moved, white pieces are indicated by uppercase  # noqa: E501
 
         :param piece: The piece of this Move.
         :type piece: str
@@ -109,6 +111,7 @@ class Move(Model):
     def src(self) -> str:
         """Gets the src of this Move.
 
+        The square that the piece was on at the start of the move  # noqa: E501
 
         :return: The src of this Move.
         :rtype: str
@@ -119,6 +122,7 @@ class Move(Model):
     def src(self, src: str):
         """Sets the src of this Move.
 
+        The square that the piece was on at the start of the move  # noqa: E501
 
         :param src: The src of this Move.
         :type src: str
@@ -132,6 +136,7 @@ class Move(Model):
     def dst(self) -> str:
         """Gets the dst of this Move.
 
+        The square that the piece is on at the end of the move  # noqa: E501
 
         :return: The dst of this Move.
         :rtype: str
@@ -142,6 +147,7 @@ class Move(Model):
     def dst(self, dst: str):
         """Sets the dst of this Move.
 
+        The square that the piece is on at the end of the move  # noqa: E501
 
         :param dst: The dst of this Move.
         :type dst: str
@@ -155,6 +161,7 @@ class Move(Model):
     def is_check(self) -> bool:
         """Gets the is_check of this Move.
 
+        True if the move results in check, false otherwise  # noqa: E501
 
         :return: The is_check of this Move.
         :rtype: bool
@@ -165,6 +172,7 @@ class Move(Model):
     def is_check(self, is_check: bool):
         """Sets the is_check of this Move.
 
+        True if the move results in check, false otherwise  # noqa: E501
 
         :param is_check: The is_check of this Move.
         :type is_check: bool
@@ -176,6 +184,7 @@ class Move(Model):
     def is_mate(self) -> bool:
         """Gets the is_mate of this Move.
 
+        True if the move results in checkmate, false otherwise  # noqa: E501
 
         :return: The is_mate of this Move.
         :rtype: bool
@@ -186,6 +195,7 @@ class Move(Model):
     def is_mate(self, is_mate: bool):
         """Sets the is_mate of this Move.
 
+        True if the move results in checkmate, false otherwise  # noqa: E501
 
         :param is_mate: The is_mate of this Move.
         :type is_mate: bool
@@ -197,6 +207,7 @@ class Move(Model):
     def is_stalemate(self) -> bool:
         """Gets the is_stalemate of this Move.
 
+        True if the move results in stalemate, false otherwise  # noqa: E501
 
         :return: The is_stalemate of this Move.
         :rtype: bool
@@ -207,6 +218,7 @@ class Move(Model):
     def is_stalemate(self, is_stalemate: bool):
         """Sets the is_stalemate of this Move.
 
+        True if the move results in stalemate, false otherwise  # noqa: E501
 
         :param is_stalemate: The is_stalemate of this Move.
         :type is_stalemate: bool
@@ -218,6 +230,7 @@ class Move(Model):
     def is_enpessant(self) -> bool:
         """Gets the is_enpessant of this Move.
 
+        True if the move was an en pessant capture  # noqa: E501
 
         :return: The is_enpessant of this Move.
         :rtype: bool
@@ -228,6 +241,7 @@ class Move(Model):
     def is_enpessant(self, is_enpessant: bool):
         """Sets the is_enpessant of this Move.
 
+        True if the move was an en pessant capture  # noqa: E501
 
         :param is_enpessant: The is_enpessant of this Move.
         :type is_enpessant: bool
@@ -239,6 +253,7 @@ class Move(Model):
     def is_castle(self) -> bool:
         """Gets the is_castle of this Move.
 
+        True if the move is a castle  # noqa: E501
 
         :return: The is_castle of this Move.
         :rtype: bool
@@ -249,6 +264,7 @@ class Move(Model):
     def is_castle(self, is_castle: bool):
         """Sets the is_castle of this Move.
 
+        True if the move is a castle  # noqa: E501
 
         :param is_castle: The is_castle of this Move.
         :type is_castle: bool
@@ -260,6 +276,7 @@ class Move(Model):
     def captured_piece(self) -> str:
         """Gets the captured_piece of this Move.
 
+        The piece that was captured if one was captured  # noqa: E501
 
         :return: The captured_piece of this Move.
         :rtype: str
@@ -270,6 +287,7 @@ class Move(Model):
     def captured_piece(self, captured_piece: str):
         """Sets the captured_piece of this Move.
 
+        The piece that was captured if one was captured  # noqa: E501
 
         :param captured_piece: The captured_piece of this Move.
         :type captured_piece: str

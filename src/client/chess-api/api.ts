@@ -79,87 +79,61 @@ export class RequiredError extends Error {
 }
 
 /**
- * 
- * @export
- * @interface ApiResponse
- */
-export interface ApiResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof ApiResponse
-     */
-    code?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResponse
-     */
-    type?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ApiResponse
-     */
-    message?: string;
-}
-
-/**
- * 
+ * Represents a single move that a player can make during a turn
  * @export
  * @interface Move
  */
 export interface Move {
     /**
-     * 
+     * The piece being moved, white pieces are indicated by uppercase
      * @type {string}
      * @memberof Move
      */
     piece: string;
     /**
-     * 
+     * The square that the piece was on at the start of the move
      * @type {string}
      * @memberof Move
      */
     src: string;
     /**
-     * 
+     * The square that the piece is on at the end of the move
      * @type {string}
      * @memberof Move
      */
     dst: string;
     /**
-     * 
+     * True if the move results in check, false otherwise
      * @type {boolean}
      * @memberof Move
      */
     isCheck?: boolean;
     /**
-     * 
+     * True if the move results in checkmate, false otherwise
      * @type {boolean}
      * @memberof Move
      */
     isMate?: boolean;
     /**
-     * 
+     * True if the move results in stalemate, false otherwise
      * @type {boolean}
      * @memberof Move
      */
     isStalemate?: boolean;
     /**
-     * 
+     * True if the move was an en pessant capture
      * @type {boolean}
      * @memberof Move
      */
     isEnpessant?: boolean;
     /**
-     * 
+     * True if the move is a castle
      * @type {boolean}
      * @memberof Move
      */
     isCastle?: boolean;
     /**
-     * 
+     * The piece that was captured if one was captured
      * @type {string}
      * @memberof Move
      */
@@ -167,29 +141,55 @@ export interface Move {
 }
 
 /**
- * 
+ * An ECO chess opening
  * @export
  * @interface Opening
  */
 export interface Opening {
     /**
-     * 
+     * The human friendly name for the opening
      * @type {string}
      * @memberof Opening
      */
     name: string;
     /**
-     * 
+     * The ECO id for the opening, e.g. E04
      * @type {string}
      * @memberof Opening
      */
     id: string;
     /**
-     * 
+     * The mainline moves that identify this opening
      * @type {Array&lt;Move&gt;}
      * @memberof Opening
      */
     moves: Array<Move>;
+    /**
+     * Variants of the opening if any exist
+     * @type {Array&lt;OpeningVariant&gt;}
+     * @memberof Opening
+     */
+    variants?: Array<OpeningVariant>;
+}
+
+/**
+ * A named variation of an ECO opening
+ * @export
+ * @interface OpeningVariant
+ */
+export interface OpeningVariant {
+    /**
+     * The human friendly name for the variant
+     * @type {string}
+     * @memberof OpeningVariant
+     */
+    name?: string;
+    /**
+     * The moves that identify this variant
+     * @type {Array&lt;Move&gt;}
+     * @memberof OpeningVariant
+     */
+    moves?: Array<Move>;
 }
 
 

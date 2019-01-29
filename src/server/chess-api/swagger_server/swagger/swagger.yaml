@@ -117,25 +117,35 @@ definitions:
       piece:
         type: "string"
         format: "[PNBRQKpnbrqk]"
+        description: "The piece being moved, white pieces are indicated by uppercase"
       src:
         type: "string"
         format: "[a-g][1-8]"
+        description: "The square that the piece was on at the start of the move"
       dst:
         type: "string"
         format: "[a-g][1-8]"
+        description: "The square that the piece is on at the end of the move"
       is_check:
         type: "boolean"
+        description: "True if the move results in check, false otherwise"
       is_mate:
         type: "boolean"
+        description: "True if the move results in checkmate, false otherwise"
       is_stalemate:
         type: "boolean"
+        description: "True if the move results in stalemate, false otherwise"
       is_enpessant:
         type: "boolean"
+        description: "True if the move was an en pessant capture"
       is_castle:
         type: "boolean"
+        description: "True if the move is a castle"
       captured_piece:
         type: "string"
         format: "[PNBRQKpnbrqk]"
+        description: "The piece that was captured if one was captured"
+    description: "Represents a single move that a player can make during a turn"
     example:
       is_mate: true
       is_stalemate: true
@@ -155,15 +165,24 @@ definitions:
     properties:
       name:
         type: "string"
+        description: "The human friendly name for the opening"
       id:
         type: "string"
+        description: "The ECO id for the opening, e.g. E04"
         pattern: "[A-E][0-9]{2}"
         x-regex: "[A-E][0-9]{2}"
         x-modifiers: []
       moves:
         type: "array"
+        description: "The mainline moves that identify this opening"
         items:
           $ref: "#/definitions/Move"
+      variants:
+        type: "array"
+        description: "Variants of the opening if any exist"
+        items:
+          $ref: "#/definitions/OpeningVariant"
+    description: "An ECO chess opening"
     example:
       moves:
       - is_mate: true
@@ -186,13 +205,77 @@ definitions:
         is_enpessant: true
       name: "name"
       id: "id"
-  ApiResponse:
+      variants:
+      - moves:
+        - is_mate: true
+          is_stalemate: true
+          dst: "dst"
+          piece: "piece"
+          src: "src"
+          captured_piece: "captured_piece"
+          is_castle: true
+          is_check: true
+          is_enpessant: true
+        - is_mate: true
+          is_stalemate: true
+          dst: "dst"
+          piece: "piece"
+          src: "src"
+          captured_piece: "captured_piece"
+          is_castle: true
+          is_check: true
+          is_enpessant: true
+        name: "name"
+      - moves:
+        - is_mate: true
+          is_stalemate: true
+          dst: "dst"
+          piece: "piece"
+          src: "src"
+          captured_piece: "captured_piece"
+          is_castle: true
+          is_check: true
+          is_enpessant: true
+        - is_mate: true
+          is_stalemate: true
+          dst: "dst"
+          piece: "piece"
+          src: "src"
+          captured_piece: "captured_piece"
+          is_castle: true
+          is_check: true
+          is_enpessant: true
+        name: "name"
+  OpeningVariant:
     type: "object"
     properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
+      name:
         type: "string"
-      message:
-        type: "string"
+        description: "The human friendly name for the variant"
+      moves:
+        type: "array"
+        description: "The moves that identify this variant"
+        items:
+          $ref: "#/definitions/Move"
+    description: "A named variation of an ECO opening"
+    example:
+      moves:
+      - is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        is_castle: true
+        is_check: true
+        is_enpessant: true
+      - is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        is_castle: true
+        is_check: true
+        is_enpessant: true
+      name: "name"
