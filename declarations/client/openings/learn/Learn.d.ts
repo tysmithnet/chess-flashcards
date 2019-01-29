@@ -10,7 +10,8 @@ export interface IProps extends IBaseProps {
 export declare class Learn extends React.Component<IProps> {
     constructor(props: any);
     render(): JSX.Element;
-    private handleOpeningSelected;
+    private handleVariantChanged;
+    private handleOpeningChanged;
 }
 export declare const connectedComponent: React.ComponentClass<Pick<any, string | number | symbol>, any> & {
     WrappedComponent: React.ComponentType<any>;

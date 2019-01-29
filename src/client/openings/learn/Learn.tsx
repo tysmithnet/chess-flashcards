@@ -13,7 +13,8 @@ export class Learn extends React.Component<IProps> {
 
     constructor(props: any) {
         super(props);
-        this.handleOpeningSelected = this.handleOpeningSelected.bind(this);
+        this.handleOpeningChanged = this.handleOpeningChanged.bind(this);
+        this.handleVariantChanged = this.handleVariantChanged.bind(this);
     }
 
     public render() {
@@ -24,17 +25,43 @@ export class Learn extends React.Component<IProps> {
             }
             return <option key={o.id} value={o.id}>{o.id} - {o.name}</option>;
         });
+        let variantSelect = null;
+        if (this.props.match.params.id) {
+            const opening = this.props.openings.filter(o => {
+                return o.id === this.props.match.params.id;
+            })[0];
+            if (opening.variants.length) {
+                const variantOptions = opening.variants.map(v => {
+                    return <option key={v.name} value={v.name}>{v.name}</option>;
+                });
+                variantSelect = (
+                    <div>
+                        <select onChange={this.handleVariantChanged}>
+                            {variantOptions}
+                        </select>
+                    </div>
+                );
+            }
+        }
         return (
             <div>
                 <h3>{id}</h3>
-                <select onChange={this.handleOpeningSelected}>
-                    {options}
-                </select>
+                <div>
+                    <select onChange={this.handleOpeningChanged}>
+                        {options}
+                    </select>
+                </div>
+                {variantSelect}
             </div>
         );
     }
 
-    private handleOpeningSelected(event: React.ChangeEvent<HTMLSelectElement>) {
+    private handleVariantChanged(event: React.ChangeEvent<HTMLSelectElement>) {
+        const id = event.target.value;
+        this.props.history.push(`${this.props.match.url}/${id}`);
+    }
+
+    private handleOpeningChanged(event: React.ChangeEvent<HTMLSelectElement>) {
         const id = event.target.value;
         this.props.history.push(`/openings/learn/${id}`);
     }

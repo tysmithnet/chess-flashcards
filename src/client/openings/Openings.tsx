@@ -27,8 +27,7 @@ export class Openings extends React.Component<IProps> {
                     <li><Link to={`${this.props.match.path}/learn`}>Learn</Link></li>
                 </ul>
                 <Switch>
-                    <Route exact={true} path={`${this.props.match.path}/learn`} component={Learn} />
-                    <Route path={`${this.props.match.path}/learn/:id`} component={Learn} />
+                    <Route path={`${this.props.match.path}/learn/:id?/:variant?`} component={Learn} />
                 </Switch>
             </div>
         );
