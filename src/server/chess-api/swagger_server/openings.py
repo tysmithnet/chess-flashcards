@@ -42,8 +42,6 @@ Amar (Paris) opening
 1. Nh3
 Amar gambit
 1. Nh3 d5 2. g3 e5 3. f4 Bxh3 4. Bxh3 exf4 
-Dunst (Sleipner, Heinrichsen) opening
-1. Nc3
 Dunst (Sleipner,Heinrichsen) opening
 1. Nc3 e5 
 Battambang opening
@@ -58,8 +56,6 @@ Crab opening
 1. a4 e5 2. h4
 Saragossa opening
 1. c3
-Mieses opening
-1. d3
 Mieses opening
 1. d3 e5 
 Valencia opening
