@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { Link, Route, Switch } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import {Opening as IOpening} from "../chess-api";
 import {Board} from "../common/board";
@@ -20,20 +21,22 @@ export class Openings extends React.Component<IProps, IState> {
         });
         return (
             <div>
-                <div className="board">
-                    <Board />
-                </div>
-                <div>
-                    <select>
-                        {options}
-                    </select>
-                </div>
+                <ul>
+                    <li><Link to={`/openings/A01`}>ad</Link></li>
+                </ul>
+                <Route path={`/openings/:ecoId`} component={HelloWorld} />
             </div>
         );
     }
 
     public componentDidMount() {
         this.props.dispatch(getAllOpeningsRequestFactory());
+    }
+}
+
+export class HelloWorld extends React.Component<any> {
+    public render() {
+        return <h1>hi! {this.props.match.params.ecoId}</h1>;
     }
 }
 
@@ -44,6 +47,7 @@ function mapStateToProps(state: IRootState): IProps {
     }
     return {
        openings: val,
+
     };
 }
 
