@@ -6,12 +6,12 @@ import {Opening as IOpening} from "../chess-api";
 import {Board} from "../common/board";
 import { IState } from "../menu/menu.domain";
 import { IRootState } from "../root";
-import {Learn} from "./learn";
+import {connectedComponent as Learn} from "./learn";
 import { getAllOpeningsRequestFactory } from "./openings.actions";
 import {IProps} from "./openings.domain";
 import "./openings.styles";
 
-export class Openings extends React.Component<IProps, IState> {
+export class Openings extends React.Component<IProps> {
 
     constructor(props: IProps) {
         super(props);
@@ -24,10 +24,11 @@ export class Openings extends React.Component<IProps, IState> {
         return (
             <div>
                 <ul>
-                    <li><Link to={`${this.props.match.path}/learn`}>Learn Openings</Link></li>
+                    <li><Link to={`${this.props.match.path}/learn`}>Learn</Link></li>
                 </ul>
                 <Switch>
-                    <Route path={`${this.props.match.path}/learn`} component={Learn} />
+                    <Route exact={true} path={`${this.props.match.path}/learn`} component={Learn} />
+                    <Route path={`${this.props.match.path}/learn/:id`} component={Learn} />
                 </Switch>
             </div>
         );

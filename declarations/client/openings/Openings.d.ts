@@ -1,8 +1,7 @@
 import * as React from "react";
-import { IState } from "../menu/menu.domain";
 import { IProps } from "./openings.domain";
 import "./openings.styles";
-export declare class Openings extends React.Component<IProps, IState> {
+export declare class Openings extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
