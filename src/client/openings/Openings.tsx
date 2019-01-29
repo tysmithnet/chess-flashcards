@@ -6,9 +6,11 @@ import {Opening as IOpening} from "../chess-api";
 import {Board} from "../common/board";
 import { IState } from "../menu/menu.domain";
 import { IRootState } from "../root";
+import {Learn} from "./learn";
 import { getAllOpeningsRequestFactory } from "./openings.actions";
 import {IProps} from "./openings.domain";
 import "./openings.styles";
+
 export class Openings extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
@@ -22,21 +24,17 @@ export class Openings extends React.Component<IProps, IState> {
         return (
             <div>
                 <ul>
-                    <li><Link to={`/openings/A01`}>ad</Link></li>
+                    <li><Link to={`${this.props.match.path}/learn`}>Learn Openings</Link></li>
                 </ul>
-                <Route path={`/openings/:ecoId`} component={HelloWorld} />
+                <Switch>
+                    <Route path={`${this.props.match.path}/learn`} component={Learn} />
+                </Switch>
             </div>
         );
     }
 
     public componentDidMount() {
         this.props.dispatch(getAllOpeningsRequestFactory());
-    }
-}
-
-export class HelloWorld extends React.Component<any> {
-    public render() {
-        return <h1>hi! {this.props.match.params.ecoId}</h1>;
     }
 }
 

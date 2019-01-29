@@ -87,6 +87,7 @@ export class App extends React.Component<IProps> {
                         />
                         <Switch>
                             {toAdd.map(x => x.route)}
+                            <Route render={fourOhFour} />
                         </Switch>
                     </div>
                 </ConnectedRouter>

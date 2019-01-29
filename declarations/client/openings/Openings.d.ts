@@ -7,9 +7,6 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
 }
-export declare class HelloWorld extends React.Component<any> {
-    render(): JSX.Element;
-}
 export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
     WrappedComponent: React.ComponentType<IProps>;
 };
