@@ -5,10 +5,9 @@ import { IBaseProps } from "../../root";
 import "./learn.styles";
 export interface IProps extends IBaseProps {
     match?: match<any>;
-    history?: any;
     openings: IOpening[];
 }
-export declare class Learn extends React.Component<IProps> {
+export declare class LearnOpening extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
 }

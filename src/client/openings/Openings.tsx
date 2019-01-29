@@ -18,17 +18,10 @@ export class Openings extends React.Component<IProps> {
     }
 
     public render() {
-        const options = (this.props.openings || []).map(x => {
-            return <option key={x.id} value={x.id}>{x.name}</option>;
-        });
         return (
             <div>
-                <ul>
-                    <li><Link to={`${this.props.match.path}/learn`}>Learn</Link></li>
-                </ul>
-                <Switch>
-                    <Route path={`${this.props.match.path}/learn/:id?/:variant?`} component={Learn} />
-                </Switch>
+                <Link to={"/openings/learn"}>Learn</Link>
+                <Route path={"/openings/learn"} component={Learn} />
             </div>
         );
     }

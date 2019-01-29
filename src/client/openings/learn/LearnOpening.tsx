@@ -5,30 +5,32 @@ import { Link } from "react-router-dom";
 import {Opening as IOpening} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
 import "./learn.styles";
-import { connectedComponent as LearnOpening } from "./LearnOpening";
 
 export interface IProps extends IBaseProps {
     match?: match<any>;
-    history?: any;
     openings: IOpening[];
 }
 
-export class Learn extends React.Component<IProps> {
-
+export class LearnOpening extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
     }
-
     public render() {
-        const links = (this.props.openings || []).map(o => {
-            return <li key={o.id}><Link to={`/openings/learn/${o.id}`}>{o.id} - {o.name}</Link></li>;
+        const id = this.props.match.params.id;
+        if (this.props.openings == null) {
+            return <h1>{this.props.match.params.id}</h1>;
+        }
+        const opening = (this.props.openings || []).filter(o => o.id === id)[0];
+        const variants = opening.variants;
+        const items = variants.map(v => {
+            return <li key={v.name}><Link  to={`/openings/learn/${id}/${v.name}`}>{v.name}</Link></li>;
         });
         return (
             <div>
-                <ul className={"id-list"}>
-                    {links}
+                <h1>{this.props.match.params.id}</h1>
+                <ul>
+                    {items}
                 </ul>
-                <Route path={"/openings/learn/:id"} component={LearnOpening}/>
             </div>
         );
     }
@@ -40,4 +42,4 @@ function mapStateToProps(state: IRootState): IProps {
     };
 }
 
-export const connectedComponent = connect(mapStateToProps)(Learn);
+export const connectedComponent = connect(mapStateToProps)(LearnOpening);

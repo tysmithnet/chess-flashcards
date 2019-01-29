@@ -20,7 +20,7 @@ export const routes: IRoute[] = [
     {
         component: Admin,
         display: "Admin",
-        exact: false,
+        exact: true,
         path: "/admin",
         permissions: [Permissions.get("ADMIN")],
     },
