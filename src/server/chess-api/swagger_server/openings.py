@@ -1,8 +1,10 @@
 import io
 import chess
 import chess.pgn
+
+from pprint import pprint as pp
 from swagger_server.models.move_factory import create_move_models
-from swagger_server.models.opening import Opening
+from swagger_server.models import Opening, OpeningVariant
 
 class MoveVisitor(chess.pgn.BaseVisitor):
     def __init__(self):
@@ -4542,16 +4544,35 @@ King's Indian, orthodox, Aronin-Taimanov, Benko attack
 
 
 OPENINGS = []
-lines = TEXT.split("\n")
-for i in range(0, len(lines), 2):
-    groups = lines[i:i+2]
-    name = groups[0][4:]
-    id = groups[0][:3]
-    pgn = io.StringIO(groups[1])
+openings = TEXT.split("******")
+openings = [l for l in openings if len(l)]
+
+for opening in openings:
+    lines = opening.split("\n")
+    title_line = lines[0]
+    id = title_line[:3]
+    name = title_line[5:]
+    mainline = lines[2]
+    variant_lines = lines[3:]
+    variant_lines = [l for l in variant_lines if len(l)]
+    pgn = io.StringIO(mainline)
     game = chess.pgn.read_game(pgn)
     visitor = MoveVisitor()
     game.accept(visitor)
     moves = visitor.moves
     board = chess.Board()
     models = create_move_models(board, moves)
-    OPENINGS.append(Opening(name, id, models))
+    variants = []
+    for i in range(0, len(variant_lines), 2):
+        variant_name = variant_lines[i]
+        variant_pgn = variant_lines[i + 1]
+        variant_pgn = io.StringIO(variant_pgn)
+        variant_game = chess.pgn.read_game(variant_pgn)
+        visitor = MoveVisitor()
+        variant_game.accept(visitor)
+        variant_moves = visitor.moves
+        variant_board = chess.Board()
+        variant_models = create_move_models(variant_board, variant_moves)
+        variant = OpeningVariant(variant_name, variant_models)
+        variants.append(variant)
+    OPENINGS.append(Opening(name, id, models, variants=variants))
