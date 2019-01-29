@@ -4,11 +4,13 @@ import { Opening as IOpening } from "../../chess-api";
 import { IBaseProps } from "../../root";
 export interface IProps extends IBaseProps {
     match?: match<any>;
+    history?: any;
     openings: IOpening[];
 }
 export declare class Learn extends React.Component<IProps> {
     constructor(props: any);
     render(): JSX.Element;
+    private handleOpeningSelected;
 }
 export declare const connectedComponent: React.ComponentClass<Pick<any, string | number | symbol>, any> & {
     WrappedComponent: React.ComponentType<any>;
