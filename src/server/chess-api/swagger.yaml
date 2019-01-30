@@ -133,6 +133,12 @@ definitions:
         description: "The piece that was captured if one was captured"
         type: "string"
         format: "[PNBRQKpnbrqk]"
+      fen_after:
+        description: "The fen of the board before the move"
+        type: "string"
+      fen_before:
+        description: "The fen of the board at the end of the move"
+        type: "string"
   Opening:
     description: "An ECO chess opening"
     type: "object"

@@ -138,6 +138,18 @@ export interface Move {
      * @memberof Move
      */
     capturedPiece?: string;
+    /**
+     * The fen of the board before the move
+     * @type {string}
+     * @memberof Move
+     */
+    fenAfter?: string;
+    /**
+     * The fen of the board at the end of the move
+     * @type {string}
+     * @memberof Move
+     */
+    fenBefore?: string;
 }
 
 /**

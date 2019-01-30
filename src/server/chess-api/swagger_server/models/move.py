@@ -15,7 +15,7 @@ class Move(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, piece: str=None, src: str=None, dst: str=None, is_check: bool=None, is_mate: bool=None, is_stalemate: bool=None, is_enpessant: bool=None, is_castle: bool=None, captured_piece: str=None):  # noqa: E501
+    def __init__(self, piece: str=None, src: str=None, dst: str=None, is_check: bool=None, is_mate: bool=None, is_stalemate: bool=None, is_enpessant: bool=None, is_castle: bool=None, captured_piece: str=None, fen_after: str=None, fen_before: str=None):  # noqa: E501
         """Move - a model defined in Swagger
 
         :param piece: The piece of this Move.  # noqa: E501
@@ -36,6 +36,10 @@ class Move(Model):
         :type is_castle: bool
         :param captured_piece: The captured_piece of this Move.  # noqa: E501
         :type captured_piece: str
+        :param fen_after: The fen_after of this Move.  # noqa: E501
+        :type fen_after: str
+        :param fen_before: The fen_before of this Move.  # noqa: E501
+        :type fen_before: str
         """
         self.swagger_types = {
             'piece': str,
@@ -46,7 +50,9 @@ class Move(Model):
             'is_stalemate': bool,
             'is_enpessant': bool,
             'is_castle': bool,
-            'captured_piece': str
+            'captured_piece': str,
+            'fen_after': str,
+            'fen_before': str
         }
 
         self.attribute_map = {
@@ -58,7 +64,9 @@ class Move(Model):
             'is_stalemate': 'is_stalemate',
             'is_enpessant': 'is_enpessant',
             'is_castle': 'is_castle',
-            'captured_piece': 'captured_piece'
+            'captured_piece': 'captured_piece',
+            'fen_after': 'fen_after',
+            'fen_before': 'fen_before'
         }
 
         self._piece = piece
@@ -70,6 +78,8 @@ class Move(Model):
         self._is_enpessant = is_enpessant
         self._is_castle = is_castle
         self._captured_piece = captured_piece
+        self._fen_after = fen_after
+        self._fen_before = fen_before
 
     @classmethod
     def from_dict(cls, dikt) -> 'Move':
@@ -294,3 +304,49 @@ class Move(Model):
         """
 
         self._captured_piece = captured_piece
+
+    @property
+    def fen_after(self) -> str:
+        """Gets the fen_after of this Move.
+
+        The fen of the board before the move  # noqa: E501
+
+        :return: The fen_after of this Move.
+        :rtype: str
+        """
+        return self._fen_after
+
+    @fen_after.setter
+    def fen_after(self, fen_after: str):
+        """Sets the fen_after of this Move.
+
+        The fen of the board before the move  # noqa: E501
+
+        :param fen_after: The fen_after of this Move.
+        :type fen_after: str
+        """
+
+        self._fen_after = fen_after
+
+    @property
+    def fen_before(self) -> str:
+        """Gets the fen_before of this Move.
+
+        The fen of the board at the end of the move  # noqa: E501
+
+        :return: The fen_before of this Move.
+        :rtype: str
+        """
+        return self._fen_before
+
+    @fen_before.setter
+    def fen_before(self, fen_before: str):
+        """Sets the fen_before of this Move.
+
+        The fen of the board at the end of the move  # noqa: E501
+
+        :param fen_before: The fen_before of this Move.
+        :type fen_before: str
+        """
+
+        self._fen_before = fen_before

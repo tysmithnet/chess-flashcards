@@ -37,7 +37,7 @@ export class OpeningBoard extends React.Component<IProps, IState> {
         const converted = [lastMove.src as Key, lastMove.dst as Key];
         return (
             <div>
-                <Board viewOnly={true} lastMove={converted}/>
+                <Board viewOnly={true} lastMove={converted} fen={lastMove.fenAfter}/>
                 <div>
                     <button onClick={this.handleBackClick}>back</button>
                     <button onClick={this.handleForwardClick}>forward</button>

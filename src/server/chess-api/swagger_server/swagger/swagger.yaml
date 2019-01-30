@@ -145,14 +145,22 @@ definitions:
         type: "string"
         format: "[PNBRQKpnbrqk]"
         description: "The piece that was captured if one was captured"
+      fen_after:
+        type: "string"
+        description: "The fen of the board before the move"
+      fen_before:
+        type: "string"
+        description: "The fen of the board at the end of the move"
     description: "Represents a single move that a player can make during a turn"
     example:
+      fen_before: "fen_before"
       is_mate: true
       is_stalemate: true
       dst: "dst"
       piece: "piece"
       src: "src"
       captured_piece: "captured_piece"
+      fen_after: "fen_after"
       is_castle: true
       is_check: true
       is_enpessant: true
@@ -185,21 +193,25 @@ definitions:
     description: "An ECO chess opening"
     example:
       moves:
-      - is_mate: true
+      - fen_before: "fen_before"
+        is_mate: true
         is_stalemate: true
         dst: "dst"
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        fen_after: "fen_after"
         is_castle: true
         is_check: true
         is_enpessant: true
-      - is_mate: true
+      - fen_before: "fen_before"
+        is_mate: true
         is_stalemate: true
         dst: "dst"
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        fen_after: "fen_after"
         is_castle: true
         is_check: true
         is_enpessant: true
@@ -207,41 +219,49 @@ definitions:
       id: "id"
       variants:
       - moves:
-        - is_mate: true
+        - fen_before: "fen_before"
+          is_mate: true
           is_stalemate: true
           dst: "dst"
           piece: "piece"
           src: "src"
           captured_piece: "captured_piece"
+          fen_after: "fen_after"
           is_castle: true
           is_check: true
           is_enpessant: true
-        - is_mate: true
+        - fen_before: "fen_before"
+          is_mate: true
           is_stalemate: true
           dst: "dst"
           piece: "piece"
           src: "src"
           captured_piece: "captured_piece"
+          fen_after: "fen_after"
           is_castle: true
           is_check: true
           is_enpessant: true
         name: "name"
       - moves:
-        - is_mate: true
+        - fen_before: "fen_before"
+          is_mate: true
           is_stalemate: true
           dst: "dst"
           piece: "piece"
           src: "src"
           captured_piece: "captured_piece"
+          fen_after: "fen_after"
           is_castle: true
           is_check: true
           is_enpessant: true
-        - is_mate: true
+        - fen_before: "fen_before"
+          is_mate: true
           is_stalemate: true
           dst: "dst"
           piece: "piece"
           src: "src"
           captured_piece: "captured_piece"
+          fen_after: "fen_after"
           is_castle: true
           is_check: true
           is_enpessant: true
@@ -260,21 +280,25 @@ definitions:
     description: "A named variation of an ECO opening"
     example:
       moves:
-      - is_mate: true
+      - fen_before: "fen_before"
+        is_mate: true
         is_stalemate: true
         dst: "dst"
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        fen_after: "fen_after"
         is_castle: true
         is_check: true
         is_enpessant: true
-      - is_mate: true
+      - fen_before: "fen_before"
+        is_mate: true
         is_stalemate: true
         dst: "dst"
         piece: "piece"
         src: "src"
         captured_piece: "captured_piece"
+        fen_after: "fen_after"
         is_castle: true
         is_check: true
         is_enpessant: true
