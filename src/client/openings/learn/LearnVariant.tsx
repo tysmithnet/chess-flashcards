@@ -4,6 +4,7 @@ import { match, Route, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import {Opening as IOpening} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
+import {OpeningBoard} from "../opening-board/OpeningBoard";
 
 export interface IProps extends IBaseProps {
     match?: match<any>;
@@ -15,7 +16,19 @@ export class LearnVariant extends React.Component<IProps> {
         super(props);
     }
     public render() {
-        return <h1>hi {this.props.match.params.id} - {this.props.match.params.name}</h1>;
+        const id = this.props.match.params.id;
+        const name = this.props.match.params.name;
+        if (!this.props.openings) {
+            return <h1>{name}</h1>;
+        }
+        const opening = this.props.openings.filter(o => o.id === id)[0];
+        const variant = opening.variants.filter(v => v.name === name)[0];
+        return (
+            <div>
+                <h1>{name}</h1>
+                <OpeningBoard moves={variant.moves} />
+            </div>
+        )
     }
 }
 

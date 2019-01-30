@@ -6,6 +6,6 @@ export interface IProps {
     moves: IMove[];
 }
 
-const OpeningBoard: React.SFC<IProps> = (props) => {
+export const OpeningBoard: React.SFC<IProps> = (props) => {
     return <Board />;
 };
