@@ -1,19 +1,14 @@
 import axios from "axios";
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
+import {Configuration, DefaultApi, DefaultApiFactory } from "../chess-api";
+
 import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactory, IGetAllOpeningsRequest, IGetOpeningDetailRequest } from "./openings.actions";
 
+const api = DefaultApiFactory();
 function* getAllOpenings() {
     try {
-        const cachedData = localStorage.getItem(ACTION_TYPES.GET_ALL_OPENINGS_REQUEST);
-        if (cachedData) {
-            const inflated = JSON.parse(cachedData);
-            yield put(getAllOpeningsSuccessFactory(inflated));
-        } else {
-            const res = yield axios.get("/chess/api/v1/openings");
-            const result = yield res.data;
-            localStorage.setItem(ACTION_TYPES.GET_ALL_OPENINGS_REQUEST, JSON.stringify(res.data));
-            yield put(getAllOpeningsSuccessFactory(result));
-        }
+        const openings = yield call(api.openingsGet); // todo: cache
+        yield put(getAllOpeningsSuccessFactory(openings));
     } catch (err) {
         yield put(getAllOpeningsFailureFactory(err));
     }

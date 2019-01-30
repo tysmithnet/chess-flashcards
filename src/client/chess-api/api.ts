@@ -17,7 +17,11 @@ import * as url from "url";
 import * as portableFetch from "portable-fetch";
 import { Configuration } from "./configuration";
 
-const BASE_PATH = "https://localhost:5000/api/v1".replace(/\/+$/, "");
+/*
+ * SUPPOSEDLY THIS WAS SUPPOSED TO BE FIXED A FEW MONTHS AGO, WHERE THIS COULD BE SET, BUT
+ * IT HAS NOT MADE ITS WAY INTO RELEASE, SO YOU MUST CHANGE THIS TO BE THE PROXIED ADDRESS
+ */
+const BASE_PATH = "http://localhost:8080/chess/api/v1".replace(/\/+$/, "");
 
 /**
  *

@@ -24,11 +24,6 @@ export declare class RequiredError extends Error {
     name: "RequiredError";
     constructor(field: string, msg?: string);
 }
-export interface ApiResponse {
-    code?: number;
-    type?: string;
-    message?: string;
-}
 export interface Move {
     piece: string;
     src: string;
@@ -39,11 +34,23 @@ export interface Move {
     isEnpessant?: boolean;
     isCastle?: boolean;
     capturedPiece?: string;
+    fenAfter?: string;
+    fenBefore?: string;
 }
 export interface Opening {
     name: string;
     id: string;
     moves: Array<Move>;
+    variants?: Array<OpeningVariant>;
+}
+export interface OpeningMeta {
+    name: string;
+    id: string;
+    variantNames: Array<string>;
+}
+export interface OpeningVariant {
+    name?: string;
+    moves?: Array<Move>;
 }
 export declare const DefaultApiFetchParamCreator: (configuration?: Configuration) => {
     movesGet(fen: string, flags?: string[], options?: any): FetchArgs;
@@ -53,19 +60,19 @@ export declare const DefaultApiFetchParamCreator: (configuration?: Configuration
 };
 export declare const DefaultApiFp: (configuration?: Configuration) => {
     movesGet(fen: string, flags?: string[], options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Move[]>;
-    openingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
+    openingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
 };
 export declare const DefaultApiFactory: (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) => {
     movesGet(fen: string, flags?: string[], options?: any): Promise<Move[]>;
-    openingsGet(options?: any): Promise<Opening[]>;
+    openingsGet(options?: any): Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): Promise<Opening[]>;
 };
 export declare class DefaultApi extends BaseAPI {
     movesGet(fen: string, flags?: Array<string>, options?: any): Promise<Move[]>;
-    openingsGet(options?: any): Promise<Opening[]>;
+    openingsGet(options?: any): Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): Promise<Opening[]>;
 }

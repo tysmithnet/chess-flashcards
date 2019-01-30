@@ -22,7 +22,7 @@ export class LearnOpening extends React.Component<IProps> {
             return <h1>{this.props.match.params.id}</h1>;
         }
         const opening = (this.props.openings || []).filter(o => o.id === id)[0];
-        const variants = opening.variant_names;
+        const variants = opening.variantNames;
         const items = variants.map(v => {
             return <li key={v}><Link  to={`/openings/learn/${id}/${v}`}>{v}</Link></li>;
         });
