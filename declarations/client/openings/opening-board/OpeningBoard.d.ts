@@ -3,4 +3,12 @@ import { Move as IMove } from "../../chess-api";
 export interface IProps {
     moves: IMove[];
 }
-export declare const OpeningBoard: React.SFC<IProps>;
+export interface IState {
+    moveIndex: number;
+}
+export declare class OpeningBoard extends React.Component<IProps, IState> {
+    constructor(props: IProps);
+    render(): JSX.Element;
+    private handleBackClick;
+    private handleForwardClick;
+}

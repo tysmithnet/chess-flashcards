@@ -28,7 +28,7 @@ export class LearnVariant extends React.Component<IProps> {
                 <h1>{name}</h1>
                 <OpeningBoard moves={variant.moves} />
             </div>
-        )
+        );
     }
 }
 

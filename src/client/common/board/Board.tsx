@@ -27,7 +27,7 @@ export class Board extends React.Component<IProps> {
     }
 
     public componentDidMount() {
-        this.ground = Chessground(this.ref.current);
+        this.ground = Chessground(this.ref.current, this.props);
     }
 
     public componentWillUnmount() {
