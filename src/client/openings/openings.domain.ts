@@ -7,10 +7,10 @@ export interface IParams {
 }
 
 export interface IProps extends IBaseProps {
-    openings: IOpeningMeta[];
+    openingMetaData: IOpeningMeta[];
     match?: match<any>;
 }
 
 export interface IRootState {
-    openings: IOpeningMeta[];
+    openingMetaData: IOpeningMeta[];
 }

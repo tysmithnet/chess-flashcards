@@ -36,7 +36,7 @@ export class Learn extends React.Component<IProps> {
 
 function mapStateToProps(state: IRootState): IProps {
     return {
-       openings: state.openings.openings,
+       openings: state.openings.openingMetaData,
     };
 }
 

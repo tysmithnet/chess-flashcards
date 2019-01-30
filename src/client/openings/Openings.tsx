@@ -34,10 +34,10 @@ export class Openings extends React.Component<IProps> {
 function mapStateToProps(state: IRootState): IProps {
     let val: IOpeningMeta[] = [];
     if (state.openings) {
-        val = state.openings.openings;
+        val = state.openings.openingMetaData;
     }
     return {
-       openings: val,
+       openingMetaData: val,
 
     };
 }
