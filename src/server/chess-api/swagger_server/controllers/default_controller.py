@@ -11,6 +11,12 @@ from swagger_server.openings import OPENINGS
 from flask import abort
 from fuzzywuzzy import process
 
+def create_lite_version(opening):
+    id = opening.id
+    name = opening.name
+    variant_names = list(map(lambda v: v.name, opening.variants))
+    return OpeningLite(name, id, variant_names)
+
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
 
@@ -24,7 +30,7 @@ def moves_get(fen, flags=None):  # noqa: E501
     :rtype: List[Move]
     """
     board = chess.Board(fen)
-    return map(lambda x: create_move_model(board, x), board.generate_legal_moves())
+    return list(map(lambda x: create_move_model(board, x), board.generate_legal_moves()))
 
 def openings_get():  # noqa: E501
     """Get all ECO openings
@@ -34,7 +40,7 @@ def openings_get():  # noqa: E501
 
     :rtype: List[OpeningLite]
     """
-    return OPENINGS
+    return list(map(create_lite_version, OPENINGS))
 
 
 def openings_id_get(id):  # noqa: E501
