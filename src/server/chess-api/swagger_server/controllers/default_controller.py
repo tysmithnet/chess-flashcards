@@ -5,6 +5,7 @@ import chess.pgn
 from swagger_server.models.move import Move  # noqa: E501
 from swagger_server.models.move_factory import create_move_model
 from swagger_server.models.opening import Opening  # noqa: E501
+from swagger_server.models.opening_lite import OpeningLite  # noqa: E501
 from swagger_server import util
 from swagger_server.openings import OPENINGS
 from flask import abort
@@ -31,7 +32,7 @@ def openings_get():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[Opening]
+    :rtype: List[OpeningLite]
     """
     return OPENINGS
 

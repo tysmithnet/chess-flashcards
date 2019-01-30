@@ -61,7 +61,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/Opening"
+              $ref: "#/definitions/OpeningLite"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /openings/{id}:
     get:
@@ -266,6 +266,33 @@ definitions:
           is_check: true
           is_enpessant: true
         name: "name"
+  OpeningLite:
+    type: "object"
+    required:
+    - "id"
+    - "name"
+    - "variant_names"
+    properties:
+      name:
+        type: "string"
+        description: "The human friendly name for the opening"
+      id:
+        type: "string"
+        description: "The ECO id for the opening, e.g. E04"
+        pattern: "[A-E][0-9]{2}"
+        x-regex: "[A-E][0-9]{2}"
+        x-modifiers: []
+      variant_names:
+        type: "array"
+        items:
+          type: "string"
+    description: "The meta data for an ECO opening without the move data"
+    example:
+      name: "name"
+      variant_names:
+      - "variant_names"
+      - "variant_names"
+      id: "id"
   OpeningVariant:
     type: "object"
     properties:
