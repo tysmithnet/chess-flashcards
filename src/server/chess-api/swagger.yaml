@@ -55,7 +55,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/OpeningLite"
+              $ref: "#/definitions/OpeningMeta"
   /openings/{id}:
     get:
       summary: "Get an opening and its variants by id"
@@ -164,7 +164,7 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/OpeningVariant"
-  OpeningLite:
+  OpeningMeta:
     description: "The meta data for an ECO opening without the move data"
     type: "object"
     required:

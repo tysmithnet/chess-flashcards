@@ -1,5 +1,5 @@
 import {match, RouteComponentProps} from "react-router";
-import {Opening as IOpening} from "../chess-api/api";
+import {OpeningMeta as IOpeningMeta} from "../chess-api/api";
 import { IBaseProps } from "../root";
 
 export interface IParams {
@@ -7,10 +7,10 @@ export interface IParams {
 }
 
 export interface IProps extends IBaseProps {
-    openings: IOpening[];
+    openings: IOpeningMeta[];
     match?: match<any>;
 }
 
 export interface IRootState {
-    openings: IOpening[];
+    openings: IOpeningMeta[];
 }

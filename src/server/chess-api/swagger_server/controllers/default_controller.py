@@ -5,17 +5,17 @@ import chess.pgn
 from swagger_server.models.move import Move  # noqa: E501
 from swagger_server.models.move_factory import create_move_model
 from swagger_server.models.opening import Opening  # noqa: E501
-from swagger_server.models.opening_lite import OpeningLite  # noqa: E501
+from swagger_server.models.opening_meta import OpeningMeta
 from swagger_server import util
 from swagger_server.openings import OPENINGS
 from flask import abort
 from fuzzywuzzy import process
 
-def create_lite_version(opening):
+def extract_meta_data(opening):
     id = opening.id
     name = opening.name
     variant_names = list(map(lambda v: v.name, opening.variants))
-    return OpeningLite(name, id, variant_names)
+    return OpeningMeta(name, id, variant_names)
 
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
@@ -38,9 +38,9 @@ def openings_get():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[OpeningLite]
+    :rtype: List[OpeningMeta]
     """
-    return list(map(create_lite_version, OPENINGS))
+    return list(map(extract_meta_data, OPENINGS))
 
 
 def openings_id_get(id):  # noqa: E501

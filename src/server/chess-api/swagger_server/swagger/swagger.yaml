@@ -61,7 +61,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/OpeningLite"
+              $ref: "#/definitions/OpeningMeta"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /openings/{id}:
     get:
@@ -266,7 +266,7 @@ definitions:
           is_check: true
           is_enpessant: true
         name: "name"
-  OpeningLite:
+  OpeningMeta:
     type: "object"
     required:
     - "id"

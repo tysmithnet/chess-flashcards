@@ -1,11 +1,11 @@
 import * as React from "react";
 import { match } from "react-router";
-import { Opening as IOpening } from "../../chess-api";
+import { OpeningMeta as IOpeningMeta } from "../../chess-api";
 import { IBaseProps } from "../../root";
 import "./learn.styles";
 export interface IProps extends IBaseProps {
     match?: match<any>;
-    openings: IOpening[];
+    openings: IOpeningMeta[];
 }
 export declare class LearnOpening extends React.Component<IProps> {
     constructor(props: IProps);
