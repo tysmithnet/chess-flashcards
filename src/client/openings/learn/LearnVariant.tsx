@@ -2,27 +2,41 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { match, Route, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import {OpeningMeta as IOpeningMeta} from "../../chess-api";
+import {Opening as IOpening, OpeningMeta as IOpeningMeta} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
 import {OpeningBoard} from "../opening-board/OpeningBoard";
+import { getOpeningDetailRequestFactory } from "../openings.actions";
 
 export interface IProps extends IBaseProps {
     match?: match<any>;
-    openings: IOpeningMeta[];
+    openingMetaData: IOpeningMeta[];
+    openings: IOpening[];
 }
 
 export class LearnVariant extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
     }
+
     public render() {
-        return <h1>hi</h1>;
+        const opening = this.props.openings.find(o => o.id === this.props.match.params.id);
+        if (opening == null) {
+            return <h1>loading..</h1>;
+        }
+        return <h1>OK TO GO AHEAD</h1>;
+    }
+
+    public componentDidMount() {
+        if (this.props.openings.find(o => o.id === this.props.match.params.id) == null) {
+            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
+        }
     }
 }
 
 function mapStateToProps(state: IRootState): IProps {
     return {
-       openings: state.openings.openingMetaData,
+        openings: state.openings.openings,
+        openingMetaData: state.openings.openingMetaData,
     };
 }
 
