@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import {Opening as IOpening} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
 import "./learn.styles";
+import {connectedComponent as LearnVariant} from "./LearnVariant";
 
 export interface IProps extends IBaseProps {
     match?: match<any>;
@@ -31,6 +32,7 @@ export class LearnOpening extends React.Component<IProps> {
                 <ul>
                     {items}
                 </ul>
+                <Route path={`/openings/learn/:id/:name`} component={LearnVariant} />
             </div>
         );
     }
