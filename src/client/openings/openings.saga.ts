@@ -1,14 +1,15 @@
 import axios from "axios";
+import {camelArray} from "change-object-case";
 import { all, call, put, takeLatest } from "redux-saga/effects";
-import {Configuration, DefaultApi, DefaultApiFactory } from "../chess-api";
-
+import {Configuration, DefaultApi, DefaultApiFactory, OpeningMeta as IOpeningMeta } from "../chess-api";
 import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactory, IGetAllOpeningsRequest, IGetOpeningDetailRequest } from "./openings.actions";
 
 const api = DefaultApiFactory();
 function* getAllOpenings() {
     try {
         const openings = yield call(api.openingsGet); // todo: cache
-        yield put(getAllOpeningsSuccessFactory(openings));
+        const converted = camelArray(openings, {recursive: true, arrayRecursive: true}) as IOpeningMeta[];
+        yield put(getAllOpeningsSuccessFactory(converted));
     } catch (err) {
         yield put(getAllOpeningsFailureFactory(err));
     }

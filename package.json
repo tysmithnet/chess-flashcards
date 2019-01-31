@@ -123,6 +123,7 @@
         "@material-ui/core": "^3.9.0",
         "@material-ui/icons": "^3.0.2",
         "axios": "0.18.0",
+        "change-object-case": "^0.2.0",
         "chess.js": "^0.10.2",
         "chessground": "^7.3.5",
         "connected-react-router": "4.3.0",
