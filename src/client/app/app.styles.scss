@@ -1,3 +1,29 @@
 html {
-    background-color: lightgray;
+    background-color: #312e2b;
+    margin: 0;
+    padding: 0;
+    min-height: 1vh;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#root {
+    display: flex;
+    align-self: stretch;
+    min-height: 100%;
+}
+
+.menu-wrapper {
+    flex-grow: 0;
+    background-color: rgba(0,0,0,.2);
+}
+
+.routes-wrapper {
+    flex-grow: 1;
+}
+

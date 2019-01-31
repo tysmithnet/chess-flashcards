@@ -1,10 +1,11 @@
 import * as React from "react";
-import { IProps, IState } from "./menu.domain";
-export declare class Menu extends React.Component<IProps, IState> {
-    private rootRef;
-    constructor(props: IProps, state: IState);
+import { Link } from "react-router-dom";
+import { IBaseProps } from "../root";
+import "./menu.styles";
+export interface IProps extends IBaseProps {
+    links: Link[];
+}
+export declare class Menu extends React.Component<IProps> {
+    constructor(props: IProps);
     render(): JSX.Element;
-    private handleFormSubmitted;
-    private handleIdChanged;
-    private handlePasswordChanged;
 }

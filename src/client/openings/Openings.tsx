@@ -4,7 +4,6 @@ import { Link, Route, Switch } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import {OpeningMeta as IOpeningMeta} from "../chess-api";
 import {Board} from "../common/board";
-import { IState } from "../menu/menu.domain";
 import { IRootState } from "../root";
 import {connectedComponent as Learn} from "./learn";
 import { getAllOpeningsRequestFactory } from "./openings.actions";

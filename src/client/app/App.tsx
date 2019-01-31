@@ -77,21 +77,21 @@ export class App extends React.Component<IProps> {
                 };
             });
         return (
-            <div>
-                <ConnectedRouter history={getHistory()}>
-                    <div>
+            <ConnectedRouter history={getHistory()}>
+                <div id="root">
+                    <div className="menu-wrapper">
                         <Menu
                             links={toAdd.map(x => x.link as any)}
-                            user={this.props.user}
-                            dispatch={this.props.dispatch}
                         />
+                    </div>
+                    <div className="routes-wrapper">
                         <Switch>
                             {toAdd.map(x => x.route)}
                             <Route render={fourOhFour} />
                         </Switch>
                     </div>
-                </ConnectedRouter>
-            </div>
+                </div>
+            </ConnectedRouter>
         );
     }
 }
