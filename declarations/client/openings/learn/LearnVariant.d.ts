@@ -10,7 +10,6 @@ export interface IProps extends IBaseProps {
 export declare class LearnVariant extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
-    componentDidMount(): void;
 }
 export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
     WrappedComponent: React.ComponentType<IProps>;

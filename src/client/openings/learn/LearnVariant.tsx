@@ -19,17 +19,15 @@ export class LearnVariant extends React.Component<IProps> {
     }
 
     public render() {
+        if (this.props.openings == null) {
+            return <h1>loading..</h1>;
+        }
         const opening = this.props.openings.find(o => o.id === this.props.match.params.id);
         if (opening == null) {
+            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
             return <h1>loading..</h1>;
         }
         return <h1>OK TO GO AHEAD</h1>;
-    }
-
-    public componentDidMount() {
-        if (this.props.openings.find(o => o.id === this.props.match.params.id) == null) {
-            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
-        }
     }
 }
 
