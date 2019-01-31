@@ -416,7 +416,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        openingsIdGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Opening>> {
+        openingsIdGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening> {
             const localVarFetchArgs = DefaultApiFetchParamCreator(configuration).openingsIdGet(id, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {

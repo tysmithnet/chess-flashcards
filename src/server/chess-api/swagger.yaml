@@ -69,9 +69,7 @@ paths:
         200:
           description: "Successfully found requested opening"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Opening"
+            $ref: "#/definitions/Opening"
         400:
           description: "Invalid ECO id supplied"
         404:

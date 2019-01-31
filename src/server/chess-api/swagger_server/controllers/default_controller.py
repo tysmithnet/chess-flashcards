@@ -51,7 +51,7 @@ def openings_id_get(id):  # noqa: E501
     :param id: ECO id e.g. C42
     :type id: str
 
-    :rtype: List[Opening]
+    :rtype: Opening
     """
     first = next((o for o in OPENINGS if o.id == id), None)
     if first is None:
