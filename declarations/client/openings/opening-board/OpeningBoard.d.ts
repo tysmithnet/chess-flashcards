@@ -7,8 +7,10 @@ export interface IState {
     moveIndex: number;
 }
 export declare class OpeningBoard extends React.Component<IProps, IState> {
+    private curMoves;
     constructor(props: IProps);
     render(): JSX.Element;
+    componentDidUpdate(): void;
     private handleBackClick;
     private handleForwardClick;
 }

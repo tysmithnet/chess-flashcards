@@ -19,7 +19,7 @@ if (!isTest) {
             if (measurement.entryType !== "measure") {
                 continue;
             }
-            console.log(`${measurement.componentName} - ${measurement.duration}`);
+            // console.log(`${measurement.componentName} - ${measurement.duration}`);
             // todo: batch this
             // axios.post("/metrics", {
             //   data: `${measurement.componentName} - ${measurement.duration}`,

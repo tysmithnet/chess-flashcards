@@ -25,6 +25,7 @@ export class LearnVariant extends React.Component<IProps> {
         }
         const opening = this.props.openings.find(o => o.id === this.props.match.params.id);
         if (opening == null) {
+            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
             return <h1>loading..</h1>;
         }
 
