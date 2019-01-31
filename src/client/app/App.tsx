@@ -78,7 +78,7 @@ export class App extends React.Component<IProps> {
             });
         return (
             <ConnectedRouter history={getHistory()}>
-                <div id="root">
+                <div className="app">
                     <div className="menu-wrapper">
                         <Menu
                             links={toAdd.map(x => x.link as any)}
