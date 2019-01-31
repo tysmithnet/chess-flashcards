@@ -1,15 +1,4 @@
 .menu {
     padding: .5em;
     font-size: 1.5em;
-    color: rgba(255, 255, 255, .6);
-    .menu-item {
-        a {
-            color: inherit;
-            text-decoration: none;
-
-            &:hover {
-                color: white;
-            }
-        }
-    }
 }

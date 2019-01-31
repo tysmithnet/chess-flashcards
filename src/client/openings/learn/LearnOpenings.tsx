@@ -13,7 +13,7 @@ export interface IProps extends IBaseProps {
     openings: IOpeningMeta[];
 }
 
-export class Learn extends React.Component<IProps> {
+export class LearnOpenings extends React.Component<IProps> {
 
     constructor(props: IProps) {
         super(props);
@@ -40,4 +40,4 @@ function mapStateToProps(state: IRootState): IProps {
     };
 }
 
-export const connectedComponent = connect(mapStateToProps)(Learn);
+export const connectedComponent = connect(mapStateToProps)(LearnOpenings);

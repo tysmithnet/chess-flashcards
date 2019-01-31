@@ -1,4 +1,9 @@
-.board {
-    width: 400px;
-    height: 400px;
+.openings {
+    .links {
+        text-align: center;
+
+        a {
+            margin: .5em;
+        }
+    }
 }
