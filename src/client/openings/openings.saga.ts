@@ -1,8 +1,8 @@
 import axios from "axios";
-import {camelArray} from "change-object-case";
+import {camelArray, camelKeys} from "change-object-case";
 import { all, call, put, takeLatest } from "redux-saga/effects";
-import {Configuration, DefaultApi, DefaultApiFactory, OpeningMeta as IOpeningMeta } from "../chess-api";
-import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactory, IGetAllOpeningsRequest, IGetOpeningDetailRequest } from "./openings.actions";
+import {Configuration, DefaultApi, DefaultApiFactory, Opening as IOpening, OpeningMeta as IOpeningMeta } from "../chess-api";
+import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactory, getOpeningDetailSuccessFactory, IGetAllOpeningsRequest, IGetOpeningDetailRequest } from "./openings.actions";
 
 const api = DefaultApiFactory();
 function* getAllOpenings() {
@@ -23,9 +23,9 @@ export function* getAllOpeningsSaga() {
 
 export function* getOpeningDetail(id: string) {
     try {
-        const res = yield axios.get(`/chess/api/v1/openings/${id}`);
-        const result = res.data;
-        yield put(getAllOpeningsSuccessFactory(result));
+        const openings = yield call(api.openingsIdGet, id); // todo: cache
+        const converted = camelKeys(openings, {recursive: true, arrayRecursive: true}) as IOpening;
+        yield put(getOpeningDetailSuccessFactory(converted));
     } catch (err) {
         yield put(getAllOpeningsFailureFactory(err));
     }
@@ -38,5 +38,5 @@ export function* getOpeningDetailSaga() {
 }
 
 export function* rootSaga() {
-    yield all([getAllOpeningsSaga()]);
+    yield all([getAllOpeningsSaga(), getOpeningDetailSaga()]);
 }

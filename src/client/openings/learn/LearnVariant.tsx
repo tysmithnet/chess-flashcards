@@ -20,14 +20,22 @@ export class LearnVariant extends React.Component<IProps> {
 
     public render() {
         if (this.props.openings == null) {
+            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
             return <h1>loading..</h1>;
         }
         const opening = this.props.openings.find(o => o.id === this.props.match.params.id);
         if (opening == null) {
-            this.props.dispatch(getOpeningDetailRequestFactory(this.props.match.params.id));
             return <h1>loading..</h1>;
         }
-        return <h1>OK TO GO AHEAD</h1>;
+
+        const variant = opening.variants.find(v => v.name === this.props.match.params.name);
+
+        return (
+            <div>
+                <h3>{variant.name}</h3>
+                <OpeningBoard moves={variant.moves} />
+            </div>
+        );
     }
 }
 

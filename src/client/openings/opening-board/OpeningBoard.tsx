@@ -33,7 +33,7 @@ export class OpeningBoard extends React.Component<IProps, IState> {
                 </div>
             );
         }
-        const lastMove = this.props.moves[Math.min(this.props.moves.length, this.state.moveIndex)];
+        const lastMove = this.props.moves[Math.min(this.props.moves.length - 1, this.state.moveIndex)];
         const converted = [lastMove.src as Key, lastMove.dst as Key];
         return (
             <div>
