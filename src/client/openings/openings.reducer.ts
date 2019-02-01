@@ -1,4 +1,3 @@
-import { combineReducers } from "redux";
 import { IAction } from "../root";
 import { reducer as discoverReducer } from "./discover";
 import { ACTION_TYPES, IGetAllOpeningsSuccess, IGetOpeningDetailSuccess } from "./openings.actions";
@@ -30,7 +29,7 @@ function handleGetOpeningDetailSuccess(
     };
 }
 
-export function openingsReducer(state: IRootState, action: IAction): IRootState {
+export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
         case ACTION_TYPES.GET_ALL_OPENINGS_SUCCESS:
             return handleGetAllOpeningsSuccess(state, action as IGetAllOpeningsSuccess);
@@ -39,5 +38,3 @@ export function openingsReducer(state: IRootState, action: IAction): IRootState 
     }
     return { ...state };
 }
-
-export const reducer = combineReducers({ openingsReducer, discoverReducer });

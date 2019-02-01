@@ -12,7 +12,7 @@ export class Home extends React.Component {
                     <p>Practice your chess openings, and quiz yourself on best moves, checks, captures, and more!</p>
                 </div>
             </div>
-        )
+        );
     }
 }
 

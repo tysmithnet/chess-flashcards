@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Move as IMove, Opening as IOpening } from "../../chess-api";
 import { Board, STARTING_FEN } from "../../common/board";
 import { IBaseProps, IRootState } from "../../root";
+import { makeMovesRequestFactory } from "./discover.actions";
 import { IProps } from "./discover.domain";
 
 export class DiscoverOpenings extends React.Component<IProps> {
@@ -13,7 +14,11 @@ export class DiscoverOpenings extends React.Component<IProps> {
     }
 
     public render() {
-        return <Board onMove={this.handleOnMove} />;
+        return <Board fen={this.props.fen} onMove={this.handleOnMove} />;
+    }
+
+    public componentDidMount() {
+        this.props.dispatch(makeMovesRequestFactory(STARTING_FEN, []));
     }
 
     private handleOnMove(src: Key, dst: Key, capturedPiece?: Piece) {

@@ -30,7 +30,13 @@ def fen_post(body):  # noqa: E501
     """
     if connexion.request.is_json:
         body = FenRequest.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    else:
+        abort(400)
+    
+    board = chess.Board(fen=body.fen)
+    for move in body.moves:
+        board.push(chess.Move.from_uci("{}{}".format(move.src, move.dst)))
+    return board.fen()
 
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position

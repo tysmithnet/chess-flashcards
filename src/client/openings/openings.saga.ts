@@ -2,6 +2,7 @@ import axios from "axios";
 import {camelArray, camelKeys} from "change-object-case";
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import {Configuration, DefaultApi, DefaultApiFactory, Opening as IOpening, OpeningMeta as IOpeningMeta } from "../chess-api";
+import {rootSaga as discoverSaga} from "./discover";
 import { ACTION_TYPES, getAllOpeningsFailureFactory, getAllOpeningsSuccessFactory, getOpeningDetailSuccessFactory, IGetAllOpeningsRequest, IGetOpeningDetailRequest } from "./openings.actions";
 
 const api = DefaultApiFactory();
@@ -38,5 +39,5 @@ export function* getOpeningDetailSaga() {
 }
 
 export function* rootSaga() {
-    yield all([getAllOpeningsSaga(), getOpeningDetailSaga()]);
+    yield all([getAllOpeningsSaga(), getOpeningDetailSaga(), discoverSaga()]);
 }

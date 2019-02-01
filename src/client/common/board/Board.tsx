@@ -3,12 +3,14 @@ import {Api as IChessground} from "chessground/api";
 import {Config as IConfig} from "chessground/config";
 import {Key, Piece} from "chessground/types";
 import * as React from "react";
+import {Move as IMove} from "../../chess-api";
 import { IBaseProps } from "../../root";
 import "./3d.css";
 import "./board.css";
 import "./theme.css";
 
 export interface IProps extends IConfig, IBaseProps {
+    moves?: IMove[];
     onMove?: (src: Key, dst: Key, capturedPiece?: Piece) => void;
 }
 
@@ -39,7 +41,23 @@ export class Board extends React.Component<IProps> {
 
     public componentWillReceiveProps(nextProps: IProps) {
         const newProps = {...nextProps};
-        newProps.events = {...(nextProps.events || {}), move: nextProps.onMove};
+        if (nextProps.onMove) {
+            newProps.events = {...(nextProps.events || {}), move: nextProps.onMove};
+        }
+        if (nextProps.moves) {
+            newProps.movable = {...(nextProps.movable || {}), dests: this.convertMovesToDests(nextProps.moves)};
+        }
         this.ground.set(newProps);
+    }
+
+    private convertMovesToDests(moves: IMove[]): {[key: string]: Key[]} {
+        const res: {[key: string]: Key[]} = {};
+        for (const move of moves) {
+            if (!res[move.src]) {
+                res[move.src] = [];
+            }
+            res[move.src].push(move.dst as Key);
+        }
+        return res;
     }
 }
