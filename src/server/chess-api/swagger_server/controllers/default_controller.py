@@ -1,21 +1,27 @@
 import connexion
 import six
-import chess
-import chess.pgn
-from swagger_server.models.move import Move  # noqa: E501
-from swagger_server.models.move_factory import create_move_model
-from swagger_server.models.opening import Opening  # noqa: E501
-from swagger_server.models.opening_meta import OpeningMeta
-from swagger_server import util
-from swagger_server.openings import OPENINGS
-from flask import abort
-from fuzzywuzzy import process
 
-def extract_meta_data(opening):
-    id = opening.id
-    name = opening.name
-    variant_names = list(map(lambda v: v.name, opening.variants))
-    return OpeningMeta(name, id, variant_names)
+from swagger_server.models.fen_request import FenRequest  # noqa: E501
+from swagger_server.models.move import Move  # noqa: E501
+from swagger_server.models.opening import Opening  # noqa: E501
+from swagger_server.models.opening_meta import OpeningMeta  # noqa: E501
+from swagger_server import util
+
+
+def fen_post(body):  # noqa: E501
+    """Apply the provided moves to the provided FEN
+
+    The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned # noqa: E501
+
+    :param body: 
+    :type body: dict | bytes
+
+    :rtype: str
+    """
+    if connexion.request.is_json:
+        body = FenRequest.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
 
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
@@ -29,8 +35,8 @@ def moves_get(fen, flags=None):  # noqa: E501
 
     :rtype: List[Move]
     """
-    board = chess.Board(fen)
-    return list(map(lambda x: create_move_model(board, x), board.generate_legal_moves()))
+    return 'do some magic!'
+
 
 def openings_get():  # noqa: E501
     """Get all ECO openings
@@ -40,7 +46,7 @@ def openings_get():  # noqa: E501
 
     :rtype: List[OpeningMeta]
     """
-    return list(map(extract_meta_data, OPENINGS))
+    return 'do some magic!'
 
 
 def openings_id_get(id):  # noqa: E501
@@ -53,11 +59,7 @@ def openings_id_get(id):  # noqa: E501
 
     :rtype: Opening
     """
-    first = next((o for o in OPENINGS if o.id == id), None)
-    if first is None:
-        abort(404)
-    else:
-        return first
+    return 'do some magic!'
 
 
 def openings_search_get(term):  # noqa: E501
@@ -70,7 +72,4 @@ def openings_search_get(term):  # noqa: E501
 
     :rtype: List[Opening]
     """
-    choices = map(lambda x: x.name, OPENINGS)
-    results = process.extract(term, choices)
-    results = list(map(lambda x: x[0], results))
-    return list(filter(lambda x: x.name in results, OPENINGS))
+    return 'do some magic!'

@@ -83,6 +83,26 @@ export class RequiredError extends Error {
 }
 
 /**
+ * Request format for the /fen endpoint
+ * @export
+ * @interface FenRequest
+ */
+export interface FenRequest {
+    /**
+     * The position on the board to apply the moves to described in FEN notation
+     * @type {string}
+     * @memberof FenRequest
+     */
+    fen?: string;
+    /**
+     * The moves to apply to the position on the board
+     * @type {Array&lt;Move&gt;}
+     * @memberof FenRequest
+     */
+    moves?: Array<Move>;
+}
+
+/**
  * Represents a single move that a player can make during a turn
  * @export
  * @interface Move
@@ -242,6 +262,38 @@ export interface OpeningVariant {
 export const DefaultApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned
+         * @summary Apply the provided moves to the provided FEN
+         * @param {FenRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fenPost(body: FenRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling fenPost.');
+            }
+            const localVarPath = `/fen`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"FenRequest" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @summary Get moves for the given position
          * @param {string} fen FEN of the position to find moves for
@@ -372,6 +424,25 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
 export const DefaultApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned
+         * @summary Apply the provided moves to the provided FEN
+         * @param {FenRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fenPost(body: FenRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string> {
+            const localVarFetchArgs = DefaultApiFetchParamCreator(configuration).fenPost(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * 
          * @summary Get moves for the given position
          * @param {string} fen FEN of the position to find moves for
@@ -457,6 +528,16 @@ export const DefaultApiFp = function(configuration?: Configuration) {
 export const DefaultApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
+         * The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned
+         * @summary Apply the provided moves to the provided FEN
+         * @param {FenRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        fenPost(body: FenRequest, options?: any) {
+            return DefaultApiFp(configuration).fenPost(body, options)(fetch, basePath);
+        },
+        /**
          * 
          * @summary Get moves for the given position
          * @param {string} fen FEN of the position to find moves for
@@ -506,6 +587,18 @@ export const DefaultApiFactory = function (configuration?: Configuration, fetch?
  * @extends {BaseAPI}
  */
 export class DefaultApi extends BaseAPI {
+    /**
+     * The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned
+     * @summary Apply the provided moves to the provided FEN
+     * @param {} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public fenPost(body: FenRequest, options?: any) {
+        return DefaultApiFp(this.configuration).fenPost(body, options)(this.fetch, this.basePath);
+    }
+
     /**
      * 
      * @summary Get moves for the given position

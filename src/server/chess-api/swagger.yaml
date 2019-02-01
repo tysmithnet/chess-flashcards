@@ -12,6 +12,23 @@ consumes:
 produces:
 - "application/json"
 paths:
+  /fen:
+    post:
+      summary: "Apply the provided moves to the provided FEN"
+      description: "The position on the board, described in FEN notation, is to have the moves applied to it, and the resulting FEN returned"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/FenRequest"
+      responses:
+        200:
+          description: "Moves were successfully applied to the FEN, and a new FEN was returned"
+          schema:
+            type: "string"
+        400:
+          description: "The FEN was not valid, the moves were not valid, or both"
   /moves:
     get:
       summary: "Get moves for the given position"
@@ -192,3 +209,16 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Move"
+  FenRequest:
+    description: "Request format for the /fen endpoint"
+    type: "object"
+    properties:
+      fen:
+        description: "The position on the board to apply the moves to described in FEN notation"
+        type: "string"
+      moves:
+        description: "The moves to apply to the position on the board"
+        type: "array"
+        items:
+          $ref: "#/definitions/Move"
+          

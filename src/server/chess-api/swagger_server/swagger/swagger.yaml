@@ -13,6 +13,27 @@ consumes:
 produces:
 - "application/json"
 paths:
+  /fen:
+    post:
+      summary: "Apply the provided moves to the provided FEN"
+      description: "The position on the board, described in FEN notation, is to have\
+        \ the moves applied to it, and the resulting FEN returned"
+      operationId: "fen_post"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FenRequest"
+      responses:
+        200:
+          description: "Moves were successfully applied to the FEN, and a new FEN\
+            \ was returned"
+          schema:
+            type: "string"
+        400:
+          description: "The FEN was not valid, the moves were not valid, or both"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /moves:
     get:
       summary: "Get moves for the given position"
@@ -327,3 +348,41 @@ definitions:
         is_check: true
         is_enpessant: true
       name: "name"
+  FenRequest:
+    type: "object"
+    properties:
+      fen:
+        type: "string"
+        description: "The position on the board to apply the moves to described in\
+          \ FEN notation"
+      moves:
+        type: "array"
+        description: "The moves to apply to the position on the board"
+        items:
+          $ref: "#/definitions/Move"
+    description: "Request format for the /fen endpoint"
+    example:
+      moves:
+      - fen_before: "fen_before"
+        is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        fen_after: "fen_after"
+        is_castle: true
+        is_check: true
+        is_enpessant: true
+      - fen_before: "fen_before"
+        is_mate: true
+        is_stalemate: true
+        dst: "dst"
+        piece: "piece"
+        src: "src"
+        captured_piece: "captured_piece"
+        fen_after: "fen_after"
+        is_castle: true
+        is_check: true
+        is_enpessant: true
+      fen: "fen"
