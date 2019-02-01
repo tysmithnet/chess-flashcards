@@ -1,10 +1,12 @@
 import { Config as IConfig } from "chessground/config";
+import { Key, Piece } from "chessground/types";
 import * as React from "react";
 import { IBaseProps } from "../../root";
 import "./3d.css";
 import "./board.css";
 import "./theme.css";
 export interface IProps extends IConfig, IBaseProps {
+    onMove?: (src: Key, dst: Key, capturedPiece?: Piece) => void;
 }
 export declare class Board extends React.Component<IProps> {
     private ref;

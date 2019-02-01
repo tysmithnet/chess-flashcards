@@ -1,13 +1,16 @@
 import {Chessground} from "chessground";
 import {Api as IChessground} from "chessground/api";
 import {Config as IConfig} from "chessground/config";
+import {Key, Piece} from "chessground/types";
 import * as React from "react";
 import { IBaseProps } from "../../root";
 import "./3d.css";
 import "./board.css";
 import "./theme.css";
 
-export interface IProps extends IConfig, IBaseProps { }
+export interface IProps extends IConfig, IBaseProps {
+    onMove?: (src: Key, dst: Key, capturedPiece?: Piece) => void;
+}
 
 export class Board extends React.Component<IProps> {
     private ref: React.RefObject<HTMLDivElement>;
@@ -35,6 +38,8 @@ export class Board extends React.Component<IProps> {
     }
 
     public componentWillReceiveProps(nextProps: IProps) {
-        this.ground.set(nextProps);
+        const newProps = {...nextProps};
+        newProps.events = {...(nextProps.events || {}), move: nextProps.onMove};
+        this.ground.set(newProps);
     }
 }

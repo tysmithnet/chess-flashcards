@@ -1,17 +1,23 @@
+import { Key, Piece } from "chessground/types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Move as IMove, Opening as IOpening} from "../../chess-api";
+import { Move as IMove, Opening as IOpening } from "../../chess-api";
 import { Board, STARTING_FEN } from "../../common/board";
 import { IBaseProps, IRootState } from "../../root";
-import {IProps} from "./discover.domain";
+import { IProps } from "./discover.domain";
 
 export class DiscoverOpenings extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
+        this.handleOnMove = this.handleOnMove.bind(this);
     }
 
     public render() {
-        return <Board />;
+        return <Board onMove={this.handleOnMove} />;
+    }
+
+    private handleOnMove(src: Key, dst: Key, capturedPiece?: Piece) {
+        console.log(`MOVED ${src} -> ${dst}`);
     }
 }
 
