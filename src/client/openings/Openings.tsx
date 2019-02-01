@@ -4,7 +4,8 @@ import { Link, Route, Switch } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { OpeningMeta as IOpeningMeta } from "../chess-api";
 import { IRootState } from "../root";
-import { connectedComponent as Learn } from "./learn";
+import {connectedComponent as DiscoverOpenings } from "./discover";
+import { connectedComponent as LearnOpenings } from "./learn";
 import { getAllOpeningsRequestFactory } from "./openings.actions";
 import { IProps } from "./openings.domain";
 import "./openings.styles";
@@ -20,9 +21,11 @@ export class Openings extends React.Component<IProps> {
             <div className="openings">
                 <div className="links">
                     <Link to={"/openings/learn"}>Learn</Link>
+                    <Link to={"/openings/discover"}>Discover</Link>
                     <Link to={"/openings/quiz"}>Quiz</Link>
                 </div>
-                <Route path={"/openings/learn"} component={Learn} />
+                <Route path={"/openings/learn"} component={LearnOpenings} />
+                <Route path={"/openings/discover"} component={DiscoverOpenings} />
             </div>
         );
     }
