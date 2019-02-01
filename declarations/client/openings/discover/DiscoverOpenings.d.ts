@@ -1,9 +1,5 @@
 import * as React from "react";
-import { Opening as IOpening } from "../../chess-api";
-import { IBaseProps } from "../../root";
-export interface IProps extends IBaseProps {
-    openings: IOpening[];
-}
+import { IProps } from "./discover.domain";
 export declare class DiscoverOpenings extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
