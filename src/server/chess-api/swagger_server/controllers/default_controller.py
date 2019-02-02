@@ -38,6 +38,26 @@ def fen_post(body):  # noqa: E501
         board.push(chess.Move.from_uci("{}{}".format(move.src, move.dst)))
     return board.fen()
 
+def openings_fen_get(fen):  # noqa: E501
+    """Find openings that match the provided FEN
+
+     # noqa: E501
+
+    :param fen: The FEN of the position to match
+    :type fen: str
+
+    :rtype: List[Opening]
+    """
+    def opening_matches(opening):
+        for variant in opening.variants:
+            for move in variant.moves:
+                if move.fen_before == fen:
+                    return True
+        return False
+    
+    matching_openings = filter(lambda o: opening_matches(o), OPENINGS)
+    return list(matching_openings)
+
 def moves_get(fen, flags=None):  # noqa: E501
     """Get moves for the given position
 

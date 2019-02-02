@@ -10,4 +10,5 @@ export interface IProps extends IBaseProps {
 export interface IRootState {
     fen: string;
     legalMoves: IMove[];
+    discoveredOpenings: IOpening[];
 }

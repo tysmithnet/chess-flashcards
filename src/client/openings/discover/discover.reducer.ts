@@ -1,5 +1,5 @@
 import { IAction } from "../../root";
-import { ACTION_TYPES, IMakeMovesRequest, IMakeMovesSuccess} from "./discover.actions";
+import { ACTION_TYPES, IMakeMovesRequest, IMakeMovesSuccess, IMatchOpeningsSuccess} from "./discover.actions";
 import { IRootState } from "./discover.domain";
 
 export function handleMakeMovesSuccess(state: IRootState, action: IMakeMovesSuccess): IRootState {

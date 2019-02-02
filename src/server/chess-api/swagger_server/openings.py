@@ -4558,7 +4558,7 @@ for opening in openings:
     moves = visitor.moves
     board = chess.Board()
     models = create_move_models(board, moves)
-    variants = []
+    variants = [OpeningVariant(name, models)]
     for i in range(0, len(variant_lines), 2):
         variant_name = variant_lines[i]
         variant_pgn = variant_lines[i + 1]

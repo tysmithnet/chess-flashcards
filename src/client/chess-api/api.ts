@@ -17,7 +17,11 @@ import * as url from "url";
 import * as portableFetch from "portable-fetch";
 import { Configuration } from "./configuration";
 
-const BASE_PATH = "http://localhost:5000/api/v1".replace(/\/+$/, "");
+/*
+ * SUPPOSEDLY THIS WAS SUPPOSED TO BE FIXED A FEW MONTHS AGO, WHERE THIS COULD BE SET, BUT
+ * IT HAS NOT MADE ITS WAY INTO RELEASE, SO YOU MUST CHANGE THIS TO BE THE PROXIED ADDRESS
+ */
+const BASE_PATH = "http://localhost:8080/chess/api/v1".replace(/\/+$/, "");
 
 /**
  *
@@ -328,6 +332,35 @@ export const DefaultApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Find openings that match the provided FEN
+         * @param {string} fen The FEN of the position to match
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        openingsFenGet(fen: string, options: any = {}): FetchArgs {
+            // verify required parameter 'fen' is not null or undefined
+            if (fen === null || fen === undefined) {
+                throw new RequiredError('fen','Required parameter fen was null or undefined when calling openingsFenGet.');
+            }
+            const localVarPath = `/openings/{fen}`
+                .replace(`{${"fen"}}`, encodeURIComponent(String(fen)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all ECO openings
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -460,6 +493,25 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Find openings that match the provided FEN
+         * @param {string} fen The FEN of the position to match
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        openingsFenGet(fen: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Opening>> {
+            const localVarFetchArgs = DefaultApiFetchParamCreator(configuration).openingsFenGet(fen, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary Get all ECO openings
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -546,6 +598,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * 
+         * @summary Find openings that match the provided FEN
+         * @param {string} fen The FEN of the position to match
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        openingsFenGet(fen: string, options?: any) {
+            return DefaultApiFp(configuration).openingsFenGet(fen, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary Get all ECO openings
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -606,6 +668,18 @@ export class DefaultApi extends BaseAPI {
      */
     public movesGet(fen: string, flags?: Array<string>, options?: any) {
         return DefaultApiFp(this.configuration).movesGet(fen, flags, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Find openings that match the provided FEN
+     * @param {} fen The FEN of the position to match
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public openingsFenGet(fen: string, options?: any) {
+        return DefaultApiFp(this.configuration).openingsFenGet(fen, options)(this.fetch, this.basePath);
     }
 
     /**

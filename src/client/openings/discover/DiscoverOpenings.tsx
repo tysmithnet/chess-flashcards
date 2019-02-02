@@ -33,6 +33,7 @@ function mapStateToProps(state: IRootState): IProps {
     let val: IOpening[] = [];
     let fen = STARTING_FEN;
     let moves: IMove[] = [];
+    const matchingOpenings: IOpening[] = [];
     if (state.openings) {
         val = state.openings.openings;
         if (state.openingsDiscover) {

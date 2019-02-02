@@ -72,6 +72,24 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/OpeningMeta"
+  /openings/match/{fen}:
+    get:
+      summary: "Find openings that match the provided FEN"
+      parameters:
+      - name: "fen"
+        in: "path"
+        description: "The FEN of the position to match"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Query was successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opening"
+        400:
+          description: "The provided FEN was invalid"
   /openings/{id}:
     get:
       summary: "Get an opening and its variants by id"
@@ -89,8 +107,6 @@ paths:
             $ref: "#/definitions/Opening"
         400:
           description: "Invalid ECO id supplied"
-        404:
-          description: "Opening not found"
   /openings/search:
     get:
       summary: "Fuzzy search for openings"
