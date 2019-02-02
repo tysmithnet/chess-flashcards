@@ -112,8 +112,6 @@ class Move(Model):
         :param piece: The piece of this Move.
         :type piece: str
         """
-        if piece is None:
-            raise ValueError("Invalid value for `piece`, must not be `None`")  # noqa: E501
 
         self._piece = piece
 

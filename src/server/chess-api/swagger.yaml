@@ -112,7 +112,6 @@ definitions:
     description: "Represents a single move that a player can make during a turn"
     type: "object"
     required:
-    - "piece"
     - "dst"
     - "src"
     properties:

@@ -129,7 +129,6 @@ definitions:
     type: "object"
     required:
     - "dst"
-    - "piece"
     - "src"
     properties:
       piece:

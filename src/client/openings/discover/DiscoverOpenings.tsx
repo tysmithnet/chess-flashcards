@@ -22,7 +22,10 @@ export class DiscoverOpenings extends React.Component<IProps> {
     }
 
     private handleOnMove(src: Key, dst: Key, capturedPiece?: Piece) {
-        console.log(`MOVED ${src} -> ${dst}`);
+        this.props.dispatch(makeMovesRequestFactory(this.props.fen, [{
+            src,
+            dst,
+        }]));
     }
 }
 
