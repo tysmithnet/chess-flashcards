@@ -9,6 +9,7 @@ import "./theme.css";
 export interface IProps extends IConfig, IBaseProps {
     moves?: IMove[];
     onMove?: (src: Key, dst: Key, capturedPiece?: Piece) => void;
+    freeMoveable?: boolean;
 }
 export declare class Board extends React.Component<IProps> {
     private ref;

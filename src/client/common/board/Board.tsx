@@ -12,6 +12,7 @@ import "./theme.css";
 export interface IProps extends IConfig, IBaseProps {
     moves?: IMove[];
     onMove?: (src: Key, dst: Key, capturedPiece?: Piece) => void;
+    freeMoveable?: boolean;
 }
 
 export class Board extends React.Component<IProps> {
@@ -46,6 +47,7 @@ export class Board extends React.Component<IProps> {
         }
         if (nextProps.moves) {
             newProps.movable = {...(nextProps.movable || {}), dests: this.convertMovesToDests(nextProps.moves)};
+            newProps.movable.free = nextProps.freeMoveable;
         }
         this.ground.set(newProps);
     }

@@ -1,16 +1,12 @@
-import { IAction, IRootState } from "../../root";
+import { IAction } from "../../root";
 import { ACTION_TYPES, IMakeMovesRequest, IMakeMovesSuccess} from "./discover.actions";
+import { IRootState } from "./discover.domain";
 
 export function handleMakeMovesSuccess(state: IRootState, action: IMakeMovesSuccess): IRootState {
     return {
         ...state,
-        openings: {
-            ...state.openings,
-            discover: {
-                fen: action.fen,
-                legalMoves: action.moves,
-            },
-        },
+        fen: action.fen,
+        legalMoves: action.moves,
     };
 }
 

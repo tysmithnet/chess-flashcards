@@ -2,6 +2,7 @@ import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
 import { IRootState as IOpeningsState } from "../openings";
+import { IRootState as IDiscoverState } from "../openings/discover";
 
 /**
  * Root of the state tree
@@ -27,6 +28,8 @@ export interface IRootState {
     auth: IAuthState;
 
     openings: IOpeningsState;
+
+    openingsDiscover: IDiscoverState;
 }
 
 /**

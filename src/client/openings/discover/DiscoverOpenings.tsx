@@ -14,7 +14,7 @@ export class DiscoverOpenings extends React.Component<IProps> {
     }
 
     public render() {
-        return <Board fen={this.props.fen} onMove={this.handleOnMove} />;
+        return <Board fen={this.props.fen} onMove={this.handleOnMove} moves={this.props.legalMoves} freeMoveable={false} />;
     }
 
     public componentDidMount() {
@@ -32,9 +32,9 @@ function mapStateToProps(state: IRootState): IProps {
     let moves: IMove[] = [];
     if (state.openings) {
         val = state.openings.openings;
-        if (state.openings.discover) {
-            fen = state.openings.discover.fen;
-            moves = state.openings.discover.legalMoves;
+        if (state.openingsDiscover) {
+            fen = state.openingsDiscover.fen;
+            moves = state.openingsDiscover.legalMoves;
         }
     }
     return {
