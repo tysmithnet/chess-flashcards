@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { match, Route, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import {OpeningMeta as IOpeningMeta} from "../../chess-api";
+import {Opening as IOpening} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
 import "./learn.styles";
 import { connectedComponent as LearnOpening } from "./LearnOpening";
@@ -10,7 +10,7 @@ import { connectedComponent as LearnOpening } from "./LearnOpening";
 export interface IProps extends IBaseProps {
     match?: match<any>;
     history?: any;
-    openings: IOpeningMeta[];
+    openings: IOpening[];
 }
 
 export class LearnOpenings extends React.Component<IProps> {
@@ -36,7 +36,7 @@ export class LearnOpenings extends React.Component<IProps> {
 
 function mapStateToProps(state: IRootState): IProps {
     return {
-       openings: state.openings.openingMetaData,
+       openings: state.openings.openings,
     };
 }
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { OpeningMeta as IOpeningMeta } from "../chess-api";
+import { Opening as IOpening } from "../chess-api";
 import { IRootState } from "../root";
 import {connectedComponent as DiscoverOpenings } from "./discover";
 import { connectedComponent as LearnOpenings } from "./learn";
@@ -36,13 +36,12 @@ export class Openings extends React.Component<IProps> {
 }
 
 function mapStateToProps(state: IRootState): IProps {
-    let val: IOpeningMeta[] = [];
+    let val: IOpening[] = [];
     if (state.openings) {
-        val = state.openings.openingMetaData;
+        val = state.openings.openings;
     }
     return {
-        openingMetaData: val,
-
+        openings: val,
     };
 }
 

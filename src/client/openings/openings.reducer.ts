@@ -9,7 +9,7 @@ function handleGetAllOpeningsSuccess(
 ): IRootState {
     return {
         ...state,
-        openingMetaData: getAllOpeningsSuccess.payload,
+        openings: getAllOpeningsSuccess.payload,
     };
 }
 

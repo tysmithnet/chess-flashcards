@@ -6,17 +6,10 @@ from swagger_server.models.fen_request import FenRequest
 from swagger_server.models.move import Move  # noqa: E501
 from swagger_server.models.move_factory import create_move_model
 from swagger_server.models.opening import Opening  # noqa: E501
-from swagger_server.models.opening_meta import OpeningMeta
 from swagger_server import util
 from swagger_server.openings import OPENINGS
 from flask import abort
 from fuzzywuzzy import process
-
-def extract_meta_data(opening):
-    id = opening.id
-    name = opening.name
-    variant_names = list(map(lambda v: v.name, opening.variants))
-    return OpeningMeta(name, id, variant_names)
 
 def fen_post(body):  # noqa: E501
     """Apply the provided moves to the provided FEN
@@ -79,9 +72,9 @@ def openings_get():  # noqa: E501
      # noqa: E501
 
 
-    :rtype: List[OpeningMeta]
+    :rtype: List[Opening]
     """
-    return list(map(extract_meta_data, OPENINGS))
+    return OPENINGS
 
 
 def openings_id_get(id):  # noqa: E501

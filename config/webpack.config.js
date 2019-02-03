@@ -4,8 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const distPath = path.resolve(__dirname, "../", "dist/client");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const StatsPlugin = require("stats-webpack-plugin")
-
+const StatsPlugin = require("stats-webpack-plugin");
 
 // loader configuration for typescript
 const compileTypeScript = {
@@ -30,6 +29,18 @@ const compileTypeScript = {
         },
         babelCore: "@babel/core"
     }
+};
+
+const fileRule = {
+    test: /\.json$/,
+    use: [
+        {
+            loader: "file-loader",
+            options: {
+                name: "[path][name].[ext]"
+            }
+        }
+    ]
 };
 
 // rule for compiling sass

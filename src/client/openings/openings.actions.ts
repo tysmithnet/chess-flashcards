@@ -1,4 +1,4 @@
-import {Opening as IOpening, OpeningMeta as IOpeningMeta} from "../chess-api";
+import { Opening as IOpening } from "../chess-api";
 import { IAction } from "../root";
 
 export const ACTION_TYPES = {
@@ -15,7 +15,7 @@ export interface IGetAllOpeningsFailure extends IAction {
     message: string;
 }
 export interface IGetAllOpeningsSuccess extends IAction {
-    payload: IOpeningMeta[];
+    payload: IOpening[];
 }
 
 export interface IGetOpeningDetailRequest extends IAction {
@@ -36,7 +36,7 @@ export function getAllOpeningsRequestFactory(): IGetAllOpeningsRequest {
     };
 }
 
-export function getAllOpeningsSuccessFactory(openings: IOpeningMeta[]): IGetAllOpeningsSuccess {
+export function getAllOpeningsSuccessFactory(openings: IOpening[]): IGetAllOpeningsSuccess {
     return {
         type: ACTION_TYPES.GET_ALL_OPENINGS_SUCCESS,
         payload: openings,

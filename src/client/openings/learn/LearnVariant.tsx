@@ -2,14 +2,13 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { match, Route, RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import {Opening as IOpening, OpeningMeta as IOpeningMeta} from "../../chess-api";
+import {Opening as IOpening} from "../../chess-api";
 import { IBaseProps, IRootState } from "../../root";
 import {OpeningBoard} from "../opening-board/OpeningBoard";
 import { getOpeningDetailRequestFactory } from "../openings.actions";
 
 export interface IProps extends IBaseProps {
     match?: match<any>;
-    openingMetaData: IOpeningMeta[];
     openings: IOpening[];
 }
 
@@ -43,7 +42,6 @@ export class LearnVariant extends React.Component<IProps> {
 function mapStateToProps(state: IRootState): IProps {
     return {
         openings: state.openings.openings,
-        openingMetaData: state.openings.openingMetaData,
     };
 }
 

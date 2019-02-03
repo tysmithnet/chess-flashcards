@@ -71,7 +71,7 @@ paths:
           schema:
             type: "array"
             items:
-              $ref: "#/definitions/OpeningMeta"
+              $ref: "#/definitions/Opening"
   /openings/match:
     get:
       summary: "Find openings that match the provided FEN"
@@ -193,25 +193,6 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/OpeningVariant"
-  OpeningMeta:
-    description: "The meta data for an ECO opening without the move data"
-    type: "object"
-    required:
-    - "name"
-    - "id"
-    - "variant_names"
-    properties:
-      name:
-        description: "The human friendly name for the opening"
-        type: "string"
-      id:
-        description: "The ECO id for the opening, e.g. E04"
-        type: "string"
-        pattern: "[A-E][0-9]{2}"
-      variant_names:
-        type: "array"
-        items:
-          type: "string"
   OpeningVariant:
     description: "A named variation of an ECO opening"
     type: "object"

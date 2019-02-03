@@ -1,7 +1,7 @@
 import axios from "axios";
 import { camelArray, camelKeys } from "change-object-case";
 import { all, call, put, takeLatest } from "redux-saga/effects";
-import { Configuration, DefaultApi, DefaultApiFactory, Move as IMove, Opening as IOpening, OpeningMeta as IOpeningMeta } from "../../chess-api";
+import { Configuration, DefaultApi, DefaultApiFactory, Move as IMove, Opening as IOpening } from "../../chess-api";
 import { STARTING_FEN } from "../../common/board";
 import { getOpeningDetailSuccessFactory } from "../openings.actions";
 import { ACTION_TYPES, IMakeMovesRequest, IMatchOpeningsRequest, makeMovesFailureFactory, makeMovesSuccessFactory, matchOpeningsFailureFactory, matchOpeningsRequestFactory, matchOpeningsSuccessFactory } from "./discover.actions";

@@ -205,32 +205,6 @@ export interface Opening {
 }
 
 /**
- * The meta data for an ECO opening without the move data
- * @export
- * @interface OpeningMeta
- */
-export interface OpeningMeta {
-    /**
-     * The human friendly name for the opening
-     * @type {string}
-     * @memberof OpeningMeta
-     */
-    name: string;
-    /**
-     * The ECO id for the opening, e.g. E04
-     * @type {string}
-     * @memberof OpeningMeta
-     */
-    id: string;
-    /**
-     * 
-     * @type {Array&lt;string&gt;}
-     * @memberof OpeningMeta
-     */
-    variantNames: Array<string>;
-}
-
-/**
  * A named variation of an ECO opening
  * @export
  * @interface OpeningVariant
@@ -496,7 +470,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        openingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<OpeningMeta>> {
+        openingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Opening>> {
             const localVarFetchArgs = DefaultApiFetchParamCreator(configuration).openingsGet(options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {

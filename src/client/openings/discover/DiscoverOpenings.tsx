@@ -1,12 +1,12 @@
 import { Key, Piece } from "chessground/types";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { Move as IMove, Opening as IOpening, OpeningVariant as IOpeningVariant } from "../../chess-api";
 import { Board, STARTING_FEN } from "../../common/board";
 import { IBaseProps, IRootState } from "../../root";
 import { makeMovesRequestFactory } from "./discover.actions";
 import { IProps } from "./discover.domain";
-import { Link } from "react-router-dom";
 
 export class DiscoverOpenings extends React.Component<IProps> {
     constructor(props: IProps) {
@@ -15,8 +15,8 @@ export class DiscoverOpenings extends React.Component<IProps> {
     }
 
     public render() {
-        const links = this.props.matchingVariants.map(v => {
-            return <li key={v.name}>{v.name}</li>;
+        const links = this.props.matchingVariants.map((v, i) => {
+            return <li key={`${v.name}${i}`}>{v.name}</li>;
         });
         return (
         <div>
