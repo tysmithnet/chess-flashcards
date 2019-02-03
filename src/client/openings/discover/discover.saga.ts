@@ -32,7 +32,7 @@ function* matchOpenings(fen: string) {
         if (fen === STARTING_FEN) {
             yield put(matchOpeningsSuccessFactory([]));
         } else {
-            const openings = yield call(api.openingsFenGet, fen);
+            const openings = yield call(api.openingsMatchGet, fen);
             yield put(matchOpeningsSuccessFactory(openings));
             for (const opening of openings) {
                 yield put(getOpeningDetailSuccessFactory(opening));

@@ -1,11 +1,12 @@
 import { Key, Piece } from "chessground/types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Move as IMove, Opening as IOpening } from "../../chess-api";
+import { Move as IMove, Opening as IOpening, OpeningVariant as IOpeningVariant } from "../../chess-api";
 import { Board, STARTING_FEN } from "../../common/board";
 import { IBaseProps, IRootState } from "../../root";
 import { makeMovesRequestFactory } from "./discover.actions";
 import { IProps } from "./discover.domain";
+import { Link } from "react-router-dom";
 
 export class DiscoverOpenings extends React.Component<IProps> {
     constructor(props: IProps) {
@@ -14,7 +15,17 @@ export class DiscoverOpenings extends React.Component<IProps> {
     }
 
     public render() {
-        return <Board fen={this.props.fen} onMove={this.handleOnMove} moves={this.props.legalMoves} freeMoveable={false} />;
+        const links = this.props.matchingVariants.map(v => {
+            return <li key={v.name}>{v.name}</li>;
+        });
+        return (
+        <div>
+            <Board fen={this.props.fen} onMove={this.handleOnMove} moves={this.props.legalMoves} freeMoveable={false} />
+            <ul>
+                {links}
+            </ul>
+        </div>
+        );
     }
 
     public componentDidMount() {
@@ -33,16 +44,29 @@ function mapStateToProps(state: IRootState): IProps {
     let val: IOpening[] = [];
     let fen = STARTING_FEN;
     let moves: IMove[] = [];
-    const matchingOpenings: IOpening[] = [];
+    const matchingVariants: IOpeningVariant[] = [];
+    if (state.openingsDiscover) {
+        fen = state.openingsDiscover.fen;
+        moves = state.openingsDiscover.legalMoves;
+    }
+
     if (state.openings) {
         val = state.openings.openings;
-        if (state.openingsDiscover) {
-            fen = state.openingsDiscover.fen;
-            moves = state.openingsDiscover.legalMoves;
+        if (state.openings.openings && fen !== STARTING_FEN) {
+            for (const opening of state.openings.openings) {
+                for (const variant of opening.variants) {
+                    for (const move of variant.moves) {
+                        if (move.fenBefore === fen) {
+                            matchingVariants.push(variant);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     return {
-        openings: val,
+        matchingVariants,
         fen,
         legalMoves: moves,
     };

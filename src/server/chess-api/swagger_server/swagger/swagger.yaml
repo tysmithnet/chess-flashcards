@@ -83,13 +83,13 @@ paths:
             items:
               $ref: "#/definitions/OpeningMeta"
       x-swagger-router-controller: "swagger_server.controllers.default_controller"
-  /openings/{fen}:
+  /openings/match:
     get:
       summary: "Find openings that match the provided FEN"
-      operationId: "openings_fen_get"
+      operationId: "openings_match_get"
       parameters:
       - name: "fen"
-        in: "path"
+        in: "query"
         description: "The FEN of the position to match"
         required: true
         type: "string"

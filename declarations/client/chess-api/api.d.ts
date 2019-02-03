@@ -59,32 +59,32 @@ export interface OpeningVariant {
 export declare const DefaultApiFetchParamCreator: (configuration?: Configuration) => {
     fenPost(body: FenRequest, options?: any): FetchArgs;
     movesGet(fen: string, flags?: string[], options?: any): FetchArgs;
-    openingsFenGet(fen: string, options?: any): FetchArgs;
     openingsGet(options?: any): FetchArgs;
     openingsIdGet(id: string, options?: any): FetchArgs;
+    openingsMatchGet(fen: string, options?: any): FetchArgs;
     openingsSearchGet(term: string, options?: any): FetchArgs;
 };
 export declare const DefaultApiFp: (configuration?: Configuration) => {
     fenPost(body: FenRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<string>;
     movesGet(fen: string, flags?: string[], options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Move[]>;
-    openingsFenGet(fen: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
     openingsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening>;
+    openingsMatchGet(fen: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Opening[]>;
 };
 export declare const DefaultApiFactory: (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) => {
     fenPost(body: FenRequest, options?: any): Promise<string>;
     movesGet(fen: string, flags?: string[], options?: any): Promise<Move[]>;
-    openingsFenGet(fen: string, options?: any): Promise<Opening[]>;
     openingsGet(options?: any): Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): Promise<Opening>;
+    openingsMatchGet(fen: string, options?: any): Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): Promise<Opening[]>;
 };
 export declare class DefaultApi extends BaseAPI {
     fenPost(body: FenRequest, options?: any): Promise<string>;
     movesGet(fen: string, flags?: Array<string>, options?: any): Promise<Move[]>;
-    openingsFenGet(fen: string, options?: any): Promise<Opening[]>;
     openingsGet(options?: any): Promise<OpeningMeta[]>;
     openingsIdGet(id: string, options?: any): Promise<Opening>;
+    openingsMatchGet(fen: string, options?: any): Promise<Opening[]>;
     openingsSearchGet(term: string, options?: any): Promise<Opening[]>;
 }

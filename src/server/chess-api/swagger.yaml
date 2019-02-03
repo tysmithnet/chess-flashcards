@@ -72,12 +72,12 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/OpeningMeta"
-  /openings/match/{fen}:
+  /openings/match:
     get:
       summary: "Find openings that match the provided FEN"
       parameters:
       - name: "fen"
-        in: "path"
+        in: "query"
         description: "The FEN of the position to match"
         required: true
         type: "string"

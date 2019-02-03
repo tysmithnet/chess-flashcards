@@ -1,8 +1,8 @@
-import {Move as IMove, Opening as IOpening} from "../../chess-api";
+import {Move as IMove, Opening as IOpening, OpeningVariant as IOpeningVariant} from "../../chess-api";
 import { IBaseProps } from "../../root";
 
 export interface IProps extends IBaseProps {
-    openings: IOpening[];
+    matchingVariants: IOpeningVariant[];
     fen: string;
     legalMoves: IMove[];
 }
