@@ -5,6 +5,7 @@ export interface IProps {
     fillColor: Color;
     strokeColor: Color;
     onMouseDown?: React.MouseEventHandler<SVGElement>;
+    onMouseMove?: React.MouseEventHandler<SVGElement>;
     x: number;
     y: number;
 }
@@ -522,7 +523,7 @@ export class Knight extends React.Component<IProps> {
 export class Pawn extends React.Component<IProps> {
     public render() {
         return (
-            <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} onMouseDown={this.props.onMouseDown}>
+            <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} onMouseDown={this.props.onMouseDown} onMouseMove={this.props.onMouseMove}>
                 <path
                     d="M15.8,53.9c-0.4,0-0.8-0.3-0.8-0.8c0-8.9,5.2-14.3,9.4-16.2c-1.6-1.6-2.6-3.6-2.6-5.7
                     c0-2.8,1.6-5.3,4.1-6.9c-0.5-0.8-0.7-1.7-0.7-2.6c0-3,2.8-5.5,6.2-5.5s6.2,2.5,6.2,5.5c0,0.9-0.2,1.8-0.7,2.6

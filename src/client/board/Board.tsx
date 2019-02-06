@@ -19,13 +19,16 @@ export interface IProps {
 }
 
 export interface IState {
-
+    selectedPiece: SVGElement;
+    x: number;
+    y: number;
 }
 
 export class Board extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     public render() {
@@ -50,7 +53,7 @@ export class Board extends React.Component<IProps, IState> {
             const stroke = isWhite ? "black" : "white";
             switch (pieceLetter.toLowerCase()) {
                 case "p":
-                    pieces.push(<Pawn onMouseDown={this.handleMouseDown} x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
+                    pieces.push(<Pawn onMouseDown={this.handleMouseDown} onMouseMove={this.handleMouseMove} x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
                     break;
                 case "n":
                     pieces.push(<Knight x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
@@ -81,7 +84,13 @@ export class Board extends React.Component<IProps, IState> {
     }
 
     private handleMouseDown(event: React.MouseEvent<SVGElement>) {
-        const x = event.currentTarget.attributes.getNamedItem("x");
-        console.log(x);
+        this.setState({
+            ...this.state,
+            selectedPiece: event.currentTarget,
+        });
+    }
+
+    private handleMouseMove(event: React.MouseEvent<SVGElement>) {
+        console.dir(`${event.screenX}, ${event.screenY}, ${event.shiftKey}`);
     }
 }

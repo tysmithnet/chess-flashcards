@@ -4,6 +4,7 @@ export interface IProps {
     fillColor: Color;
     strokeColor: Color;
     onMouseDown?: React.MouseEventHandler<SVGElement>;
+    onMouseMove?: React.MouseEventHandler<SVGElement>;
     x: number;
     y: number;
 }
