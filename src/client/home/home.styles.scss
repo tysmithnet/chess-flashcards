@@ -1,9 +1,15 @@
 .home {
     display: flex;
+    flex-direction: column;
     justify-content: center;
 
     .jumbo {
         width: 80%;
         text-align: center;
     }   
+
+    .board {
+        width: 30em;
+        height: 30em;
+    }
 }

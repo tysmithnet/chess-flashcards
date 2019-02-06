@@ -55,7 +55,7 @@ const stylesRule = {
 
 // rule for images
 const imageRule = {
-    test: /\.(png|jpg|svg)$/,
+    test: /\.(png|jpg)$/,
     loader: "url-loader",
 }
 
@@ -168,7 +168,7 @@ module.exports = (env, argv) => {
                 hmrPlugin,
                 cleanPlugin,
                 htmlPlugin,
-                statsPlugin
+                statsPlugin,
             ],
             ...common
         };
