@@ -10,4 +10,5 @@ export interface IState {
 export declare class Board extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
+    private handleMouseDown;
 }

@@ -25,6 +25,7 @@ export interface IState {
 export class Board extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
     }
 
     public render() {
@@ -49,7 +50,7 @@ export class Board extends React.Component<IProps, IState> {
             const stroke = isWhite ? "black" : "white";
             switch (pieceLetter.toLowerCase()) {
                 case "p":
-                    pieces.push(<Pawn x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
+                    pieces.push(<Pawn onMouseDown={this.handleMouseDown} x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
                     break;
                 case "n":
                     pieces.push(<Knight x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
@@ -65,6 +66,7 @@ export class Board extends React.Component<IProps, IState> {
                     break;
                 case "k":
                     pieces.push(<King x={col * 64} y={512 - (64 * (row + 1))} fillColor={fill} strokeColor={stroke} />);
+                    const b = <button>something</button>;
                     break;
             }
         }
@@ -76,5 +78,10 @@ export class Board extends React.Component<IProps, IState> {
                 </svg>
             </div>
         );
+    }
+
+    private handleMouseDown(event: React.MouseEvent<SVGElement>) {
+        const x = event.currentTarget.attributes.getNamedItem("x");
+        console.log(x);
     }
 }

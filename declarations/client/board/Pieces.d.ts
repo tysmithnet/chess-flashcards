@@ -1,13 +1,27 @@
 import { Color } from "csstype";
+import * as React from "react";
 export interface IProps {
     fillColor: Color;
     strokeColor: Color;
+    onMouseDown?: React.MouseEventHandler<SVGElement>;
     x: number;
     y: number;
 }
-export declare const King: (props: IProps) => JSX.Element;
-export declare const Queen: (props: IProps) => JSX.Element;
-export declare const Rook: (props: IProps) => JSX.Element;
-export declare const Bishop: (props: IProps) => JSX.Element;
-export declare const Knight: (props: IProps) => JSX.Element;
-export declare const Pawn: (props: IProps) => JSX.Element;
+export declare class King extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+export declare class Queen extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+export declare class Rook extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+export declare class Bishop extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+export declare class Knight extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+export declare class Pawn extends React.Component<IProps> {
+    render(): JSX.Element;
+}
