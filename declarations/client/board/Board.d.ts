@@ -27,6 +27,7 @@ export interface IState {
 }
 export declare class Board extends React.Component<IProps, IState> {
     private squares;
+    private boardRef;
     constructor(props: IProps);
     render(): JSX.Element;
     private convertSquare;
@@ -37,5 +38,6 @@ export declare class Board extends React.Component<IProps, IState> {
     private handleMouseDown;
     private handleMouseUp;
     private handleMouseMove;
+    private convertPageCoordinatesToBoardRelative;
 }
 export {};

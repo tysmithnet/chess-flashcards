@@ -43,8 +43,10 @@ export interface IState {
 
 export class Board extends React.Component<IProps, IState> {
     private squares: JSX.Element[];
+    private boardRef: React.RefObject<SVGSVGElement>;
     constructor(props: IProps) {
         super(props);
+        this.boardRef = React.createRef();
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -56,7 +58,7 @@ export class Board extends React.Component<IProps, IState> {
     public render() {
         const pieces = this.createPieces();
         return (
-            <svg className="board" viewBox="0 0 512 512">
+            <svg ref={this.boardRef} className="board" viewBox="0 0 512 512">
                 {this.squares}
                 {pieces}
             </svg>
@@ -223,8 +225,9 @@ export class Board extends React.Component<IProps, IState> {
         if (this.state.selectedPieceIndex != null) {
             const newArray = [...this.state.pieceState];
             const copy = {...newArray[this.state.selectedPieceIndex]};
-            copy.x = event.pageX;
-            copy.y = event.pageY;
+            const adjustedCoords = this.convertPageCoordinatesToBoardRelative(event.pageX, event.pageY);
+            copy.x = adjustedCoords[0];
+            copy.y = adjustedCoords[1];
             newArray[this.state.selectedPieceIndex] = copy;
             this.setState({
                 ...this.state,
@@ -232,5 +235,10 @@ export class Board extends React.Component<IProps, IState> {
             });
         }
         return;
+    }
+
+    private convertPageCoordinatesToBoardRelative(x: number, y: number): number[] {
+        const boundingRect = this.boardRef.current.getBoundingClientRect();
+        return [x - boundingRect.left, y - boundingRect.top];
     }
 }
