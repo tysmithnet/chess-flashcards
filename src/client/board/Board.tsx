@@ -1,7 +1,7 @@
 import { Color } from "csstype";
 import * as React from "react";
 import { Move } from "../chess-api";
-import { Bishop, King, Knight, Pawn, Queen, Rook } from "./Pieces";
+import { Bishop, IProps as IPieceProps, King, Knight, Pawn, Queen, Rook } from "./Pieces";
 
 export const STARTING_POSITION = [
     "R", "N", "B", "Q", "K", "B", "N", "R",
@@ -15,7 +15,9 @@ export const STARTING_POSITION = [
 ];
 
 interface IPieceState {
-    piece: JSX.Element;
+    pieceLetter: string;
+    origX: number;
+    origY: number;
     x: number;
     y: number;
     square: string;
@@ -36,30 +38,26 @@ export interface IProps {
 
 export interface IState {
     pieceState: IPieceState[];
+    selectedPieceIndex: number;
 }
 
 export class Board extends React.Component<IProps, IState> {
     private squares: JSX.Element[];
     constructor(props: IProps) {
         super(props);
-        this.squares = this.createSquares();
-        this.initializeState(props);
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
-    }
-
-    public componentDidUpdate() {
-        this.initializeState(this.props);
+        this.squares = this.createSquares();
+        this.initializeState(props);
     }
 
     public render() {
-        const pieces = this.state.pieceState.map(p => p.piece);
-        const rects = this.createSquares();
+        const pieces = this.createPieces();
         return (
             <svg className="board" viewBox="0 0 512 512">
-                {rects}
+                {this.squares}
                 {pieces}
             </svg>
         );
@@ -96,6 +94,47 @@ export class Board extends React.Component<IProps, IState> {
         return res;
     }
 
+    private createPieces(): JSX.Element[] {
+        const pieces = [];
+        for (const cur of this.state.pieceState) {
+            const isBlack = cur.pieceLetter.toLowerCase() === cur.pieceLetter;
+            const fill = isBlack ? "#2d2d2d" : "white";
+            const stroke = "black";
+            const props: IPieceProps = {
+                dataSrc: cur.square,
+                fillColor: fill,
+                onMouseDown: this.handleMouseDown,
+                onMouseMove: this.handleMouseMove,
+                strokeColor: stroke,
+                x: cur.x,
+                y: cur.y,
+            };
+            let piece = null;
+            switch (cur.pieceLetter.toLowerCase()) {
+                case "p":
+                    piece = <Pawn key={cur.square} {...props}/>;
+                    break;
+                case "n":
+                    piece = <Knight key={cur.square} {...props}/>;
+                    break;
+                case "b":
+                    piece = <Bishop key={cur.square} {...props}/>;
+                    break;
+                case "r":
+                    piece = <Rook key={cur.square} {...props}/>;
+                    break;
+                case "q":
+                    piece = <Queen key={cur.square} {...props}/>;
+                    break;
+                case "k":
+                    piece = <King key={cur.square} {...props}/>;
+                    break;
+            }
+            pieces.push(piece);
+        }
+        return pieces;
+    }
+
     private initializeState(props: IProps): void {
         const pieceState: IPieceState[] = [];
         for (let i = 0; i < 64; i++) {
@@ -108,39 +147,19 @@ export class Board extends React.Component<IProps, IState> {
             const loc = this.convertSquare([row, col]);
             const x = col * 64;
             const y = 512 - (64 * (row + 1));
-            const isBlack = pieceLetter.toLowerCase() === pieceLetter;
-            const fill = isBlack ? "#2d2d2d" : "white";
-            const stroke = "black";
-            let piece = null;
-            switch (pieceLetter.toLowerCase()) {
-                case "p":
-                    piece = <Pawn key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-                case "n":
-                    piece = <Knight key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-                case "b":
-                    piece = <Bishop key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-                case "r":
-                    piece = <Rook key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-                case "q":
-                    piece = <Queen key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-                case "k":
-                    piece = <King key={loc.s} fillColor={fill} strokeColor={stroke} x={x} y={y} />;
-                    break;
-            }
+
             pieceState.push({
-                piece,
+                pieceLetter,
                 square: loc.s,
+                origX: x,
+                origY: y,
                 x,
                 y,
             });
         }
         this.state = {
             pieceState,
+            selectedPieceIndex: null,
         };
     }
 
@@ -175,26 +194,43 @@ export class Board extends React.Component<IProps, IState> {
     }
 
     private handleMouseDown(event: React.MouseEvent<SVGElement>) {
-        const square = event.currentTarget.getAttribute("data-name");
+        const square = event.currentTarget.getAttribute("data-src");
         if (event.button === 0) {
             // left click -> move
             // if no piece -> nothing to do
-
+            let i = null;
+            for (i = 0; i < this.state.pieceState.length; i++) {
+                if (this.state.pieceState[i].square === square) {
+                    break;
+                }
+            }
+            this.setState({
+                ...this.state,
+                selectedPieceIndex: i,
+            });
         } else if (event.button === 2) {
             // right click -> arrow
         }
-        console.log("down");
         return;
     }
 
     private handleMouseUp(event: React.MouseEvent<SVGElement>) {
-        // clear any in progress drags
 
         return;
     }
 
     private handleMouseMove(event: React.MouseEvent<SVGElement>) {
-        console.log("move");
+        if (this.state.selectedPieceIndex != null) {
+            const newArray = [...this.state.pieceState];
+            const copy = {...newArray[this.state.selectedPieceIndex]};
+            copy.x = event.pageX;
+            copy.y = event.pageY;
+            newArray[this.state.selectedPieceIndex] = copy;
+            this.setState({
+                ...this.state,
+                pieceState: newArray,
+            });
+        }
         return;
     }
 }

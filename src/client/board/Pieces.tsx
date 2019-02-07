@@ -2,6 +2,7 @@ import { Color } from "csstype";
 import * as React from "react";
 
 export interface IProps {
+    dataSrc: string; // a1..h8
     fillColor: Color;
     strokeColor: Color;
     onMouseDown?: React.MouseEventHandler<SVGElement>;
@@ -13,7 +14,7 @@ export interface IProps {
 export class King extends React.Component<IProps> {
     public render() {
         return (
-        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y}>
+        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc}>
             <path
                 d="M31.5,17.6v-7.2"
                 opacity={1}
@@ -121,7 +122,7 @@ export class King extends React.Component<IProps> {
 export class Queen extends React.Component<IProps> {
     public render() {
         return (
-        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y}>
+        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc}>
             <path
                 d="M13.3,19.3c0,1.4-1.1,2.5-2.5,2.5s-2.5-1.1-2.5-2.5c0-1.4,1.1-2.5,2.5-2.5
                 S13.3,17.9,13.3,19.3z"
@@ -262,7 +263,7 @@ export class Queen extends React.Component<IProps> {
 export class Rook extends React.Component<IProps> {
     public render() {
         return (
-        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y}>
+        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc}>
             <path
                 d="M12.8,53.2h37.5v-3.9H12.8V53.2z"
                 opacity={1}
@@ -368,7 +369,7 @@ export class Rook extends React.Component<IProps> {
 export class Bishop extends React.Component<IProps> {
     public render() {
         return (
-        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y}>
+        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc}>
             <g>
                 <path
                     d="M14.7,49.8c4.2-1.2,12.6,0.5,16.8-2.5c4.2,3.1,12.6,1.3,16.8,2.5c0,0,2,0.7,3.7,2.5
@@ -438,7 +439,7 @@ export class Bishop extends React.Component<IProps> {
 export class Knight extends React.Component<IProps> {
     public render() {
         return (
-        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y}>
+        <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc}>
             <g>
                 <path
                     d="M32,14.4c0,0,0-4-1.4-4c-2.3,1.4-3.4,4-3.4,4h-2.7c0,0-2.7-4.7-4.1-3.3c0,1.3-0.3,2.7,0.7,4
@@ -523,7 +524,7 @@ export class Knight extends React.Component<IProps> {
 export class Pawn extends React.Component<IProps> {
     public render() {
         return (
-            <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} onMouseDown={this.props.onMouseDown} onMouseMove={this.props.onMouseMove}>
+            <svg viewBox="0 0 64 64" width="64" height="64" x={this.props.x} y={this.props.y} data-src={this.props.dataSrc} onMouseDown={this.props.onMouseDown} onMouseMove={this.props.onMouseMove}>
                 <path
                     d="M15.8,53.9c-0.4,0-0.8-0.3-0.8-0.8c0-8.9,5.2-14.3,9.4-16.2c-1.6-1.6-2.6-3.6-2.6-5.7
                     c0-2.8,1.6-5.3,4.1-6.9c-0.5-0.8-0.7-1.7-0.7-2.6c0-3,2.8-5.5,6.2-5.5s6.2,2.5,6.2,5.5c0,0.9-0.2,1.8-0.7,2.6

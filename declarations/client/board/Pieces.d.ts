@@ -1,6 +1,7 @@
 import { Color } from "csstype";
 import * as React from "react";
 export interface IProps {
+    dataSrc: string;
     fillColor: Color;
     strokeColor: Color;
     onMouseDown?: React.MouseEventHandler<SVGElement>;
