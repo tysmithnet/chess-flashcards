@@ -5,10 +5,6 @@ import "./board.styles";
 export declare const STARTING_POSITION: string[];
 interface IPieceState {
     pieceLetter: string;
-    origX: number;
-    origY: number;
-    x: number;
-    y: number;
     square: string;
 }
 export interface IArrow {
@@ -23,6 +19,8 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
+    mouseX: number;
+    mouseY: number;
 }
 export declare class Board extends React.Component<IProps, IState> {
     private boardRef;
@@ -36,6 +34,5 @@ export declare class Board extends React.Component<IProps, IState> {
     private handleMouseDown;
     private handleMouseUp;
     private handleMouseMove;
-    private convertPageCoordinatesToBoardRelative;
 }
 export {};

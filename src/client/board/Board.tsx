@@ -3,7 +3,18 @@ import { Color } from "csstype";
 import * as React from "react";
 import { Move } from "../chess-api";
 import "./board.styles";
-import { Bishop, IProps as IPieceProps, King, Knight, Pawn, Queen, Rook } from "./Pieces";
+const BlackBishop =  require("./images/bb.png");
+const BlackKing =  require("./images/bk.png");
+const BlackKnight =  require("./images/bn.png");
+const BlackPawn =  require("./images/bp.png");
+const BlackQueen =  require("./images/bq.png");
+const BlackRook =  require("./images/br.png");
+const WhiteBishop =  require("./images/wb.png");
+const WhiteKing =  require("./images/wk.png");
+const WhiteKnight =  require("./images/wn.png");
+const WhitePawn =  require("./images/wp.png");
+const WhiteQueen =  require("./images/wq.png");
+const WhiteRook =  require("./images/wr.png");
 
 export const STARTING_POSITION = [
     "R", "N", "B", "Q", "K", "B", "N", "R",
@@ -18,10 +29,6 @@ export const STARTING_POSITION = [
 
 interface IPieceState {
     pieceLetter: string;
-    origX: number;
-    origY: number;
-    x: number;
-    y: number;
     square: string;
 }
 
@@ -39,6 +46,8 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
+    mouseX: number;
+    mouseY: number;
 }
 
 export class Board extends React.Component<IProps, IState> {
@@ -96,34 +105,42 @@ export class Board extends React.Component<IProps, IState> {
     private createPieces(): JSX.Element[] {
         const pieces = [];
         for (const cur of this.state.pieceState) {
+            let style = {};
+            if (this.state.selectedPieceIndex != null &&
+                this.state.pieceState[this.state.selectedPieceIndex].square === cur.pieceLetter) {
+                style = {
+                    position: "fixed",
+                    top: this.state.mouseX,
+                    left: this.state.mouseY,
+                };
+            }
             const isBlack = cur.pieceLetter.toLowerCase() === cur.pieceLetter;
-            const props: IPieceProps = {
-                isWhite: !isBlack,
-                dataSrc: cur.square,
-                onMouseDown: this.handleMouseDown,
-                onMouseMove: this.handleMouseMove,
-                x: cur.x,
-                y: cur.y,
-            };
             let piece = null;
+            let src = null;
             switch (cur.pieceLetter.toLowerCase()) {
                 case "p":
-                    piece = <Pawn key={cur.square} {...props}/>;
+                    src = isBlack ? BlackPawn : WhitePawn;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
                 case "n":
-                    piece = <Knight key={cur.square} {...props}/>;
+                    src = isBlack ? BlackKnight : WhiteKnight;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
                 case "b":
-                    piece = <Bishop key={cur.square} {...props}/>;
+                    src = isBlack ? BlackBishop : WhiteBishop;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
                 case "r":
-                    piece = <Rook key={cur.square} {...props}/>;
+                    src = isBlack ? BlackRook : WhiteRook;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
                 case "q":
-                    piece = <Queen key={cur.square} {...props}/>;
+                    src = isBlack ? BlackQueen : WhiteQueen;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
                 case "k":
-                    piece = <King key={cur.square} {...props}/>;
+                    src = isBlack ? BlackKing : WhiteKing;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
                     break;
             }
             pieces.push(piece);
@@ -141,21 +158,17 @@ export class Board extends React.Component<IProps, IState> {
             const row = Math.floor(i / 8);
             const col = i % 8;
             const loc = this.convertSquare([row, col]);
-            const x = col * 64;
-            const y = 512 - (64 * (row + 1));
 
             pieceState.push({
                 pieceLetter,
                 square: loc.s,
-                origX: x,
-                origY: y,
-                x,
-                y,
             });
         }
         this.state = {
             pieceState,
             selectedPieceIndex: null,
+            mouseX: 0,
+            mouseY: 0,
         };
     }
 
@@ -170,12 +183,12 @@ export class Board extends React.Component<IProps, IState> {
                 const pieceAtSquare = pieces.find(p => p.key === name);
                 if (pieceAtSquare != null) {
                     rect = (
-                        <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})}>
+                        <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})}>
                             {pieceAtSquare}
                         </div>
                     );
                 } else {
-                    rect = <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
+                    rect = <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
                 }
                 rects.push(rect);
             }
@@ -184,53 +197,18 @@ export class Board extends React.Component<IProps, IState> {
     }
 
     private handleContextMenu(event: React.MouseEvent<SVGElement>) {
-        event.preventDefault();
+        return;
     }
 
     private handleMouseDown(event: React.MouseEvent<SVGElement>) {
-        const square = event.currentTarget.getAttribute("data-src");
-        if (event.button === 0) {
-            // left click -> move
-            // if no piece -> nothing to do
-            let i = null;
-            for (i = 0; i < this.state.pieceState.length; i++) {
-                if (this.state.pieceState[i].square === square) {
-                    break;
-                }
-            }
-            this.setState({
-                ...this.state,
-                selectedPieceIndex: i,
-            });
-        } else if (event.button === 2) {
-            // right click -> arrow
-        }
         return;
     }
 
     private handleMouseUp(event: React.MouseEvent<SVGElement>) {
-
         return;
     }
 
     private handleMouseMove(event: React.MouseEvent<SVGElement>) {
-        if (this.state.selectedPieceIndex != null) {
-            const newArray = [...this.state.pieceState];
-            const copy = {...newArray[this.state.selectedPieceIndex]};
-            const adjustedCoords = this.convertPageCoordinatesToBoardRelative(event.pageX, event.pageY);
-            copy.x = adjustedCoords[0];
-            copy.y = adjustedCoords[1];
-            newArray[this.state.selectedPieceIndex] = copy;
-            this.setState({
-                ...this.state,
-                pieceState: newArray,
-            });
-        }
-        return;
-    }
-
-    private convertPageCoordinatesToBoardRelative(x: number, y: number): number[] {
-        const boundingRect = this.boardRef.current.getBoundingClientRect();
-        return [x - boundingRect.left, y - boundingRect.top];
+        return ;
     }
 }

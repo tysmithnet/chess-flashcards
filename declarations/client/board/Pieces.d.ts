@@ -4,8 +4,7 @@ export interface IProps {
     isWhite: boolean;
     onMouseDown?: React.MouseEventHandler<SVGElement>;
     onMouseMove?: React.MouseEventHandler<SVGElement>;
-    x: number;
-    y: number;
+    style: any;
 }
 export declare class Pawn extends React.Component<IProps> {
     constructor(props: IProps);
