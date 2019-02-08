@@ -46,8 +46,6 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
-    mouseX: number;
-    mouseY: number;
 }
 
 export class Board extends React.Component<IProps, IState> {
@@ -59,6 +57,9 @@ export class Board extends React.Component<IProps, IState> {
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
+        this.handleDragOver = this.handleDragOver.bind(this);
+        this.handleDragStart = this.handleDragStart.bind(this);
+        this.handleDrop = this.handleDrop.bind(this);
         this.initializeState(props);
     }
 
@@ -105,42 +106,33 @@ export class Board extends React.Component<IProps, IState> {
     private createPieces(): JSX.Element[] {
         const pieces = [];
         for (const cur of this.state.pieceState) {
-            let style = {};
-            if (this.state.selectedPieceIndex != null &&
-                this.state.pieceState[this.state.selectedPieceIndex].square === cur.pieceLetter) {
-                style = {
-                    position: "fixed",
-                    top: this.state.mouseX,
-                    left: this.state.mouseY,
-                };
-            }
             const isBlack = cur.pieceLetter.toLowerCase() === cur.pieceLetter;
             let piece = null;
             let src = null;
             switch (cur.pieceLetter.toLowerCase()) {
                 case "p":
                     src = isBlack ? BlackPawn : WhitePawn;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
                 case "n":
                     src = isBlack ? BlackKnight : WhiteKnight;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
                 case "b":
                     src = isBlack ? BlackBishop : WhiteBishop;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
                 case "r":
                     src = isBlack ? BlackRook : WhiteRook;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
                 case "q":
                     src = isBlack ? BlackQueen : WhiteQueen;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
                 case "k":
                     src = isBlack ? BlackKing : WhiteKing;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} />;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
                     break;
             }
             pieces.push(piece);
@@ -167,8 +159,6 @@ export class Board extends React.Component<IProps, IState> {
         this.state = {
             pieceState,
             selectedPieceIndex: null,
-            mouseX: 0,
-            mouseY: 0,
         };
     }
 
@@ -183,17 +173,52 @@ export class Board extends React.Component<IProps, IState> {
                 const pieceAtSquare = pieces.find(p => p.key === name);
                 if (pieceAtSquare != null) {
                     rect = (
-                        <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})}>
+                        <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} onDragOver={this.handleDragOver} onDrop={this.handleDrop}>
                             {pieceAtSquare}
                         </div>
                     );
                 } else {
-                    rect = <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
+                    rect = <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} onDragOver={this.handleDragOver} onDrop={this.handleDrop}/>;
                 }
                 rects.push(rect);
             }
         }
         return rects;
+    }
+
+    private handleDrop(event: React.DragEvent<HTMLDivElement>) {
+        const src = event.dataTransfer.getData("piece");
+        const dst = event.currentTarget.getAttribute("data-src");
+        this.movePiece(src, dst);
+        return;
+    }
+
+    private movePiece(src: string, dst: string) {
+        const newArray = [...this.state.pieceState];
+        let i = 0;
+        for (i = 0; i < newArray.length; i++) {
+            if (newArray[i].square === src) {
+                break;
+            }
+        }
+        const copy = {...newArray[i]};
+        copy.square = dst;
+        newArray[i] = copy;
+        this.setState({
+            pieceState: newArray,
+            selectedPieceIndex: null,
+        });
+        return;
+    }
+
+    private handleDragStart(event: React.DragEvent<HTMLImageElement>) {
+        event.dataTransfer.setData("piece", event.currentTarget.getAttribute("data-src"));
+        return;
+    }
+
+    private handleDragOver(event: React.DragEvent<HTMLDivElement>) {
+        event.preventDefault();
+        return;
     }
 
     private handleContextMenu(event: React.MouseEvent<SVGElement>) {

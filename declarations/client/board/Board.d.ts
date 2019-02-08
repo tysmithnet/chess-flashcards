@@ -19,8 +19,6 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
-    mouseX: number;
-    mouseY: number;
 }
 export declare class Board extends React.Component<IProps, IState> {
     private boardRef;
@@ -30,6 +28,10 @@ export declare class Board extends React.Component<IProps, IState> {
     private createPieces;
     private initializeState;
     private createSquares;
+    private handleDrop;
+    private movePiece;
+    private handleDragStart;
+    private handleDragOver;
     private handleContextMenu;
     private handleMouseDown;
     private handleMouseUp;
