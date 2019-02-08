@@ -12,6 +12,10 @@ export interface IArrow {
     dst: string;
     color: Color;
 }
+export interface ISelectedSquare {
+    square: string;
+    color: Color;
+}
 export interface IProps {
     position: string[];
     legalMoves: Move[];
@@ -19,6 +23,9 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
+    arrows: IArrow[];
+    selectedSquares: ISelectedSquare[];
+    rightMouseDownSquare: string;
 }
 export declare class Board extends React.Component<IProps, IState> {
     private boardRef;

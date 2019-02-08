@@ -1,20 +1,21 @@
 import cn from "classnames";
 import { Color } from "csstype";
+import * as _ from "lodash";
 import * as React from "react";
 import { Move } from "../chess-api";
 import "./board.styles";
-const BlackBishop =  require("./images/bb.png");
-const BlackKing =  require("./images/bk.png");
-const BlackKnight =  require("./images/bn.png");
-const BlackPawn =  require("./images/bp.png");
-const BlackQueen =  require("./images/bq.png");
-const BlackRook =  require("./images/br.png");
-const WhiteBishop =  require("./images/wb.png");
-const WhiteKing =  require("./images/wk.png");
-const WhiteKnight =  require("./images/wn.png");
-const WhitePawn =  require("./images/wp.png");
-const WhiteQueen =  require("./images/wq.png");
-const WhiteRook =  require("./images/wr.png");
+const BlackBishop = require("./images/bb.png");
+const BlackKing = require("./images/bk.png");
+const BlackKnight = require("./images/bn.png");
+const BlackPawn = require("./images/bp.png");
+const BlackQueen = require("./images/bq.png");
+const BlackRook = require("./images/br.png");
+const WhiteBishop = require("./images/wb.png");
+const WhiteKing = require("./images/wk.png");
+const WhiteKnight = require("./images/wn.png");
+const WhitePawn = require("./images/wp.png");
+const WhiteQueen = require("./images/wq.png");
+const WhiteRook = require("./images/wr.png");
 
 export const STARTING_POSITION = [
     "R", "N", "B", "Q", "K", "B", "N", "R",
@@ -38,6 +39,11 @@ export interface IArrow {
     color: Color;
 }
 
+export interface ISelectedSquare {
+    square: string;
+    color: Color;
+}
+
 export interface IProps {
     position: string[]; // ["R", "N", "B", "Q" ...] starting from A1, A2, .. H8, null represents empty
     legalMoves: Move[];
@@ -46,6 +52,9 @@ export interface IProps {
 export interface IState {
     pieceState: IPieceState[];
     selectedPieceIndex: number;
+    arrows: IArrow[];
+    selectedSquares: ISelectedSquare[];
+    rightMouseDownSquare: string;
 }
 
 export class Board extends React.Component<IProps, IState> {
@@ -72,7 +81,7 @@ export class Board extends React.Component<IProps, IState> {
         );
     }
 
-    private convertSquare(square: string | number | number[]): {s: string, i: number, c: number[]} {
+    private convertSquare(square: string | number | number[]): { s: string, i: number, c: number[] } {
         const res = {
             s: "",
             i: 0,
@@ -86,7 +95,7 @@ export class Board extends React.Component<IProps, IState> {
             res.i = index;
             res.c = [row, col];
         }
-        if (typeof(square) === "number") {
+        if (typeof (square) === "number") {
             const row = Math.floor(square / 8);
             const col = square % 8;
             const index = (row * 8) + col;
@@ -112,27 +121,27 @@ export class Board extends React.Component<IProps, IState> {
             switch (cur.pieceLetter.toLowerCase()) {
                 case "p":
                     src = isBlack ? BlackPawn : WhitePawn;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
                 case "n":
                     src = isBlack ? BlackKnight : WhiteKnight;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
                 case "b":
                     src = isBlack ? BlackBishop : WhiteBishop;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
                 case "r":
                     src = isBlack ? BlackRook : WhiteRook;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
                 case "q":
                     src = isBlack ? BlackQueen : WhiteQueen;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
                 case "k":
                     src = isBlack ? BlackKing : WhiteKing;
-                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart}/>;
+                    piece = <img className={"piece"} key={cur.square} data-src={cur.square} src={src} draggable={true} onDragStart={this.handleDragStart} />;
                     break;
             }
             pieces.push(piece);
@@ -159,6 +168,9 @@ export class Board extends React.Component<IProps, IState> {
         this.state = {
             pieceState,
             selectedPieceIndex: null,
+            arrows: [],
+            rightMouseDownSquare: null,
+            selectedSquares: [],
         };
     }
 
@@ -167,18 +179,25 @@ export class Board extends React.Component<IProps, IState> {
         const rects: JSX.Element[] = [];
         for (let rank = 7; rank >= 0; rank--) {
             for (let file = 0; file < 8; file++) {
-                const name = String.fromCharCode(97 + file) + (rank + 1);
+                const square = String.fromCharCode(97 + file) + (rank + 1);
                 const isBlack = (rank + file) % 2 === 0;
                 let rect = null;
-                const pieceAtSquare = pieces.find(p => p.key === name);
+                let style = null;
+                const selectedSquares = this.state.selectedSquares.filter(s => s.square === square);
+                if (selectedSquares.length) {
+                    style = {
+                        backgroundImage: `linear-gradient(red, green)`,
+                    };
+                }
+                const pieceAtSquare = pieces.find(p => p.key === square);
                 if (pieceAtSquare != null) {
                     rect = (
-                        <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} onDragOver={this.handleDragOver} onDrop={this.handleDrop}>
+                        <div key={square} data-src={square} className={cn("square", { white: !isBlack, black: isBlack })} style={style} onDragOver={this.handleDragOver} onDrop={this.handleDrop} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} onContextMenu={this.handleContextMenu}>
                             {pieceAtSquare}
                         </div>
                     );
                 } else {
-                    rect = <div key={name} data-src={name} className={cn("square", {white: !isBlack, black: isBlack})} onDragOver={this.handleDragOver} onDrop={this.handleDrop}/>;
+                    rect = <div key={square} data-src={square} className={cn("square", { white: !isBlack, black: isBlack })} style={style}  onDragOver={this.handleDragOver} onDrop={this.handleDrop} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp} onContextMenu={this.handleContextMenu}/>;
                 }
                 rects.push(rect);
             }
@@ -201,7 +220,7 @@ export class Board extends React.Component<IProps, IState> {
                 break;
             }
         }
-        const copy = {...newArray[i]};
+        const copy = { ...newArray[i] };
         copy.square = dst;
         newArray[i] = copy;
         this.setState({
@@ -221,19 +240,47 @@ export class Board extends React.Component<IProps, IState> {
         return;
     }
 
-    private handleContextMenu(event: React.MouseEvent<SVGElement>) {
+    private handleContextMenu(event: React.MouseEvent<HTMLDivElement>) {
+        event.preventDefault();
         return;
     }
 
-    private handleMouseDown(event: React.MouseEvent<SVGElement>) {
+    private handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+        if (event.button === 2) {
+            const square = event.currentTarget.getAttribute("data-src");
+            event.preventDefault();
+            this.setState({
+                ...this.state,
+                rightMouseDownSquare: square,
+            });
+        }
         return;
     }
 
-    private handleMouseUp(event: React.MouseEvent<SVGElement>) {
-        return;
+    private handleMouseUp(event: React.MouseEvent<HTMLDivElement>) {
+        if (event.button === 2) {
+            const square = event.currentTarget.getAttribute("data-src");
+            if (square === this.state.rightMouseDownSquare) {
+                // highlight square
+                const existing = this.state.selectedSquares.find(s => s.square === square && s.color === "red"); // todo: need to add modifier for other colors
+                let copy = [...this.state.selectedSquares];
+                if (existing) {
+                    copy = _.remove(copy, s => s === existing);
+                } else {
+                    copy.push({
+                        square,
+                        color: "red",
+                    });
+                }
+                this.setState({
+                    ...this.state,
+                    selectedSquares: copy,
+                });
+            }
+        }
     }
 
-    private handleMouseMove(event: React.MouseEvent<SVGElement>) {
-        return ;
+    private handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+        return;
     }
 }
