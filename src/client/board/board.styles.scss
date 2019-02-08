@@ -1,0 +1,19 @@
+.board {
+    display: flex;
+    width: 512px;
+    height: 512px;
+    flex-wrap: wrap;
+
+    .square {
+        width: 12.5%;
+
+        &.black {
+            background-color: rgb(181, 136, 99);
+        }
+
+        &.white {
+            background-color: rgb(240, 217, 181);
+        }
+    }
+}
+

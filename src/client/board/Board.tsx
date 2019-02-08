@@ -1,6 +1,8 @@
+import cn from "classnames";
 import { Color } from "csstype";
 import * as React from "react";
 import { Move } from "../chess-api";
+import "./board.styles";
 import { Bishop, IProps as IPieceProps, King, Knight, Pawn, Queen, Rook } from "./Pieces";
 
 export const STARTING_POSITION = [
@@ -57,11 +59,11 @@ export class Board extends React.Component<IProps, IState> {
 
     public render() {
         const pieces = this.createPieces();
+        const squares = this.createSquares();
         return (
-            <svg ref={this.boardRef} className="board" viewBox="0 0 512 512">
-                {this.squares}
-                {pieces}
-            </svg>
+            <div className={"board"}>
+                {squares}
+            </div>
         );
     }
 
@@ -167,24 +169,11 @@ export class Board extends React.Component<IProps, IState> {
 
     private createSquares(): JSX.Element[] {
         const rects: JSX.Element[] = [];
-        for (let rank = 0; rank < 8; rank++) {
+        for (let rank = 7; rank >= 0; rank--) {
             for (let file = 0; file < 8; file++) {
                 const name = String.fromCharCode(97 + file) + (rank + 1);
-                const color = (rank + file) % 2 === 0 ? this.props.darkSquareColor : this.props.lightSquareColor;
-                const rect = (
-                    <rect
-                        data-name={name}
-                        onContextMenu={this.handleContextMenu}
-                        onMouseDown={this.handleMouseDown}
-                        onMouseUp={this.handleMouseUp}
-                        onMouseMove={this.handleMouseMove}
-                        key={`${rank}${file}`}
-                        width={64}
-                        height={64}
-                        x={file * 64}
-                        y={512 - (64 * (rank + 1))}
-                        fill={color}
-                    />);
+                const isBlack = (rank + file) % 2 === 0;
+                const rect = <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
                 rects.push(rect);
             }
         }
