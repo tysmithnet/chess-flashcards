@@ -13,7 +13,7 @@ export class Home extends React.Component {
                     <p>Practice your chess openings, and quiz yourself on best moves, checks, captures, and more!</p>
                 </div>
                 <div className="board">
-                    <Board darkSquareColor={"#b58863"} lightSquareColor={"#f0d9b5"} position={STARTING_POSITION} legalMoves={[]} />
+                    <Board position={STARTING_POSITION} legalMoves={[]} />
                 </div>
             </div>
         );

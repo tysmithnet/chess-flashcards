@@ -17,8 +17,6 @@ export interface IArrow {
     color: Color;
 }
 export interface IProps {
-    darkSquareColor?: Color;
-    lightSquareColor?: Color;
     position: string[];
     legalMoves: Move[];
 }
@@ -27,7 +25,6 @@ export interface IState {
     selectedPieceIndex: number;
 }
 export declare class Board extends React.Component<IProps, IState> {
-    private squares;
     private boardRef;
     constructor(props: IProps);
     render(): JSX.Element;

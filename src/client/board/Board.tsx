@@ -32,8 +32,6 @@ export interface IArrow {
 }
 
 export interface IProps {
-    darkSquareColor?: Color;
-    lightSquareColor?: Color;
     position: string[]; // ["R", "N", "B", "Q" ...] starting from A1, A2, .. H8, null represents empty
     legalMoves: Move[];
 }
@@ -44,7 +42,6 @@ export interface IState {
 }
 
 export class Board extends React.Component<IProps, IState> {
-    private squares: JSX.Element[];
     private boardRef: React.RefObject<SVGSVGElement>;
     constructor(props: IProps) {
         super(props);
@@ -53,12 +50,10 @@ export class Board extends React.Component<IProps, IState> {
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
-        this.squares = this.createSquares();
         this.initializeState(props);
     }
 
     public render() {
-        const pieces = this.createPieces();
         const squares = this.createSquares();
         return (
             <div className={"board"}>
@@ -102,14 +97,11 @@ export class Board extends React.Component<IProps, IState> {
         const pieces = [];
         for (const cur of this.state.pieceState) {
             const isBlack = cur.pieceLetter.toLowerCase() === cur.pieceLetter;
-            const fill = isBlack ? "#2d2d2d" : "white";
-            const stroke = "black";
             const props: IPieceProps = {
+                isWhite: !isBlack,
                 dataSrc: cur.square,
-                fillColor: fill,
                 onMouseDown: this.handleMouseDown,
                 onMouseMove: this.handleMouseMove,
-                strokeColor: stroke,
                 x: cur.x,
                 y: cur.y,
             };
@@ -168,12 +160,23 @@ export class Board extends React.Component<IProps, IState> {
     }
 
     private createSquares(): JSX.Element[] {
+        const pieces = this.createPieces();
         const rects: JSX.Element[] = [];
         for (let rank = 7; rank >= 0; rank--) {
             for (let file = 0; file < 8; file++) {
                 const name = String.fromCharCode(97 + file) + (rank + 1);
                 const isBlack = (rank + file) % 2 === 0;
-                const rect = <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
+                let rect = null;
+                const pieceAtSquare = pieces.find(p => p.key === name);
+                if (pieceAtSquare != null) {
+                    rect = (
+                        <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})}>
+                            {pieceAtSquare}
+                        </div>
+                    );
+                } else {
+                    rect = <div key={name} data-name={name} className={cn("square", {white: !isBlack, black: isBlack})} />;
+                }
                 rects.push(rect);
             }
         }

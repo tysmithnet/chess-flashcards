@@ -55,8 +55,10 @@ const stylesRule = {
 
 // rule for images
 const imageRule = {
-    test: /\.(png|jpg)$/,
-    loader: "url-loader",
+    test: /\.(png|svg|jpg|gif)$/,
+    use: [
+        "file-loader",
+    ]
 }
 
 // rule to transpile regular javascript files
@@ -145,7 +147,7 @@ const common = {
         workerPlugin,
         cleanPlugin,
         htmlPlugin,
-        statsPlugin
+        statsPlugin,
     ],
     module: {
         rules: [

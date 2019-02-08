@@ -5,7 +5,10 @@
     flex-wrap: wrap;
 
     .square {
-        width: 12.5%;
+        min-width: 12.5%;
+        max-width: 12.5%;
+        min-height: 12.5%;
+        max-height: 12.5%;
 
         &.black {
             background-color: rgb(181, 136, 99);
@@ -13,6 +16,13 @@
 
         &.white {
             background-color: rgb(240, 217, 181);
+        }
+
+        img {
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 100%;
+            max-height: 100%;
         }
     }
 }
