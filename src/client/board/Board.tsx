@@ -75,8 +75,11 @@ export class Board extends React.Component<IProps, IState> {
     public render() {
         const squares = this.createSquares();
         return (
-            <div className={"board"}>
-                {squares}
+            <div className="board-container">
+                <div className={"board"}>
+                    {squares}
+                </div>
+                <div className="overlay" />
             </div>
         );
     }

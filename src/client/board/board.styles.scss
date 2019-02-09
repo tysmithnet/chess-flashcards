@@ -1,28 +1,45 @@
-.board {
-    display: flex;
-    width: 512px;
-    height: 512px;
-    flex-wrap: wrap;
+.board-container {
+    position: relative;
 
-    .square {
-        min-width: 12.5%;
-        max-width: 12.5%;
-        min-height: 12.5%;
-        max-height: 12.5%;
-
-        &.black {
-            background-color: rgb(181, 136, 99);
+    .board {
+        display: flex;
+        width: 512px;
+        height: 512px;
+        flex-wrap: wrap;
+    
+        .square {
+            min-width: 12.5%;
+            max-width: 12.5%;
+            min-height: 12.5%;
+            max-height: 12.5%;
+    
+            &.black {
+                background-color: rgb(181, 136, 99);
+            }
+    
+            &.white {
+                background-color: rgb(240, 217, 181);
+            }
         }
-
-        &.white {
-            background-color: rgb(240, 217, 181);
+    
+        .piece {
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 100%;
+            max-height: 100%;
         }
     }
 
-    .piece {
-        min-width: 100%;
-        max-width: 100%;
-        min-height: 100%;
-        max-height: 100%;
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+
+        * {
+            pointer-events: none;
+        }
     }
 }
