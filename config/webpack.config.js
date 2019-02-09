@@ -115,6 +115,7 @@ const common = {
     output: {
         path: distPath,
         publicPath: "/",
+        filename: "[name].bundle.js",
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".jsx", ".scss"]
