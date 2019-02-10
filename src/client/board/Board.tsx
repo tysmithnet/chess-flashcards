@@ -49,6 +49,8 @@ export interface ISelectedSquare {
 export interface IProps {
     position: string[]; // ["R", "N", "B", "Q" ...] starting from A1, A2, .. H8, null represents empty
     legalMoves: Move[];
+    freeMove?: boolean;
+    onMove?: (src: string, dst: string) => void;
 }
 
 export interface IState {
@@ -232,6 +234,9 @@ export class Board extends React.Component<IProps, IState> {
             pieceState: newArray,
             selectedPieceIndex: null,
         });
+        if (this.props.onMove) {
+            this.props.onMove(src, dst);
+        }
         return;
     }
 

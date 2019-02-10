@@ -16,6 +16,7 @@ export interface IState {
     selectedOpenings: ISelectedOpening[];
     showDialog: boolean;
     current: ISelectedOpening;
+    moveNum: number;
 }
 
 export interface ISelectedOpening {
@@ -31,6 +32,7 @@ export class Openings extends React.Component<IProps, IState> {
             selectedOpenings: [],
             showDialog: false,
             current: null,
+            moveNum: null,
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
@@ -143,6 +145,7 @@ export class Openings extends React.Component<IProps, IState> {
             showDialog: false,
             selectedOpenings: newSelected,
             current,
+            moveNum: 0,
         });
     }
 
