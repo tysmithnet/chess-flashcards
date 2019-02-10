@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Opening, OpeningVariant } from "../chess-api";
+import { Move, Opening, OpeningVariant } from "../chess-api";
 import { IBaseProps } from "../root";
 import "./openings.styles";
 export interface IProps extends IBaseProps {
@@ -10,6 +10,9 @@ export interface IState {
     selectedOpenings: ISelectedOpening[];
     showDialog: boolean;
     current: ISelectedOpening;
+    moveNum: number;
+    position: string[];
+    legalMoves: Move[];
 }
 export interface ISelectedOpening {
     eco: string;
@@ -20,6 +23,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private handleMove;
     private createDialog;
     private showDialog;
     private hideDialog;

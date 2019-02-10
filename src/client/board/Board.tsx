@@ -61,7 +61,65 @@ export interface IState {
     rightMouseDownSquare: string;
 }
 
+export function convertSquare(square: string | number | number[]): { s: string, i: number, c: number[] } {
+    const res = {
+        s: "",
+        i: 0,
+        c: [] as number[],
+    };
+    if (square instanceof String) {
+        res.s = square as string;
+        const col = square.charCodeAt(0) - 97;
+        const row = parseInt(square.charAt(1), 10) - 1;
+        const index = (row * 8) + col;
+        res.i = index;
+        res.c = [row, col];
+    }
+    if (typeof (square) === "number") {
+        const row = Math.floor(square / 8);
+        const col = square % 8;
+        const index = (row * 8) + col;
+        const alg = `${String.fromCharCode(97 + col)}${row + 1}`;
+        res.s = alg;
+        res.i = index;
+        res.c = [row, col];
+    }
+    if (Array.isArray(square)) {
+        res.c = square as number[];
+        res.i = (square[0] * 64) + square[1];
+        res.s = `${String.fromCharCode(97 + square[1])}${square[0] + 1}`;
+    }
+    return res;
+}
+
 export class Board extends React.Component<IProps, IState> {
+
+    public static getDerivedStateFromProps(props: IProps, state: IState): IState {
+        const pieceState: IPieceState[] = [];
+        for (let i = 0; i < 64; i++) {
+            const pieceLetter = props.position[i];
+            if (pieceLetter == null) {
+                continue;
+            }
+            const row = Math.floor(i / 8);
+            const col = i % 8;
+            const loc = convertSquare([row, col]);
+
+            pieceState.push({
+                pieceLetter,
+                square: loc.s,
+            });
+        }
+
+        return {
+            pieceState,
+            selectedSquares: [],
+            arrows: [],
+            rightMouseDownSquare: null,
+            selectedPieceIndex: null,
+        };
+    }
+
     private boardRef: React.RefObject<SVGSVGElement>;
     constructor(props: IProps) {
         super(props);
@@ -73,7 +131,6 @@ export class Board extends React.Component<IProps, IState> {
         this.handleDragOver = this.handleDragOver.bind(this);
         this.handleDragStart = this.handleDragStart.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
-        this.initializeState(props);
     }
 
     public render() {
@@ -86,37 +143,6 @@ export class Board extends React.Component<IProps, IState> {
                 <div className="overlay" />
             </div>
         );
-    }
-
-    private convertSquare(square: string | number | number[]): { s: string, i: number, c: number[] } {
-        const res = {
-            s: "",
-            i: 0,
-            c: [] as number[],
-        };
-        if (square instanceof String) {
-            res.s = square as string;
-            const col = square.charCodeAt(0) - 97;
-            const row = parseInt(square.charAt(1), 10) - 1;
-            const index = (row * 8) + col;
-            res.i = index;
-            res.c = [row, col];
-        }
-        if (typeof (square) === "number") {
-            const row = Math.floor(square / 8);
-            const col = square % 8;
-            const index = (row * 8) + col;
-            const alg = `${String.fromCharCode(97 + col)}${row + 1}`;
-            res.s = alg;
-            res.i = index;
-            res.c = [row, col];
-        }
-        if (Array.isArray(square)) {
-            res.c = square as number[];
-            res.i = (square[0] * 64) + square[1];
-            res.s = `${String.fromCharCode(97 + square[1])}${square[0] + 1}`;
-        }
-        return res;
     }
 
     private createPieces(): JSX.Element[] {
@@ -154,31 +180,6 @@ export class Board extends React.Component<IProps, IState> {
             pieces.push(piece);
         }
         return pieces;
-    }
-
-    private initializeState(props: IProps): void {
-        const pieceState: IPieceState[] = [];
-        for (let i = 0; i < 64; i++) {
-            const pieceLetter = props.position[i];
-            if (pieceLetter == null) {
-                continue;
-            }
-            const row = Math.floor(i / 8);
-            const col = i % 8;
-            const loc = this.convertSquare([row, col]);
-
-            pieceState.push({
-                pieceLetter,
-                square: loc.s,
-            });
-        }
-        this.state = {
-            pieceState,
-            selectedPieceIndex: null,
-            arrows: [],
-            rightMouseDownSquare: null,
-            selectedSquares: [],
-        };
     }
 
     private createSquares(): JSX.Element[] {

@@ -20,6 +20,8 @@ export interface ISelectedSquare {
 export interface IProps {
     position: string[];
     legalMoves: Move[];
+    freeMove?: boolean;
+    onMove?: (src: string, dst: string) => void;
 }
 export interface IState {
     pieceState: IPieceState[];
@@ -28,13 +30,17 @@ export interface IState {
     selectedSquares: ISelectedSquare[];
     rightMouseDownSquare: string;
 }
+export declare function convertSquare(square: string | number | number[]): {
+    s: string;
+    i: number;
+    c: number[];
+};
 export declare class Board extends React.Component<IProps, IState> {
+    static getDerivedStateFromProps(props: IProps, state: IState): IState;
     private boardRef;
     constructor(props: IProps);
     render(): JSX.Element;
-    private convertSquare;
     private createPieces;
-    private initializeState;
     private createSquares;
     private handleDrop;
     private movePiece;

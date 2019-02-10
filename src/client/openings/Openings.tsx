@@ -2,7 +2,8 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board, EMPTY_BOARD, STARTING_POSITION } from "../board/Board";
-import { Opening, OpeningVariant } from "../chess-api";
+import { Move, Opening, OpeningVariant } from "../chess-api";
+import { fenToArray } from "../common/fen";
 import { IBaseProps, IRootState } from "../root";
 import { loadOpeningsRequestFactory } from "./openings.action";
 import "./openings.styles";
@@ -17,6 +18,8 @@ export interface IState {
     showDialog: boolean;
     current: ISelectedOpening;
     moveNum: number;
+    position: string[];
+    legalMoves: Move[];
 }
 
 export interface ISelectedOpening {
@@ -33,10 +36,13 @@ export class Openings extends React.Component<IProps, IState> {
             showDialog: false,
             current: null,
             moveNum: null,
+            position: EMPTY_BOARD,
+            legalMoves: [],
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
         this.hideDialog = this.hideDialog.bind(this);
+        this.handleMove = this.handleMove.bind(this);
     }
 
     public render() {
@@ -56,7 +62,7 @@ export class Openings extends React.Component<IProps, IState> {
             <div className="openings">
                 <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
                 <div className="board-area">
-                    <Board position={EMPTY_BOARD} legalMoves={[]} />
+                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} />
                 </div>
                 {dialog}
             </div>
@@ -70,6 +76,25 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentWillUnmount() {
         document.removeEventListener("keydown", this.hideDialog);
+    }
+
+    private handleMove(src: string, dst: string) {
+        // check the move against the current move number, if it matches, update the position and get new legal moves
+        const expectedMove = this.state.current.variant.moves[this.state.moveNum];
+        if (expectedMove.src === src && expectedMove.dst === dst) {
+            console.log("CORRECT!");
+            // apply move to position
+            const nextPosition = fenToArray(expectedMove.fenAfter);
+            // get legal moves for position
+            // set current move++
+            const nextMoveNum = this.state.moveNum + 1;
+            this.setState({
+                ...this.state,
+                legalMoves: [],
+                position: nextPosition,
+                moveNum: nextMoveNum,
+            });
+        }
     }
 
     private createDialog() {
@@ -135,15 +160,19 @@ export class Openings extends React.Component<IProps, IState> {
         }
 
         let current = null;
+        let position = EMPTY_BOARD;
         if (newSelected.length) {
             const ran = Math.floor(Math.random() * newSelected.length);
             current = newSelected[ran];
+            position = STARTING_POSITION;
         }
 
         this.setState({
             ...this.state,
             showDialog: false,
             selectedOpenings: newSelected,
+            legalMoves: [],
+            position,
             current,
             moveNum: 0,
         });
