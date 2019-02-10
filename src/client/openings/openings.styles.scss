@@ -1,0 +1,13 @@
+.openings {
+    display: flex;
+
+    .board-area {
+        flex-grow: 1;
+    }
+
+    .selection-area {
+        flex-shrink: 1;
+        max-width: 50%;
+        overflow: auto;
+    }
+}
