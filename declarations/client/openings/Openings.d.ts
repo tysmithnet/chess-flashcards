@@ -19,7 +19,9 @@ export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
-    showDialog(): void;
+    componentWillUnmount(): void;
+    private showDialog;
+    private hideDialog;
     private handleVariantSelected;
     private handleSearchTextChange;
 }

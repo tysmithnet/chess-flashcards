@@ -35,6 +35,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
         this.showDialog = this.showDialog.bind(this);
+        this.hideDialog = this.hideDialog.bind(this);
     }
 
     public render() {
@@ -62,7 +63,7 @@ export class Openings extends React.Component<IProps, IState> {
         if (this.state.showDialog) {
             dialog = (
                 <div className="selection-dialog">
-                    <input value={this.state.searchText} onChange={this.handleSearchTextChange}/>
+                    <input className="search-bar" value={this.state.searchText} onChange={this.handleSearchTextChange}/>
                     <table>
                         <thead>
                             <tr>
@@ -95,12 +96,27 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         this.props.dispatch(loadOpeningsRequestFactory());
+        document.addEventListener("keydown", this.hideDialog);
     }
 
-    public showDialog() {
+    public componentWillUnmount() {
+        document.removeEventListener("keydown", this.hideDialog);
+    }
+
+    private showDialog() {
         this.setState({
             ...this.state,
             showDialog: true,
+        });
+    }
+
+    private hideDialog({keyCode}: any) {
+        if (keyCode !== 27) {
+            return;
+        }
+        this.setState({
+            ...this.state,
+            showDialog: false,
         });
     }
 
