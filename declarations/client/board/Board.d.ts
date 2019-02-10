@@ -2,6 +2,7 @@ import { Color } from "csstype";
 import * as React from "react";
 import { Move } from "../chess-api";
 import "./board.styles";
+export declare const EMPTY_BOARD: any[];
 export declare const STARTING_POSITION: string[];
 interface IPieceState {
     pieceLetter: string;

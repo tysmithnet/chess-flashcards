@@ -1,17 +1,24 @@
 import * as React from "react";
-import { Opening } from "../chess-api";
+import { Opening, OpeningVariant } from "../chess-api";
 import { IBaseProps } from "../root";
+import "./openings.styles";
 export interface IProps extends IBaseProps {
     openings: Opening[];
-    selectedOpenings: Opening[];
 }
 export interface IState {
-    searchTerm: string;
+    searchText: string;
+    selectedOpenings: ISelectedOpening[];
+}
+export interface ISelectedOpening {
+    eco: string;
+    variant: OpeningVariant;
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
+    private handleVariantSelected;
+    private handleSearchTextChange;
 }
 export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
     WrappedComponent: React.ComponentType<IProps>;

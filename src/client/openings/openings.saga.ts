@@ -1,12 +1,10 @@
-import axios from "axios";
-import {camelArray, camelKeys} from "change-object-case";
-import { all, call, put, takeLatest } from "redux-saga/effects";
-import {Configuration, DefaultApi, DefaultApiFactory, Opening as IOpening } from "../chess-api";
+import {camelArray} from "change-object-case";
+import { all, put, takeLatest } from "redux-saga/effects";
+import {DefaultApiFactory, Opening as IOpening } from "../chess-api";
 import {ACTION_TYPES, ILoadOpeningsRequest, loadOpeningsFailureFactory, loadOpeningsSuccessFactory} from "./openings.action";
 
 // tslint:disable-next-line:no-var-requires
 const openingsJson = require("../openings.json");
-const api = DefaultApiFactory();
 function* getAllOpenings() {
     try {
         const converted = camelArray(openingsJson, {recursive: true, arrayRecursive: true}) as IOpening[];
@@ -17,7 +15,7 @@ function* getAllOpenings() {
 }
 
 export function* getAllOpeningsSaga() {
-    yield takeLatest(ACTION_TYPES.LOAD_OPENINGS.REQUEST, (action: ILoadOpeningsRequest) => {
+    yield takeLatest(ACTION_TYPES.LOAD_OPENINGS.REQUEST, () => {
         return getAllOpenings();
     });
 }

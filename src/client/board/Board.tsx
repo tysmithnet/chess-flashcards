@@ -17,6 +17,8 @@ const WhitePawn = require("./images/wp.png");
 const WhiteQueen = require("./images/wq.png");
 const WhiteRook = require("./images/wr.png");
 
+export const EMPTY_BOARD = new Array(64);
+
 export const STARTING_POSITION = [
     "R", "N", "B", "Q", "K", "B", "N", "R",
     "P", "P", "P", "P", "P", "P", "P", "P",
