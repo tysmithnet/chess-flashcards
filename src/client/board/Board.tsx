@@ -131,6 +131,13 @@ export class Board extends React.Component<IProps, IState> {
         this.handleDragOver = this.handleDragOver.bind(this);
         this.handleDragStart = this.handleDragStart.bind(this);
         this.handleDrop = this.handleDrop.bind(this);
+        this.state = {
+            arrows: [],
+            pieceState: [],
+            rightMouseDownSquare: null,
+            selectedPieceIndex: null,
+            selectedSquares: [],
+        };
     }
 
     public render() {
