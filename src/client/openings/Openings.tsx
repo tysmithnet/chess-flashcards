@@ -94,6 +94,11 @@ export class Openings extends React.Component<IProps, IState> {
                 position: nextPosition,
                 moveNum: nextMoveNum,
             });
+        } else {
+            console.log("INCORRECT!");
+            this.setState({
+                ...this.state,
+            });
         }
     }
 
