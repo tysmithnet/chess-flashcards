@@ -8,6 +8,8 @@ export interface IProps extends IBaseProps {
 export interface IState {
     searchText: string;
     selectedOpenings: ISelectedOpening[];
+    showDialog: boolean;
+    current: ISelectedOpening;
 }
 export interface ISelectedOpening {
     eco: string;
@@ -17,6 +19,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
+    showDialog(): void;
     private handleVariantSelected;
     private handleSearchTextChange;
 }

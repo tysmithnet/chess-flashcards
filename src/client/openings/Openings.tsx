@@ -14,6 +14,8 @@ export interface IProps extends IBaseProps {
 export interface IState {
     searchText: string;
     selectedOpenings: ISelectedOpening[];
+    showDialog: boolean;
+    current: ISelectedOpening;
 }
 
 export interface ISelectedOpening {
@@ -27,9 +29,12 @@ export class Openings extends React.Component<IProps, IState> {
         this.state = {
             searchText: "",
             selectedOpenings: [],
+            showDialog: false,
+            current: null,
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
+        this.showDialog = this.showDialog.bind(this);
     }
 
     public render() {
@@ -53,12 +58,10 @@ export class Openings extends React.Component<IProps, IState> {
             });
         });
         const flattened = _.flatten(rows);
-        return (
-            <div className="openings">
-                <div className="board-area">
-                    <Board position={EMPTY_BOARD} legalMoves={[]} />
-                </div>
-                <div className="selection-area">
+        let dialog = null;
+        if (this.state.showDialog) {
+            dialog = (
+                <div className="selection-dialog">
                     <input value={this.state.searchText} onChange={this.handleSearchTextChange}/>
                     <table>
                         <thead>
@@ -73,12 +76,32 @@ export class Openings extends React.Component<IProps, IState> {
                         </tbody>
                     </table>
                 </div>
+            );
+        }
+        let currentTitle = "Select openings";
+        if (this.state.current) {
+            currentTitle = `${this.state.current.eco} - ${this.state.current.variant.name}`;
+        }
+        return (
+            <div className="openings">
+                <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
+                <div className="board-area">
+                    <Board position={EMPTY_BOARD} legalMoves={[]} />
+                </div>
+                {dialog}
             </div>
         );
     }
 
     public componentDidMount() {
         this.props.dispatch(loadOpeningsRequestFactory());
+    }
+
+    public showDialog() {
+        this.setState({
+            ...this.state,
+            showDialog: true,
+        });
     }
 
     private handleVariantSelected(event: React.ChangeEvent<HTMLInputElement>) {
