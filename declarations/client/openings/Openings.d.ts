@@ -20,9 +20,9 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private createDialog;
     private showDialog;
     private hideDialog;
-    private handleVariantSelected;
     private handleSearchTextChange;
 }
 export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
