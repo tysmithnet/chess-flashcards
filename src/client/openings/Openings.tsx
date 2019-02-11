@@ -117,7 +117,7 @@ export class Openings extends React.Component<IProps, IState> {
             position: STARTING_POSITION,
             showDialog: false,
             selectedOpenings: selected,
-            backStack: [],
+            backStack: [selected[0]],
             legalMoves: [],
         });
     }
@@ -196,7 +196,7 @@ export class Openings extends React.Component<IProps, IState> {
                 if (!pauseOnComplete) {
                     return this.goNextOpening();
                 } else {
-                    setTimeout(this.goNextOpening, 500);
+                    setTimeout(this.goNextOpening, 1000);
                 }
             }
 
