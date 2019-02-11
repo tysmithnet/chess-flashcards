@@ -20,6 +20,7 @@ export interface IState {
     moveNum: number;
     position: string[];
     legalMoves: Move[];
+    backStack: ISelectedOpening[];
 }
 
 export interface ISelectedOpening {
@@ -38,11 +39,16 @@ export class Openings extends React.Component<IProps, IState> {
             moveNum: null,
             position: EMPTY_BOARD,
             legalMoves: [],
+            backStack: [],
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
         this.hideDialog = this.hideDialog.bind(this);
         this.handleMove = this.handleMove.bind(this);
+        this.goBackOpening = this.goBackOpening.bind(this);
+        this.goNextOpening = this.goNextOpening.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
+        this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
     }
 
     public render() {
@@ -71,11 +77,70 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         this.props.dispatch(loadOpeningsRequestFactory());
-        document.addEventListener("keydown", this.hideDialog);
+        document.addEventListener("keyup", this.handleKeyUp);
     }
 
     public componentWillUnmount() {
-        document.removeEventListener("keydown", this.hideDialog);
+        document.removeEventListener("keyup", this.handleKeyUp);
+    }
+
+    private handleKeyUp(event: KeyboardEvent) {
+        if (event.code === "Escape") {
+            return this.hideDialog();
+        } else if (event.code === "Space" && !this.state.showDialog) {
+            return this.goNextOpening();
+        } else if (event.code === "KeyR" && !this.state.showDialog) {
+            return this.redoCurrentOpening();
+        } else if (event.code === "KeyB" && !this.state.showDialog) {
+            return this.goBackOpening();
+        } else if (event.code === "KeyH" && !this.state.showDialog) {
+            return this.giveHint();
+        }
+    }
+
+    private giveHint() {
+        const curMove = this.state.current.variant.moves[this.state.moveNum];
+        this.handleMove(curMove.src, curMove.dst);
+    }
+
+    private goNextOpening() {
+        const ran = Math.floor(Math.random() * this.state.selectedOpenings.length);
+        const current = this.state.selectedOpenings[ran];
+        const position = STARTING_POSITION;
+        const newBackStack = [...this.state.backStack, this.state.current];
+        this.setState({
+            ...this.state,
+            current,
+            position,
+            legalMoves: null,
+            moveNum: 0,
+            backStack: newBackStack,
+        });
+    }
+
+    private redoCurrentOpening() {
+        this.setState({
+            ...this.state,
+            position: STARTING_POSITION,
+            moveNum: 0,
+        });
+    }
+
+    private goBackOpening() {
+        const newBackStack = [...this.state.backStack];
+        if (newBackStack.length < 2) {
+            return;
+        }
+        newBackStack.pop();
+        const newCurrent = newBackStack[newBackStack.length - 1];
+        this.setState({
+            ...this.state,
+            current: newCurrent,
+            moveNum: 0,
+            position: STARTING_POSITION,
+            legalMoves: [],
+            backStack: newBackStack,
+        });
     }
 
     private handleMove(src: string, dst: string) {
@@ -88,6 +153,11 @@ export class Openings extends React.Component<IProps, IState> {
             // get legal moves for position
             // set current move++
             const nextMoveNum = this.state.moveNum + 1;
+
+            if (nextMoveNum >= this.state.current.variant.moves.length) {
+                return this.goNextOpening();
+            }
+
             this.setState({
                 ...this.state,
                 legalMoves: [],
@@ -146,11 +216,7 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private hideDialog(event: KeyboardEvent) {
-        if (event.keyCode !== 27) {
-            return;
-        }
-
+    private hideDialog() {
         const selectedInputs = (event.currentTarget as any).querySelectorAll(".openings .selection-dialog table input:checked");
         const newSelected: ISelectedOpening[] = [];
         for (const input of selectedInputs as HTMLInputElement[]) {

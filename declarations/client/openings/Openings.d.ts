@@ -13,6 +13,7 @@ export interface IState {
     moveNum: number;
     position: string[];
     legalMoves: Move[];
+    backStack: ISelectedOpening[];
 }
 export interface ISelectedOpening {
     eco: string;
@@ -23,6 +24,11 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private handleKeyUp;
+    private giveHint;
+    private goNextOpening;
+    private redoCurrentOpening;
+    private goBackOpening;
     private handleMove;
     private createDialog;
     private showDialog;
