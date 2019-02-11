@@ -122,13 +122,9 @@
         "worker-loader": "2.0.0"
     },
     "dependencies": {
-        "@material-ui/core": "3.9.0",
-        "@material-ui/icons": "3.0.2",
         "axios": "0.18.0",
         "change-object-case": "0.2.0",
-        "chess.js": "0.10.2",
-        "chessground": "7.3.5",
-        "classnames": "^2.2.6",
+        "classnames": "2.2.6",
         "connected-react-router": "4.3.0",
         "cors": "2.8.5",
         "enhanced-pgn-parser": "0.0.2",
