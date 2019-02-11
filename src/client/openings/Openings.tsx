@@ -28,6 +28,11 @@ export interface ISelectedOpening {
     variant: OpeningVariant;
 }
 
+export interface IPreset {
+    title: string;
+    selectedOpenings: ISelectedOpening[];
+}
+
 export class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -50,6 +55,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
+        this.handleRuyLopezPreset = this.handleRuyLopezPreset.bind(this);
     }
 
     public render() {
@@ -83,6 +89,37 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentWillUnmount() {
         document.removeEventListener("keyup", this.handleKeyUp);
+    }
+
+    private createPresets() {
+        if (this.props.openings == null) {
+            return null;
+        }
+        return (
+            <ul>
+                <li key="Ruy Lopez" onClick={this.handleRuyLopezPreset}>Ruy Lopez</li>
+            </ul>
+        );
+    }
+
+    private handleRuyLopezPreset() {
+        const openings = this.props.openings.filter(o => /C[6-9][0-9]/.test(o.id));
+        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
+            return {
+                eco: o.id,
+                variant: v,
+            };
+        })));
+        this.setState({
+            ...this.state,
+            current: selected[0],
+            moveNum: 0,
+            position: STARTING_POSITION,
+            showDialog: false,
+            selectedOpenings: selected,
+            backStack: [],
+            legalMoves: [],
+        });
     }
 
     private handleKeyUp(event: KeyboardEvent) {
@@ -188,7 +225,7 @@ export class Openings extends React.Component<IProps, IState> {
                 const isChecked = this.state.selectedOpenings.find(o2 => o2.eco === eco && o2.variant.name === v.name) != null;
                 return (
                     <tr key={`${eco} - ${v.name} - ${vi}`}>
-                        <td><input type="checkbox" data-eco={eco} data-name={v.name} checked={isChecked} onChange={this.handleVariantSelected}/></td>
+                        <td><input type="checkbox" data-eco={eco} data-name={v.name} checked={isChecked} onChange={this.handleVariantSelected} /></td>
                         <td>{eco}</td>
                         <td>{v.name}</td>
                     </tr>
@@ -198,19 +235,24 @@ export class Openings extends React.Component<IProps, IState> {
         const flattened = _.flatten(rows);
         return (
             <div className="selection-dialog">
-                <input className="search-bar" value={this.state.searchText} onChange={this.handleSearchTextChange} />
-                <table>
-                    <thead>
-                        <tr>
-                            <th />
-                            <th>ECO</th>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {flattened}
-                    </tbody>
-                </table>
+                <div className="table-container">
+                    <input className="search-bar" value={this.state.searchText} onChange={this.handleSearchTextChange} />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th />
+                                <th>ECO</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {flattened}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="preset-container">
+                    {this.createPresets()}
+                </div>
             </div>
         );
     }
@@ -249,7 +291,14 @@ export class Openings extends React.Component<IProps, IState> {
         }
     }
 
-    private hideDialog() {
+    private hideDialog(selectedOpenings: ISelectedOpening[] = null) {
+        if (selectedOpenings) {
+            this.setState({
+                ...this.state,
+                selectedOpenings,
+            });
+        }
+
         if (this.state.current == null && this.state.selectedOpenings != null && this.state.selectedOpenings.length) {
             this.goNextOpening();
         }

@@ -19,11 +19,17 @@ export interface ISelectedOpening {
     eco: string;
     variant: OpeningVariant;
 }
+export interface IPreset {
+    title: string;
+    selectedOpenings: ISelectedOpening[];
+}
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private createPresets;
+    private handleRuyLopezPreset;
     private handleKeyUp;
     private giveHint;
     private goNextOpening;

@@ -14,6 +14,7 @@
 
     .selection-dialog {
         position: fixed;
+        display: flex;
         top: 0;
         left: 0;
         bottom: 0;
@@ -23,12 +24,23 @@
         padding-left: 33%;
         padding-right: 33%;
 
-        .search-bar {
-            width: 100%;
+        .table-container {
+            flex-basis: 3;
+            .search-bar {
+                width: 100%;
+            }
+    
+            table {
+                text-align: center;
+            }
         }
 
-        table {
-            text-align: center;
+        .preset-container {
+            flex-basis: 1;
+            li {
+                pointer-events: all;
+                cursor: pointer;
+            }
         }
     }
 }
