@@ -14,6 +14,7 @@ export interface IState {
     position: string[];
     legalMoves: Move[];
     backStack: ISelectedOpening[];
+    isBlackPerspective: boolean;
 }
 export interface ISelectedOpening {
     eco: string;
@@ -31,6 +32,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     private createPresets;
     private handleRuyLopezPreset;
     private handleKeyUp;
+    private flipBoard;
     private giveHint;
     private goNextOpening;
     private redoCurrentOpening;

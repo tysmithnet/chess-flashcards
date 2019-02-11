@@ -21,6 +21,7 @@ export interface IState {
     position: string[];
     legalMoves: Move[];
     backStack: ISelectedOpening[];
+    isBlackPerspective: boolean;
 }
 
 export interface ISelectedOpening {
@@ -45,6 +46,7 @@ export class Openings extends React.Component<IProps, IState> {
             position: EMPTY_BOARD,
             legalMoves: [],
             backStack: [],
+            isBlackPerspective: false,
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
@@ -75,7 +77,7 @@ export class Openings extends React.Component<IProps, IState> {
             <div className="openings">
                 <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
                 <div className="board-area">
-                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} />
+                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective}/>
                 </div>
                 {dialog}
             </div>
@@ -133,7 +135,16 @@ export class Openings extends React.Component<IProps, IState> {
             return this.goBackOpening();
         } else if (event.code === "KeyH" && !this.state.showDialog) {
             return this.giveHint();
+        } else if (event.code === "KeyF" && !this.state.showDialog) {
+            return this.flipBoard();
         }
+    }
+
+    private flipBoard() {
+        this.setState({
+            ...this.state,
+            isBlackPerspective: !this.state.isBlackPerspective,
+        });
     }
 
     private giveHint() {

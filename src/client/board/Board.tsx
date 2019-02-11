@@ -50,6 +50,7 @@ export interface IProps {
     position: string[]; // ["R", "N", "B", "Q" ...] starting from A1, A2, .. H8, null represents empty
     legalMoves: Move[];
     freeMove?: boolean;
+    isBlackPerspective?: boolean;
     onMove?: (src: string, dst: string) => void;
 }
 
@@ -143,7 +144,7 @@ export class Board extends React.Component<IProps, IState> {
     public render() {
         const squares = this.createSquares();
         return (
-            <div className="board-container">
+            <div className={cn("board-container", {"black-perspective": this.props.isBlackPerspective})}>
                 <div className={"board"}>
                     {squares}
                 </div>

@@ -21,6 +21,7 @@ export interface IProps {
     position: string[];
     legalMoves: Move[];
     freeMove?: boolean;
+    isBlackPerspective?: boolean;
     onMove?: (src: string, dst: string) => void;
 }
 export interface IState {
