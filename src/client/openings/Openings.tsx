@@ -49,6 +49,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.goNextOpening = this.goNextOpening.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
+        this.handleVariantSelected = this.handleVariantSelected.bind(this);
     }
 
     public render() {
@@ -100,7 +101,7 @@ export class Openings extends React.Component<IProps, IState> {
 
     private giveHint() {
         const curMove = this.state.current.variant.moves[this.state.moveNum];
-        this.handleMove(curMove.src, curMove.dst);
+        this.handleMove(curMove.src, curMove.dst, true);
     }
 
     private goNextOpening() {
@@ -143,7 +144,7 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private handleMove(src: string, dst: string) {
+    private handleMove(src: string, dst: string, pauseOnComplete = false) {
         // check the move against the current move number, if it matches, update the position and get new legal moves
         const expectedMove = this.state.current.variant.moves[this.state.moveNum];
         if (expectedMove.src === src && expectedMove.dst === dst) {
@@ -155,7 +156,11 @@ export class Openings extends React.Component<IProps, IState> {
             const nextMoveNum = this.state.moveNum + 1;
 
             if (nextMoveNum >= this.state.current.variant.moves.length) {
-                return this.goNextOpening();
+                if (!pauseOnComplete) {
+                    return this.goNextOpening();
+                } else {
+                    setTimeout(this.goNextOpening, 500);
+                }
             }
 
             this.setState({
@@ -180,9 +185,10 @@ export class Openings extends React.Component<IProps, IState> {
                     || v.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) > -1;
             });
             return filtered.map((v, vi) => {
+                const isChecked = this.state.selectedOpenings.find(o2 => o2.eco === eco && o2.variant.name === v.name) != null;
                 return (
                     <tr key={`${eco} - ${v.name} - ${vi}`}>
-                        <td><input type="checkbox" data-eco={eco} data-name={v.name} /></td>
+                        <td><input type="checkbox" data-eco={eco} data-name={v.name} checked={isChecked} onChange={this.handleVariantSelected}/></td>
                         <td>{eco}</td>
                         <td>{v.name}</td>
                     </tr>
@@ -216,36 +222,40 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private hideDialog() {
-        const selectedInputs = (event.currentTarget as any).querySelectorAll(".openings .selection-dialog table input:checked");
-        const newSelected: ISelectedOpening[] = [];
-        for (const input of selectedInputs as HTMLInputElement[]) {
-            const eco = input.getAttribute("data-eco");
-            const name = input.getAttribute("data-name");
-            const opening = this.props.openings.find(o => o.id === eco);
-            const variant = opening.variants.find(v => v.name === name);
+    private handleVariantSelected(event: React.ChangeEvent<HTMLInputElement>) {
+        const checked = event.currentTarget.checked;
+        const eco = event.currentTarget.getAttribute("data-eco");
+        const name = event.currentTarget.getAttribute("data-name");
+        const opening = this.props.openings.find(o => o.id === eco);
+        const variant = opening.variants.find(v => v.name === name);
+        if (checked) {
+            const newSelected = [...this.state.selectedOpenings];
             newSelected.push({
                 eco,
                 variant,
             });
+            this.setState({
+                ...this.state,
+                selectedOpenings: newSelected,
+            });
+        } else {
+            const newSelected = _.remove([...this.state.selectedOpenings], o => {
+                return o.eco === eco && o.variant === variant;
+            });
+            this.setState({
+                ...this.state,
+                selectedOpenings: newSelected,
+            });
         }
+    }
 
-        let current = null;
-        let position = EMPTY_BOARD;
-        if (newSelected.length) {
-            const ran = Math.floor(Math.random() * newSelected.length);
-            current = newSelected[ran];
-            position = STARTING_POSITION;
+    private hideDialog() {
+        if (this.state.current == null && this.state.selectedOpenings != null && this.state.selectedOpenings.length) {
+            this.goNextOpening();
         }
-
         this.setState({
             ...this.state,
             showDialog: false,
-            selectedOpenings: newSelected,
-            legalMoves: [],
-            position,
-            current,
-            moveNum: 0,
         });
     }
 

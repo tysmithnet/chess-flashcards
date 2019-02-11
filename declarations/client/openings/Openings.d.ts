@@ -32,6 +32,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     private handleMove;
     private createDialog;
     private showDialog;
+    private handleVariantSelected;
     private hideDialog;
     private handleSearchTextChange;
 }
