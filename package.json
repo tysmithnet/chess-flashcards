@@ -127,7 +127,6 @@
         "classnames": "2.2.6",
         "connected-react-router": "4.3.0",
         "cors": "2.8.5",
-        "enhanced-pgn-parser": "0.0.2",
         "express-http-proxy": "1.5.1",
         "gsap": "2.0.2",
         "i": "0.3.6",
