@@ -58,6 +58,8 @@ export class Openings extends React.Component<IProps, IState> {
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
         this.handleRuyLopezPreset = this.handleRuyLopezPreset.bind(this);
+        this.handleKingsIndianPreset = this.handleKingsIndianPreset.bind(this);
+        this.handleQueensGambitPreset = this.handleQueensGambitPreset.bind(this);
     }
 
     public render() {
@@ -75,9 +77,13 @@ export class Openings extends React.Component<IProps, IState> {
         }
         return (
             <div className="openings">
-                <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
-                <div className="board-area">
-                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective}/>
+                <div className="quiz-area">
+                    <div>
+                        <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
+                        <div className="board-area">
+                            <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
+                        </div>
+                    </div>
                 </div>
                 {dialog}
             </div>
@@ -100,12 +106,54 @@ export class Openings extends React.Component<IProps, IState> {
         return (
             <ul>
                 <li key="Ruy Lopez" onClick={this.handleRuyLopezPreset}>Ruy Lopez</li>
+                <li key="King's Indian" onClick={this.handleKingsIndianPreset}>King's Indian</li>
+                <li key="Queen's Gambit" onClick={this.handleQueensGambitPreset}>Queen's Gambit</li>
             </ul>
         );
     }
 
     private handleRuyLopezPreset() {
         const openings = this.props.openings.filter(o => /C[6-9][0-9]/.test(o.id));
+        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
+            return {
+                eco: o.id,
+                variant: v,
+            };
+        })));
+        this.setState({
+            ...this.state,
+            current: selected[0],
+            moveNum: 0,
+            position: STARTING_POSITION,
+            showDialog: false,
+            selectedOpenings: selected,
+            backStack: [selected[0]],
+            legalMoves: [],
+        });
+    }
+
+    private handleKingsIndianPreset() {
+        const openings = this.props.openings.filter(o => /E[6-9][0-9]/.test(o.id));
+        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
+            return {
+                eco: o.id,
+                variant: v,
+            };
+        })));
+        this.setState({
+            ...this.state,
+            current: selected[0],
+            moveNum: 0,
+            position: STARTING_POSITION,
+            showDialog: false,
+            selectedOpenings: selected,
+            backStack: [selected[0]],
+            legalMoves: [],
+        });
+    }
+
+    private handleQueensGambitPreset() {
+        const openings = this.props.openings.filter(o => /D/.test(o.id) && parseInt(o.id.substr(1)) > 5 && parseInt(o.id.substr(1)) < 70);
         const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
             return {
                 eco: o.id,
@@ -149,7 +197,7 @@ export class Openings extends React.Component<IProps, IState> {
 
     private giveHint() {
         const curMove = this.state.current.variant.moves[this.state.moveNum];
-        this.handleMove(curMove.src, curMove.dst, true);
+        this.handleMove(curMove.src, curMove.dst);
     }
 
     private goNextOpening() {
@@ -192,7 +240,7 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private handleMove(src: string, dst: string, pauseOnComplete = false) {
+    private handleMove(src: string, dst: string) {
         // check the move against the current move number, if it matches, update the position and get new legal moves
         const expectedMove = this.state.current.variant.moves[this.state.moveNum];
         if (expectedMove.src === src && expectedMove.dst === dst) {
@@ -204,11 +252,7 @@ export class Openings extends React.Component<IProps, IState> {
             const nextMoveNum = this.state.moveNum + 1;
 
             if (nextMoveNum >= this.state.current.variant.moves.length) {
-                if (!pauseOnComplete) {
-                    return this.goNextOpening();
-                } else {
-                    setTimeout(this.goNextOpening, 1000);
-                }
+                setTimeout(this.goNextOpening, 1000);
             }
 
             this.setState({

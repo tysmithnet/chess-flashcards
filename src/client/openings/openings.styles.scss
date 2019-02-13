@@ -1,15 +1,25 @@
 .openings {
-    .title {
-        cursor: pointer;
+    .quiz-area {
+        display: flex;
+        justify-content: center;
 
-        &:hover {
-            color: white;
-        }
-    }
-
-    .board-area {
-        width: 50vh;
-        height: 50vh;
+        > div {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            .title {
+                cursor: pointer;
+                text-align: center;
+                &:hover {
+                    color: white;
+                }
+            }
+        
+            .board-area {
+                width: 50vh;
+                height: 50vh;
+            }
+        }        
     }
 
     .selection-dialog {
@@ -40,6 +50,10 @@
             li {
                 pointer-events: all;
                 cursor: pointer;
+
+                &:hover {
+                    color: white;
+                }
             }
         }
     }

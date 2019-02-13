@@ -31,6 +31,8 @@ export declare class Openings extends React.Component<IProps, IState> {
     componentWillUnmount(): void;
     private createPresets;
     private handleRuyLopezPreset;
+    private handleKingsIndianPreset;
+    private handleQueensGambitPreset;
     private handleKeyUp;
     private flipBoard;
     private giveHint;
