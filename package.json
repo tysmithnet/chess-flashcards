@@ -21,7 +21,7 @@
         "build": "webpack --mode production --config ./config/webpack.config.js",
         "build:dev": "webpack --mode development --config ./config/webpack.config.js",
         "build:client:dev": "webpack --mode development --config ./config/webpack.config.js",
-        "build:server:dev": "pyinstaller --onefile ./src/server/server.py ./dist",
+        "build:server:dev": "cd src/server/ && pyinstaller --onefile server.py && cp ./dist/server.exe ../../dist/",
         "build-storybook": "build-storybook",
         "clean": "rimraf dist",
         "doc": "typedoc --tsconfig config/tsconfig.json --out docs/ --ignoreCompilerErrors src/",
