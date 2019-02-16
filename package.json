@@ -21,7 +21,7 @@
         "build": "webpack --mode production --config ./config/webpack.config.js",
         "build:dev": "webpack --mode development --config ./config/webpack.config.js",
         "build:client:dev": "webpack --mode development --config ./config/webpack.config.js",
-        "build:server:dev": "tsc --p config/tsconfig.server.json && cd src/server/chess-api && python setup.py install",
+        "build:server:dev": "pyinstaller --onefile ./src/server/server.py ./dist",
         "build-storybook": "build-storybook",
         "clean": "rimraf dist",
         "doc": "typedoc --tsconfig config/tsconfig.json --out docs/ --ignoreCompilerErrors src/",
