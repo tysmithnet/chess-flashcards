@@ -53,6 +53,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
+        this.handlePresetSelected = this.handlePresetSelected.bind(this);
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -108,11 +109,26 @@ export class Openings extends React.Component<IProps, IState> {
         if (this.props.openings == null) {
             return null;
         }
+        const items = PRESETS.map(p => {
+            return (
+                <li key={p.title} data-title={p.title} onClick={this.handlePresetSelected}>{p.title}</li>
+            );
+        });
         return (
             <ul>
-                <li>hi</li>
+                {items}
             </ul>
         );
+    }
+
+    private handlePresetSelected(event: React.MouseEvent<HTMLLIElement>) {
+        const title = event.currentTarget.getAttribute("data-title");
+        const preset = PRESETS.find(p => p.title === title);
+        const openings = preset.getSelectedOpenings(this.props.openings);
+        this.setState({
+            ...this.state,
+            selectedOpenings: new Set(openings),
+        });
     }
 
     private handleKeyUp(event: KeyboardEvent) {

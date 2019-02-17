@@ -12,6 +12,7 @@ export const PRESETS: IPreset[] = [
             const fuse = new Fuse(openings, {
                 keys: ["variantName"],
                 id: "id",
+                threshold: 0.2,
             });
             return fuse.search("ruy lopez");
         },
