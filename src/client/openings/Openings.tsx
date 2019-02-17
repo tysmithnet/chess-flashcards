@@ -1,3 +1,4 @@
+import * as Fuse from "fuse.js";
 import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -232,7 +233,15 @@ export class Openings extends React.Component<IProps, IState> {
 
     private createDialog() {
         const rows: JSX.Element[] = [];
+        const fuse = new Fuse(Array.from(this.state.openings.values()), {
+            keys: ["variantName", "moveText", "ecoId"],
+            threshold: 0.1,
+        });
+        const matches = fuse.search(this.state.searchText);
         this.state.openings.forEach((v, k) => {
+            if (matches.indexOf(v) === -1 && this.state.searchText.length) {
+                return;
+            }
             const isChecked = this.state.selectedOpenings.has(k);
             rows.push((
                 <tr key={v.id}>
