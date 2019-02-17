@@ -1,5 +1,5 @@
-import { Opening } from "../chess-api";
+import { IOpening } from "../root";
 
 export interface IRootState {
-    openings: Opening[];
+    openings: IOpening[];
 }

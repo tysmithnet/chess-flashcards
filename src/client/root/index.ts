@@ -1,4 +1,4 @@
-export { IBaseProps, IRootState } from "./root.domain";
-export { IAction, reducer } from "./root.reducer";
-export { rootSaga } from "./root.saga";
-export { getHistory, sagaMiddleware, store } from "./root.store";
+export * from "./root.domain";
+export * from "./root.reducer";
+export * from "./root.saga";
+export * from "./root.store";

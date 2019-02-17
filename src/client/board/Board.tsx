@@ -2,7 +2,7 @@ import cn from "classnames";
 import { Color } from "csstype";
 import * as _ from "lodash";
 import * as React from "react";
-import { Move } from "../chess-api";
+import {convertSquare, IMove} from "../root";
 import "./board.styles";
 const BlackBishop = require("./images/bb.png");
 const BlackKing = require("./images/bk.png");
@@ -16,19 +16,6 @@ const WhiteKnight = require("./images/wn.png");
 const WhitePawn = require("./images/wp.png");
 const WhiteQueen = require("./images/wq.png");
 const WhiteRook = require("./images/wr.png");
-
-export const EMPTY_BOARD = new Array(64);
-
-export const STARTING_POSITION = [
-    "R", "N", "B", "Q", "K", "B", "N", "R",
-    "P", "P", "P", "P", "P", "P", "P", "P",
-    null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null,
-    "p", "p", "p", "p", "p", "p", "p", "p",
-    "r", "n", "b", "q", "k", "b", "n", "r",
-];
 
 interface IPieceState {
     pieceLetter: string;
@@ -48,7 +35,7 @@ export interface ISelectedSquare {
 
 export interface IProps {
     position: string[]; // ["R", "N", "B", "Q" ...] starting from A1, A2, .. H8, null represents empty
-    legalMoves: Move[];
+    legalMoves: IMove[];
     freeMove?: boolean;
     isBlackPerspective?: boolean;
     onMove?: (src: string, dst: string) => void;
@@ -60,37 +47,6 @@ export interface IState {
     arrows: IArrow[];
     selectedSquares: ISelectedSquare[];
     rightMouseDownSquare: string;
-}
-
-export function convertSquare(square: string | number | number[]): { s: string, i: number, c: number[] } {
-    const res = {
-        s: "",
-        i: 0,
-        c: [] as number[],
-    };
-    if (square instanceof String) {
-        res.s = square as string;
-        const col = square.charCodeAt(0) - 97;
-        const row = parseInt(square.charAt(1), 10) - 1;
-        const index = (row * 8) + col;
-        res.i = index;
-        res.c = [row, col];
-    }
-    if (typeof (square) === "number") {
-        const row = Math.floor(square / 8);
-        const col = square % 8;
-        const index = (row * 8) + col;
-        const alg = `${String.fromCharCode(97 + col)}${row + 1}`;
-        res.s = alg;
-        res.i = index;
-        res.c = [row, col];
-    }
-    if (Array.isArray(square)) {
-        res.c = square as number[];
-        res.i = (square[0] * 64) + square[1];
-        res.s = `${String.fromCharCode(97 + square[1])}${square[0] + 1}`;
-    }
-    return res;
 }
 
 export class Board extends React.Component<IProps, IState> {

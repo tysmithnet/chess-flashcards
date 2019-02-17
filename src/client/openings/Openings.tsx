@@ -1,15 +1,13 @@
 import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Board, EMPTY_BOARD, STARTING_POSITION } from "../board/Board";
-import { Move, Opening, OpeningVariant } from "../chess-api";
-import { fenToArray } from "../common/fen";
-import { IBaseProps, IRootState } from "../root";
+import { Board } from "../board/Board";
+import { EMPTY_BOARD, IBaseProps, IMove, IOpening, IRootState, STARTING_POSITION } from "../root";
 import { loadOpeningsRequestFactory } from "./openings.action";
 import "./openings.styles";
 
 export interface IProps extends IBaseProps {
-    openings: Opening[];
+    openings: IOpening[];
 }
 
 export interface IState {
@@ -19,14 +17,14 @@ export interface IState {
     current: ISelectedOpening;
     moveNum: number;
     position: string[];
-    legalMoves: Move[];
+    legalMoves: IMove[];
     backStack: ISelectedOpening[];
     isBlackPerspective: boolean;
 }
 
 export interface ISelectedOpening {
     eco: string;
-    variant: OpeningVariant;
+    variant: IOpening;
 }
 
 export interface IPreset {
@@ -57,9 +55,6 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
-        this.handleRuyLopezPreset = this.handleRuyLopezPreset.bind(this);
-        this.handleKingsIndianPreset = this.handleKingsIndianPreset.bind(this);
-        this.handleQueensGambitPreset = this.handleQueensGambitPreset.bind(this);
     }
 
     public render() {
@@ -73,7 +68,7 @@ export class Openings extends React.Component<IProps, IState> {
         let currentTitle = "Select openings";
 
         if (this.state.current) {
-            currentTitle = `${this.state.current.eco} - ${this.state.current.variant.name}`;
+            currentTitle = "CHANGE ME";
         }
         return (
             <div className="openings">
@@ -104,72 +99,8 @@ export class Openings extends React.Component<IProps, IState> {
             return null;
         }
         return (
-            <ul>
-                <li key="Ruy Lopez" onClick={this.handleRuyLopezPreset}>Ruy Lopez</li>
-                <li key="King's Indian" onClick={this.handleKingsIndianPreset}>King's Indian</li>
-                <li key="Queen's Gambit" onClick={this.handleQueensGambitPreset}>Queen's Gambit</li>
-            </ul>
+            <h3>presets</h3>
         );
-    }
-
-    private handleRuyLopezPreset() {
-        const openings = this.props.openings.filter(o => /C[6-9][0-9]/.test(o.id));
-        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
-            return {
-                eco: o.id,
-                variant: v,
-            };
-        })));
-        this.setState({
-            ...this.state,
-            current: selected[0],
-            moveNum: 0,
-            position: STARTING_POSITION,
-            showDialog: false,
-            selectedOpenings: selected,
-            backStack: [selected[0]],
-            legalMoves: [],
-        });
-    }
-
-    private handleKingsIndianPreset() {
-        const openings = this.props.openings.filter(o => /E[6-9][0-9]/.test(o.id));
-        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
-            return {
-                eco: o.id,
-                variant: v,
-            };
-        })));
-        this.setState({
-            ...this.state,
-            current: selected[0],
-            moveNum: 0,
-            position: STARTING_POSITION,
-            showDialog: false,
-            selectedOpenings: selected,
-            backStack: [selected[0]],
-            legalMoves: [],
-        });
-    }
-
-    private handleQueensGambitPreset() {
-        const openings = this.props.openings.filter(o => /D/.test(o.id) && parseInt(o.id.substr(1)) > 5 && parseInt(o.id.substr(1)) < 70);
-        const selected: ISelectedOpening[] = _.flatten(openings.map(o => o.variants.map(v => {
-            return {
-                eco: o.id,
-                variant: v,
-            };
-        })));
-        this.setState({
-            ...this.state,
-            current: selected[0],
-            moveNum: 0,
-            position: STARTING_POSITION,
-            showDialog: false,
-            selectedOpenings: selected,
-            backStack: [selected[0]],
-            legalMoves: [],
-        });
     }
 
     private handleKeyUp(event: KeyboardEvent) {
@@ -241,75 +172,11 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private handleMove(src: string, dst: string) {
-        // check the move against the current move number, if it matches, update the position and get new legal moves
-        const expectedMove = this.state.current.variant.moves[this.state.moveNum];
-        if (expectedMove.src === src && expectedMove.dst === dst) {
-            console.log("CORRECT!");
-            // apply move to position
-            const nextPosition = fenToArray(expectedMove.fenAfter);
-            // get legal moves for position
-            // set current move++
-            const nextMoveNum = this.state.moveNum + 1;
-
-            if (nextMoveNum >= this.state.current.variant.moves.length) {
-                setTimeout(this.goNextOpening, 1000);
-            }
-
-            this.setState({
-                ...this.state,
-                legalMoves: [],
-                position: nextPosition,
-                moveNum: nextMoveNum,
-            });
-        } else {
-            console.log("INCORRECT!");
-            this.setState({
-                ...this.state,
-            });
-        }
+        return;
     }
 
     private createDialog() {
-        const rows = this.props.openings.map((o, oi) => {
-            const eco = o.id;
-            const filtered = o.variants.filter(v => {
-                return o.id.toLowerCase().indexOf(this.state.searchText.toLowerCase()) > -1
-                    || v.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) > -1;
-            });
-            return filtered.map((v, vi) => {
-                const isChecked = this.state.selectedOpenings.find(o2 => o2.eco === eco && o2.variant.name === v.name) != null;
-                return (
-                    <tr key={`${eco} - ${v.name} - ${vi}`}>
-                        <td><input type="checkbox" data-eco={eco} data-name={v.name} checked={isChecked} onChange={this.handleVariantSelected} /></td>
-                        <td>{eco}</td>
-                        <td>{v.name}</td>
-                    </tr>
-                );
-            });
-        });
-        const flattened = _.flatten(rows);
-        return (
-            <div className="selection-dialog">
-                <div className="table-container">
-                    <input className="search-bar" value={this.state.searchText} onChange={this.handleSearchTextChange} />
-                    <table>
-                        <thead>
-                            <tr>
-                                <th />
-                                <th>ECO</th>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {flattened}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="preset-container">
-                    {this.createPresets()}
-                </div>
-            </div>
-        );
+        return <h1>DIALOG</h1>;
     }
 
     private showDialog() {
@@ -320,30 +187,7 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private handleVariantSelected(event: React.ChangeEvent<HTMLInputElement>) {
-        const checked = event.currentTarget.checked;
-        const eco = event.currentTarget.getAttribute("data-eco");
-        const name = event.currentTarget.getAttribute("data-name");
-        const opening = this.props.openings.find(o => o.id === eco);
-        const variant = opening.variants.find(v => v.name === name);
-        if (checked) {
-            const newSelected = [...this.state.selectedOpenings];
-            newSelected.push({
-                eco,
-                variant,
-            });
-            this.setState({
-                ...this.state,
-                selectedOpenings: newSelected,
-            });
-        } else {
-            const newSelected = _.remove([...this.state.selectedOpenings], o => {
-                return o.eco === eco && o.variant === variant;
-            });
-            this.setState({
-                ...this.state,
-                selectedOpenings: newSelected,
-            });
-        }
+        return;
     }
 
     private hideDialog(selectedOpenings: ISelectedOpening[] = null) {

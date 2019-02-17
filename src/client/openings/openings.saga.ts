@@ -1,6 +1,6 @@
 import {camelArray} from "change-object-case";
 import { all, put, takeLatest } from "redux-saga/effects";
-import {DefaultApiFactory, Opening as IOpening } from "../chess-api";
+import { IOpening } from "../root";
 import {ACTION_TYPES, ILoadOpeningsRequest, loadOpeningsFailureFactory, loadOpeningsSuccessFactory} from "./openings.action";
 
 // tslint:disable-next-line:no-var-requires
