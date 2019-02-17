@@ -2,8 +2,10 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board } from "../board/Board";
+import { fenToArray } from "../common/fen";
 import { applyMove, EMPTY_BOARD, IBaseProps, IMove, IOpening, IRootState, STARTING_POSITION } from "../root";
 import { loadOpeningsRequestFactory } from "./openings.action";
+import {PRESETS} from "./openings.presets";
 import "./openings.styles";
 
 export interface IProps extends IBaseProps {
@@ -11,33 +13,29 @@ export interface IProps extends IBaseProps {
 }
 
 export interface IState {
+    openings: Map<string, IOpening>;
     searchText: string;
-    selectedOpenings: ISelectedOpening[];
+    selectedOpenings: Set<string>;
     showDialog: boolean;
-    current: ISelectedOpening;
+    current: IOpening;
     moveNum: number;
     position: string[];
     legalMoves: IMove[];
-    backStack: ISelectedOpening[];
+    backStack: string[];
     isBlackPerspective: boolean;
 }
 
-export interface ISelectedOpening {
-    eco: string;
-    variant: IOpening;
-}
-
-export interface IPreset {
-    title: string;
-    selectedOpenings: ISelectedOpening[];
-}
-
 export class Openings extends React.Component<IProps, IState> {
+
     constructor(props: IProps) {
         super(props);
         this.state = {
+            openings: (props.openings || []).reduce((m, c) => {
+                m.set(c.id, c);
+                return m;
+            }, new Map<string, IOpening>()),
             searchText: "",
-            selectedOpenings: [],
+            selectedOpenings: new Set<string>(),
             showDialog: false,
             current: null,
             moveNum: null,
@@ -57,6 +55,18 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
     }
 
+    public componentDidUpdate(prevProps: IProps) {
+        if (prevProps.openings !== this.props.openings) {
+            this.setState({
+                ...this.state,
+                openings: this.props.openings.reduce((m, c) => {
+                    m.set(c.id, c);
+                    return m;
+                }, new Map<string, IOpening>()),
+            });
+        }
+    }
+
     public render() {
         if (!this.props.openings) {
             return <h3>Loading...</h3>;
@@ -68,7 +78,7 @@ export class Openings extends React.Component<IProps, IState> {
         let currentTitle = "Select openings";
 
         if (this.state.current) {
-            currentTitle = "CHANGE ME";
+            currentTitle = `${this.state.current.ecoId} - ${this.state.current.variantName}`;
         }
         return (
             <div className="openings">
@@ -99,7 +109,9 @@ export class Openings extends React.Component<IProps, IState> {
             return null;
         }
         return (
-            <h3>presets</h3>
+            <ul>
+                <li>hi</li>
+            </ul>
         );
     }
 
@@ -127,22 +139,24 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private giveHint() {
-        const curMove = this.state.current.variant.moves[this.state.moveNum];
+        const curMove = this.state.current.moves[this.state.moveNum];
         this.handleMove(curMove.src, curMove.dst);
     }
 
     private goNextOpening() {
-        const ran = Math.floor(Math.random() * this.state.selectedOpenings.length);
-        const current = this.state.selectedOpenings[ran];
-        const position = STARTING_POSITION;
-        const newBackStack = [...this.state.backStack, this.state.current];
+        const ran = Math.floor(Math.random() * this.state.selectedOpenings.size);
+        const id = Array.from(this.state.selectedOpenings.keys())[ran];
+        const selected: IOpening = this.state.openings.get(id);
+        const newBackStack = [...this.state.backStack];
+        if (this.state.current) {
+            newBackStack.push(this.state.current.id);
+        }
         this.setState({
             ...this.state,
-            current,
-            position,
-            legalMoves: null,
-            moveNum: 0,
+            current: selected,
             backStack: newBackStack,
+            moveNum: 0,
+            position: STARTING_POSITION,
         });
     }
 
@@ -160,10 +174,10 @@ export class Openings extends React.Component<IProps, IState> {
             return;
         }
         newBackStack.pop();
-        const newCurrent = newBackStack[newBackStack.length - 1];
+        const lastId = _.last(newBackStack);
         this.setState({
             ...this.state,
-            current: newCurrent,
+            current: this.state.openings.get(lastId),
             moveNum: 0,
             position: STARTING_POSITION,
             legalMoves: [],
@@ -172,15 +186,69 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private handleMove(src: string, dst: string) {
-        const copy = applyMove(this.state.position, {src, dst});
-        this.setState({
-            ...this.state,
-            position: copy,
-        });
+        // check the move against the current move number, if it matches, update the position and get new legal moves
+        const expectedMove = this.state.current.moves[this.state.moveNum];
+        if (expectedMove.src === src && expectedMove.dst === dst) {
+            console.log("CORRECT!");
+            // apply move to position
+            const nextPosition = applyMove(this.state.position, {src, dst});
+            // get legal moves for position
+            // set current move++
+            const nextMoveNum = this.state.moveNum + 1;
+
+            if (nextMoveNum >= this.state.current.moves.length) {
+                setTimeout(this.goNextOpening, 1000);
+            }
+
+            this.setState({
+                ...this.state,
+                legalMoves: [],
+                position: nextPosition,
+                moveNum: nextMoveNum,
+            });
+        } else {
+            console.log("INCORRECT!");
+            this.setState({
+                ...this.state,
+            });
+        }
     }
 
     private createDialog() {
-        return <h1>DIALOG</h1>;
+        const rows: JSX.Element[] = [];
+        this.state.openings.forEach((v, k) => {
+            const isChecked = this.state.selectedOpenings.has(k);
+            rows.push((
+                <tr key={v.id}>
+                    <td><input type="checkbox" data-id={v.id} checked={isChecked} onChange={this.handleVariantSelected} /></td>
+                    <td>{v.ecoId}</td>
+                    <td>{v.variantName}</td>
+                </tr>
+            ));
+        });
+        const flattened = _.flatten(rows);
+        return (
+            <div className="selection-dialog">
+                <div className="table-container">
+                    <input className="search-bar" value={this.state.searchText} onChange={this.handleSearchTextChange} />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th />
+                                <th>ECO</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {flattened}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="preset-container">
+                    {this.createPresets()}
+                </div>
+            </div>
+        );
     }
 
     private showDialog() {
@@ -191,18 +259,22 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private handleVariantSelected(event: React.ChangeEvent<HTMLInputElement>) {
-        return;
+        const checked = event.currentTarget.checked;
+        const copy = new Set(this.state.selectedOpenings);
+        const id = event.currentTarget.getAttribute("data-id");
+        if (checked) {
+            copy.add(id);
+        } else {
+            copy.delete(id);
+        }
+        this.setState({
+            ...this.state,
+            selectedOpenings: copy,
+        });
     }
 
-    private hideDialog(selectedOpenings: ISelectedOpening[] = null) {
-        if (selectedOpenings) {
-            this.setState({
-                ...this.state,
-                selectedOpenings,
-            });
-        }
-
-        if (this.state.current == null && this.state.selectedOpenings != null && this.state.selectedOpenings.length) {
+    private hideDialog() {
+        if (this.state.current == null && this.state.selectedOpenings != null && this.state.selectedOpenings.size) {
             this.goNextOpening();
         }
         this.setState({

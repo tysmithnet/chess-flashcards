@@ -86,7 +86,7 @@ export function convertSquare(square: string | number | number[]): { s: string, 
         i: 0,
         c: [] as number[],
     };
-    if (square instanceof String) {
+    if (typeof (square) === "string") {
         res.s = square as string;
         const col = square.charCodeAt(0) - 97;
         const row = parseInt(square.charAt(1), 10) - 1;

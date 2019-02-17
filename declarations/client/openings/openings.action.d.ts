@@ -1,5 +1,4 @@
-import { Opening } from "../chess-api";
-import { IAction } from "../root";
+import { IAction, IOpening } from "../root";
 export declare const ACTION_TYPES: {
     LOAD_OPENINGS: {
         REQUEST: string;
@@ -11,9 +10,9 @@ export interface ILoadOpeningsRequest extends IAction {
 }
 export declare function loadOpeningsRequestFactory(): ILoadOpeningsRequest;
 export interface ILoadOpeningsSuccess extends IAction {
-    openings: Opening[];
+    openings: IOpening[];
 }
-export declare function loadOpeningsSuccessFactory(openings: Opening[]): ILoadOpeningsSuccess;
+export declare function loadOpeningsSuccessFactory(openings: IOpening[]): ILoadOpeningsSuccess;
 export interface ILoadOpeningsFailure extends IAction {
     message: string;
 }

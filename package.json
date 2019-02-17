@@ -126,6 +126,7 @@
         "connected-react-router": "4.3.0",
         "cors": "2.8.5",
         "express-http-proxy": "1.5.1",
+        "fuse.js": "^3.4.2",
         "gsap": "2.0.2",
         "i": "0.3.6",
         "lodash-es": "4.17.11",

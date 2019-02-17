@@ -1,38 +1,28 @@
 import * as React from "react";
-import { Move, Opening, OpeningVariant } from "../chess-api";
-import { IBaseProps } from "../root";
+import { IBaseProps, IMove, IOpening } from "../root";
 import "./openings.styles";
 export interface IProps extends IBaseProps {
-    openings: Opening[];
+    openings: IOpening[];
 }
 export interface IState {
+    openings: Map<string, IOpening>;
     searchText: string;
-    selectedOpenings: ISelectedOpening[];
+    selectedOpenings: Set<string>;
     showDialog: boolean;
-    current: ISelectedOpening;
+    current: IOpening;
     moveNum: number;
     position: string[];
-    legalMoves: Move[];
-    backStack: ISelectedOpening[];
+    legalMoves: IMove[];
+    backStack: string[];
     isBlackPerspective: boolean;
-}
-export interface ISelectedOpening {
-    eco: string;
-    variant: OpeningVariant;
-}
-export interface IPreset {
-    title: string;
-    selectedOpenings: ISelectedOpening[];
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
+    componentDidUpdate(prevProps: IProps): void;
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
     private createPresets;
-    private handleRuyLopezPreset;
-    private handleKingsIndianPreset;
-    private handleQueensGambitPreset;
     private handleKeyUp;
     private flipBoard;
     private giveHint;

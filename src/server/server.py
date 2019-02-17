@@ -41,7 +41,8 @@ def catch_all(path):
     base = os.path.abspath(base)
     if os.path.exists(os.path.join(base, path)):
         return send_from_directory(base, path)
-    return "404"
+    else:
+        return send_from_directory(base, "index.html")
 
 if __name__ == "__main__":
     from_main = True
