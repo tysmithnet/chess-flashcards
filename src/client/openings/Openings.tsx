@@ -24,6 +24,7 @@ export interface IState {
     legalMoves: IMove[];
     backStack: string[];
     isBlackPerspective: boolean;
+    isBackOfCard: boolean;
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -44,6 +45,7 @@ export class Openings extends React.Component<IProps, IState> {
             legalMoves: [],
             backStack: [],
             isBlackPerspective: false,
+            isBackOfCard: true,
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
@@ -55,6 +57,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.redoCurrentOpening = this.redoCurrentOpening.bind(this);
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
         this.handlePresetSelected = this.handlePresetSelected.bind(this);
+        this.handleMouseWheelOverBoard = this.handleMouseWheelOverBoard.bind(this);
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -77,20 +80,16 @@ export class Openings extends React.Component<IProps, IState> {
         if (this.state.showDialog) {
             dialog = this.createDialog();
         }
-        let currentTitle = "Select openings";
 
-        if (this.state.current) {
-            currentTitle = `${this.state.current.ecoId} - ${this.state.current.variantName}`;
+        let body = this.createDemonstrateQuiz();
+        if (this.state.isBackOfCard) {
+            body = this.createRecognizeQuiz();
         }
+
         return (
             <div className="openings">
                 <div className="quiz-area">
-                    <div>
-                        <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
-                        <div className="board-area">
-                            <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
-                        </div>
-                    </div>
+                    {body}
                 </div>
                 {dialog}
             </div>
@@ -104,6 +103,51 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentWillUnmount() {
         document.removeEventListener("keyup", this.handleKeyUp);
+    }
+
+    private createRecognizeQuiz() {
+        const currentTitle = "Select openings";
+        return (
+            <div>
+                <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
+                <div className="board-area" onWheel={this.handleMouseWheelOverBoard}>
+                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
+                </div>
+            </div>
+        );
+    }
+
+    private handleMouseWheelOverBoard(event: React.WheelEvent<HTMLDivElement>) {
+        const isNextMove = event.deltaY < 0;
+        let nextIndex = Math.min(this.state.moveNum + 1, this.state.current.moves.length - 1);
+        if (!isNextMove) {
+            nextIndex = Math.max(this.state.moveNum - 1, 0);
+        }
+        let position = STARTING_POSITION;
+        for (let i = 0; i < nextIndex; i++) {
+            position = applyMove(position, this.state.current.moves[i]);
+        }
+        this.setState({
+            ...this.state,
+            position,
+            moveNum: nextIndex,
+        });
+    }
+
+    private createDemonstrateQuiz() {
+        let currentTitle = "Select openings";
+
+        if (this.state.current) {
+            currentTitle = `${this.state.current.ecoId} - ${this.state.current.variantName}`;
+        }
+        return (
+            <div>
+                <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
+                <div className="board-area">
+                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
+                </div>
+            </div>
+        );
     }
 
     private createPresets() {
@@ -145,7 +189,16 @@ export class Openings extends React.Component<IProps, IState> {
             return this.giveHint();
         } else if (event.code === "KeyF" && !this.state.showDialog) {
             return this.flipBoard();
+        } else if (event.code === "KeyM" && !this.state.showDialog) {
+            return this.flipMode();
         }
+    }
+
+    private flipMode() {
+        this.setState({
+            ...this.state,
+            isBackOfCard: !this.state.isBackOfCard,
+        });
     }
 
     private flipBoard() {

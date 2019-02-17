@@ -15,6 +15,7 @@ export interface IState {
     legalMoves: IMove[];
     backStack: string[];
     isBlackPerspective: boolean;
+    isBackOfCard: boolean;
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
@@ -22,9 +23,13 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private createRecognizeQuiz;
+    private handleMouseWheelOverBoard;
+    private createDemonstrateQuiz;
     private createPresets;
     private handlePresetSelected;
     private handleKeyUp;
+    private flipMode;
     private flipBoard;
     private giveHint;
     private goNextOpening;
