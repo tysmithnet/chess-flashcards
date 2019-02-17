@@ -111,7 +111,7 @@ export function convertSquare(square: string | number | number[]): { s: string, 
     return res;
 }
 
-export function apply_move(position: string[], move: IMove): string[] {
+export function applyMove(position: string[], move: IMove): string[] {
     if (position == null || position.length !== 64) {
         throw new Error("Position must be a string array with 64 elements");
     }

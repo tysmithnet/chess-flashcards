@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board } from "../board/Board";
-import { IBaseProps, IRootState, STARTING_POSITION } from "../root";
+import { applyMove, IBaseProps, IRootState, STARTING_POSITION } from "../root/root.domain";
 import "./home.styles";
 
 export class Home extends React.Component {

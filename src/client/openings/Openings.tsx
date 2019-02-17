@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board } from "../board/Board";
-import { EMPTY_BOARD, IBaseProps, IMove, IOpening, IRootState, STARTING_POSITION } from "../root";
+import { applyMove, EMPTY_BOARD, IBaseProps, IMove, IOpening, IRootState, STARTING_POSITION } from "../root";
 import { loadOpeningsRequestFactory } from "./openings.action";
 import "./openings.styles";
 
@@ -172,7 +172,11 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private handleMove(src: string, dst: string) {
-        return;
+        const copy = applyMove(this.state.position, {src, dst});
+        this.setState({
+            ...this.state,
+            position: copy,
+        });
     }
 
     private createDialog() {
