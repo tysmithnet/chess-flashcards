@@ -119,11 +119,22 @@ export class Openings extends React.Component<IProps, IState> {
 
     private handleMouseWheelOverBoard(event: React.WheelEvent<HTMLDivElement>) {
         const isNextMove = event.deltaY < 0;
-        let nextIndex = Math.min(this.state.moveNum + 1, this.state.current.moves.length - 1);
+        let nextIndex = this.state.moveNum + 1;
         if (!isNextMove) {
-            nextIndex = Math.max(this.state.moveNum - 1, 0);
+            nextIndex = this.state.moveNum - 1;
         }
         let position = STARTING_POSITION;
+        if (nextIndex < 0) {
+            this.setState({
+                ...this.state,
+                position,
+                moveNum: 0,
+            });
+            return;
+        }
+        if (nextIndex >= this.state.current.moves.length) {
+            nextIndex = this.state.current.moves.length - 1;
+        }
         for (let i = 0; i < nextIndex; i++) {
             position = applyMove(position, this.state.current.moves[i]);
         }
@@ -209,6 +220,9 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private giveHint() {
+        if (this.state.isBackOfCard) {
+            return;
+        }
         const curMove = this.state.current.moves[this.state.moveNum];
         this.handleMove(curMove.src, curMove.dst);
     }
