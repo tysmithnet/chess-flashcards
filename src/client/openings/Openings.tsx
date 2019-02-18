@@ -217,10 +217,7 @@ export class Openings extends React.Component<IProps, IState> {
         const ran = Math.floor(Math.random() * this.state.selectedOpenings.size);
         const id = Array.from(this.state.selectedOpenings.keys())[ran];
         const selected: IOpening = this.state.openings.get(id);
-        const newBackStack = [...this.state.backStack];
-        if (this.state.current) {
-            newBackStack.push(this.state.current.id);
-        }
+        const newBackStack = [...this.state.backStack, id];
         this.setState({
             ...this.state,
             current: selected,
