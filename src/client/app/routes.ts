@@ -1,6 +1,7 @@
 import { Admin } from "../admin";
 import { Permissions } from "../auth";
 import { connectedComponent as Home } from "../home";
+import { connectedComponent as Moves } from "../moves/Moves";
 import { connectedComponent as Openings } from "../openings/Openings";
 import { IRoute } from "./app.domain";
 // Implementation note: I find it easier to debug applications when there is a
@@ -31,4 +32,11 @@ export const routes: IRoute[] = [
         path: "/openings",
         permissions: [],
     },
+    {
+        component: Moves,
+        display: "Threats",
+        exact: true,
+        path: "/threats",
+        permissions: [],
+    }
 ];
