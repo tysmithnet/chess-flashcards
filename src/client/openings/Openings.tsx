@@ -275,6 +275,9 @@ export class Openings extends React.Component<IProps, IState> {
 
     private handleMove(src: string, dst: string) {
         const expectedMove = this.state.current.moves[this.state.moveNum];
+        if (!expectedMove) {
+            return;
+        }
         if (expectedMove.src === src && expectedMove.dst === dst) {
             const nextPosition = applyMove(this.state.position, {src, dst});
             const nextMoveNum = this.state.moveNum + 1;
