@@ -12,10 +12,12 @@ export interface IState {
     current: IOpening;
     moveNum: number;
     position: string[];
+    recognitionPosition: string[];
     legalMoves: IMove[];
     backStack: string[];
     isBlackPerspective: boolean;
     isBackOfCard: boolean;
+    recognitionMoveNum: number;
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
@@ -23,6 +25,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     render(): JSX.Element;
     componentDidMount(): void;
     componentWillUnmount(): void;
+    private handleMouseDown;
     private createRecognizeQuiz;
     private handleMouseWheelOverBoard;
     private createDemonstrateQuiz;

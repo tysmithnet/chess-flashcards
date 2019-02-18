@@ -94,7 +94,6 @@ const BASICS = [
     "89a49ac2-8858-44dd-86da-87832c10851b",
     "f74fa565-7d48-4767-8cc0-6b37f45c724a",
     "cf7a962c-ef3b-4d5a-9b20-77da3c96d3f3",
-    "11ebc6ea-4a01-4e4a-a004-975b5f339fee",
     "fdc84dc5-e743-4361-ba2c-2a67174eb235",
     "b67e9266-d17a-4b46-8a37-5d9cfaa3a596",
 ];

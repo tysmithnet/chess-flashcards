@@ -21,10 +21,12 @@ export interface IState {
     current: IOpening;
     moveNum: number;
     position: string[];
+    recognitionPosition: string[];
     legalMoves: IMove[];
     backStack: string[];
     isBlackPerspective: boolean;
     isBackOfCard: boolean;
+    recognitionMoveNum: number;
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -42,10 +44,12 @@ export class Openings extends React.Component<IProps, IState> {
             current: null,
             moveNum: null,
             position: EMPTY_BOARD,
+            recognitionPosition: EMPTY_BOARD,
             legalMoves: [],
             backStack: [],
             isBlackPerspective: false,
             isBackOfCard: true,
+            recognitionMoveNum: -1,
         };
         this.handleSearchTextChange = this.handleSearchTextChange.bind(this);
         this.showDialog = this.showDialog.bind(this);
@@ -58,6 +62,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.handleVariantSelected = this.handleVariantSelected.bind(this);
         this.handlePresetSelected = this.handlePresetSelected.bind(this);
         this.handleMouseWheelOverBoard = this.handleMouseWheelOverBoard.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -87,7 +92,7 @@ export class Openings extends React.Component<IProps, IState> {
         }
 
         return (
-            <div className="openings">
+            <div className="openings" onMouseDown={this.handleMouseDown} onWheel={this.handleMouseWheelOverBoard}>
                 <div className="quiz-area">
                     {body}
                 </div>
@@ -105,13 +110,19 @@ export class Openings extends React.Component<IProps, IState> {
         document.removeEventListener("keyup", this.handleKeyUp);
     }
 
+    private handleMouseDown(event: React.MouseEvent<HTMLDivElement>) {
+        if (event.button === 1) {
+            this.flipMode();
+        }
+    }
+
     private createRecognizeQuiz() {
         const currentTitle = "Select openings";
         return (
             <div>
                 <h1 className="title" onClick={this.showDialog}>{currentTitle}</h1>
-                <div className="board-area" onWheel={this.handleMouseWheelOverBoard}>
-                    <Board position={this.state.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
+                <div className="board-area">
+                    <Board position={this.state.recognitionPosition} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
                 </div>
             </div>
         );
@@ -119,29 +130,19 @@ export class Openings extends React.Component<IProps, IState> {
 
     private handleMouseWheelOverBoard(event: React.WheelEvent<HTMLDivElement>) {
         const isNextMove = event.deltaY < 0;
-        let nextIndex = this.state.moveNum + 1;
+        let nextIndex = this.state.recognitionMoveNum + 1;
         if (!isNextMove) {
-            nextIndex = this.state.moveNum - 1;
+            nextIndex = this.state.recognitionMoveNum - 1;
         }
+        nextIndex = Math.max(Math.min(nextIndex, this.state.current.moves.length - 1), -1);
         let position = STARTING_POSITION;
-        if (nextIndex < 0) {
-            this.setState({
-                ...this.state,
-                position,
-                moveNum: 0,
-            });
-            return;
-        }
-        if (nextIndex >= this.state.current.moves.length) {
-            nextIndex = this.state.current.moves.length - 1;
-        }
-        for (let i = 0; i < nextIndex; i++) {
+        for (let i = 0; i <= nextIndex; i++) {
             position = applyMove(position, this.state.current.moves[i]);
         }
         this.setState({
             ...this.state,
-            position,
-            moveNum: nextIndex,
+            recognitionPosition: position,
+            recognitionMoveNum: nextIndex,
         });
     }
 
@@ -220,7 +221,7 @@ export class Openings extends React.Component<IProps, IState> {
     }
 
     private giveHint() {
-        if (this.state.isBackOfCard) {
+        if (this.state.isBackOfCard && this.state.current && this.state.moveNum < this.state.current.moves.length) {
             return;
         }
         const curMove = this.state.current.moves[this.state.moveNum];
@@ -238,6 +239,8 @@ export class Openings extends React.Component<IProps, IState> {
             backStack: newBackStack,
             moveNum: 0,
             position: STARTING_POSITION,
+            recognitionMoveNum: -1,
+            recognitionPosition: STARTING_POSITION,
         });
     }
 
@@ -246,6 +249,8 @@ export class Openings extends React.Component<IProps, IState> {
             ...this.state,
             position: STARTING_POSITION,
             moveNum: 0,
+            recognitionMoveNum: -1,
+            recognitionPosition: STARTING_POSITION,
         });
     }
 
@@ -263,18 +268,15 @@ export class Openings extends React.Component<IProps, IState> {
             position: STARTING_POSITION,
             legalMoves: [],
             backStack: newBackStack,
+            recognitionMoveNum: -1,
+            recognitionPosition: STARTING_POSITION,
         });
     }
 
     private handleMove(src: string, dst: string) {
-        // check the move against the current move number, if it matches, update the position and get new legal moves
         const expectedMove = this.state.current.moves[this.state.moveNum];
         if (expectedMove.src === src && expectedMove.dst === dst) {
-            console.log("CORRECT!");
-            // apply move to position
             const nextPosition = applyMove(this.state.position, {src, dst});
-            // get legal moves for position
-            // set current move++
             const nextMoveNum = this.state.moveNum + 1;
 
             if (nextMoveNum >= this.state.current.moves.length) {
@@ -288,7 +290,6 @@ export class Openings extends React.Component<IProps, IState> {
                 moveNum: nextMoveNum,
             });
         } else {
-            console.log("INCORRECT!");
             this.setState({
                 ...this.state,
             });
