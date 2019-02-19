@@ -27,7 +27,11 @@ def moves():
         })
     return jsonify(ret)
 
+
+@app.route("/api/move_quiz", methods=["GET"])
+def move_quiz():
     
+
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
