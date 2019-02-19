@@ -1,5 +1,9 @@
 import chess
+import chess.pgn
 import os
+import random
+import sqlite3
+from models import *
 from flask import Flask, jsonify, send_from_directory, request
 from openings import OPENINGS
 
@@ -27,10 +31,28 @@ def moves():
         })
     return jsonify(ret)
 
-
-@app.route("/api/move_quiz", methods=["GET"])
-def move_quiz():
-    
+@app.route("/api/random_move_challenge", methods=["GET"])
+def random_move_challenge():
+    # get random game id
+    conn = sqlite3.connect("./games.db")
+    curs = conn.cursor()
+    game = None
+    while not game:
+        curs.execute("select id from game order by random() limit 1;")
+        id = curs.fetchone()[0]
+        game = Game.get_by_id(id)
+        num_moves = len(game.moves)
+        if num_moves < 5:
+            break
+    random_move_index = random.randint(5, len(game.moves) + 1)
+    board = chess.Board()
+    for i in range(random_move_index + 1):
+        game_move = game.moves[i]
+        src = chess.SQUARE_NAMES[game_move.move.move_src]
+        dst = chess.SQUARE_NAMES[game_move.move.move_dst]
+        move = chess.Move.from_uci("{}{}".format(src, dst))
+        board.push(move)
+    return jsonify(str(board.fen()))
 
 
 @app.route("/", defaults={"path": ""})
