@@ -20,14 +20,14 @@ def create_position_model(board, is_capture=False, is_castle=False, is_enpassant
     , is_whites_move=board.turn)
     return position
 
-def create_move_model(start_position, end_position, piece, src, dst):
-    return Move(start_position=start_position, end_position=end_position, piece=piece, move_src=src, move_dst=dst)
+def create_move_model(start_position, end_position, piece, src, dst, promotion):
+    return Move(start_position=start_position, end_position=end_position, piece=piece, move_src=src, move_dst=dst, promotion=promotion)
 
 eargs = Enumerable(sys.argv)
 exporter = chess.pgn.StringExporter(headers=True, variations=True, comments=True)
 i = 0
-with open("./src/server/games/Fischer.pgn", "r") as pgn:
-    while i < 1000:
+with open("./games/Caruana.pgn", "r") as pgn:
+    while i < 10:
         i += 1
         game = chess.pgn.read_game(pgn)
         if not game:
@@ -54,6 +54,7 @@ with open("./src/server/games/Fischer.pgn", "r") as pgn:
             is_capture = board.is_capture(move)
             is_castling = board.is_castling(move)
             is_enpassant = board.is_en_passant(move)
+            promotion = str(move.promotion) if move.promotion else None
             board.push(move)
             after_fen = board.fen()
             after_position = Position.get_or_none(Position.fen == after_fen)
@@ -63,7 +64,7 @@ with open("./src/server/games/Fischer.pgn", "r") as pgn:
 
             existing_move = Move.get_or_none((Move.start_position == before_position) & (Move.end_position == after_position))
             if not existing_move:                
-                existing_move = Move.create(start_position=before_position, end_position=after_position, piece=piece, move_src=move.from_square, move_dst=move.to_square)
+                existing_move = Move.create(start_position=before_position, end_position=after_position, piece=piece, move_src=move.from_square, move_dst=move.to_square, promotion=promotion)
                 existing_move.save()
 
             existing_game_move = GameMove.get_or_none((GameMove.game == game_model) & (GameMove.move == existing_move))
