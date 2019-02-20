@@ -47,43 +47,78 @@ def random_move_challenge():
             if num_moves < 5:
                 break
         random_move_index = random.randint(5, len(game.moves))
-        board = chess.Board()
+        opportunity_board = chess.Board()
+        threat_board = chess.Board()
         for i in range(random_move_index + 1):
             game_move = game.moves[i]
             src = chess.SQUARE_NAMES[game_move.move.move_src]
             dst = chess.SQUARE_NAMES[game_move.move.move_dst]
             move = chess.Move.from_uci("{}{}".format(src, dst))
-            board.push(move)
-        moves = []
-        for move in board.legal_moves:
-            copy = chess.Board(fen=board.fen())
+            opportunity_board.push(move)
+            threat_board.push(move)
+        opportunities = []
+        # opportunities
+        for move in opportunity_board.legal_moves:
+            copy = chess.Board(fen=opportunity_board.fen())
             is_capture = copy.is_capture(move)
             promotion = str(move.promotion) if move.promotion else None
-            is_castle = board.is_castling(move)
-            is_enpassant = board.is_en_passant(move)
+            is_castle = opportunity_board.is_castling(move)
+            is_enpassant = opportunity_board.is_en_passant(move)
             copy.push(move)
-            is_check = board.is_check()
-            is_checkmate = board.is_checkmate()
-            is_stalemate = board.is_stalemate()
-            is_insufficient_material = board.is_insufficient_material()
+            is_check = opportunity_board.is_check()
+            is_checkmate = opportunity_board.is_checkmate()
+            is_stalemate = opportunity_board.is_stalemate()
+            is_insufficient_material = opportunity_board.is_insufficient_material()
+            if is_capture or is_check or is_checkmate:
+                opportunities.append({
+                    "src": chess.SQUARE_NAMES[move.from_square],
+                    "dst": chess.SQUARE_NAMES[move.to_square],
+                    "is_capture": is_capture,
+                    "promotion": promotion,
+                    "is_check": is_check,
+                    "is_checkmate": is_checkmate,
+                    "is_stalemate": is_stalemate,
+                    "is_castle": is_castle,
+                    "is_enpassant": is_enpassant,
+                    "is_insufficient_material": is_insufficient_material,
+                    "is_whites_move": opportunity_board.turn
+                })
 
-            moves.append({
-                "src": chess.SQUARE_NAMES[move.from_square],
-                "dst": chess.SQUARE_NAMES[move.to_square],
-                "is_capture": is_capture,
-                "promotion": promotion,
-                "is_check": is_check,
-                "is_checkmate": is_checkmate,
-                "is_stalemate": is_stalemate,
-                "is_castle": is_castle,
-                "is_enpassant": is_enpassant,
-                "is_insufficient_material": is_insufficient_material,
-                "is_whites_move": board.turn
-            })
+        
+        # threats
+        threats = []
+        threat_board.turn = not threat_board.turn
+        for move in threat_board.legal_moves:
+            copy = chess.Board(fen=threat_board.fen())
+            is_capture = copy.is_capture(move)
+            promotion = str(move.promotion) if move.promotion else None
+            is_castle = threat_board.is_castling(move)
+            is_enpassant = threat_board.is_en_passant(move)
+            copy.push(move)
+            is_check = threat_board.is_check()
+            is_checkmate = threat_board.is_checkmate()
+            is_stalemate = threat_board.is_stalemate()
+            is_insufficient_material = threat_board.is_insufficient_material()
+            if is_capture or is_check or is_checkmate:
+                threats.append({
+                    "src": chess.SQUARE_NAMES[move.from_square],
+                    "dst": chess.SQUARE_NAMES[move.to_square],
+                    "is_capture": is_capture,
+                    "promotion": promotion,
+                    "is_check": is_check,
+                    "is_checkmate": is_checkmate,
+                    "is_stalemate": is_stalemate,
+                    "is_castle": is_castle,
+                    "is_enpassant": is_enpassant,
+                    "is_insufficient_material": is_insufficient_material,
+                    "is_whites_move": threat_board.turn
+                })
 
         return jsonify({
-            "fen": board.fen(),
-            "moves": moves
+            "fen": opportunity_board.fen(),
+            "is_whites_move": opportunity_board.turn,
+            "opportunities": opportunities,
+            "threats": threats,
         })
 
 

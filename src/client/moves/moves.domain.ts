@@ -6,5 +6,7 @@ export interface IRootState {
 
 export interface IRandomMoveChallenge {
     position: string[];
-    moves: IMove[];
+    isWhitesMove: boolean;
+    threats: IMove[];
+    opportunities: IMove[];
 }
