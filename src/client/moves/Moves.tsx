@@ -40,7 +40,7 @@ export class Moves extends React.Component<IProps, IState> {
                         <div className="title">TITLE</div>
                         <div className="board-area">
                             <div className={cn("board-mask", {success: this.state.showSuccess, failure: this.state.showFailure})} />
-                            <Board position={this.props.challenge.position} legalMoves={[]} onMove={this.handleMove} />
+                            <Board position={this.props.challenge.position} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={!this.props.challenge.isWhitesMove} />
                         </div>
                     </div>
                 </div>

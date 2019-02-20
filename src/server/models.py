@@ -51,8 +51,9 @@ class GameMove(BaseModel):
     id = pw.UUIDField(primary_key=True, default=uuid.uuid4)
     game = pw.ForeignKeyField(Game, backref="moves")
     move = pw.ForeignKeyField(Move, backref="games")
+    order = pw.IntegerField()
 
-GameMove.add_index(GameMove.game, GameMove.move, unique=True)
+GameMove.add_index(GameMove.game, GameMove.move, GameMove.order, unique=True)
 
 db.connect()
 db.create_tables([Game, GameHeader, Position, Move, GameMove])

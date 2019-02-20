@@ -44,6 +44,7 @@ with open("./games/Caruana.pgn", "r") as pgn:
             header_model = GameHeader.create(game=game_model, key=header, value=game.headers[header])
             header_model.save()
 
+        order = 0
         for move in game.mainline_moves():
             before_fen = board.fen()
             before_position = Position.get_or_none(Position.fen == before_fen)
@@ -54,7 +55,7 @@ with open("./games/Caruana.pgn", "r") as pgn:
             is_capture = board.is_capture(move)
             is_castling = board.is_castling(move)
             is_enpassant = board.is_en_passant(move)
-            promotion = str(move.promotion) if move.promotion else None
+            promotion = chess.PIECE_SYMBOLS[move.promotion] if move.promotion else None
             board.push(move)
             after_fen = board.fen()
             after_position = Position.get_or_none(Position.fen == after_fen)
@@ -67,10 +68,11 @@ with open("./games/Caruana.pgn", "r") as pgn:
                 existing_move = Move.create(start_position=before_position, end_position=after_position, piece=piece, move_src=move.from_square, move_dst=move.to_square, promotion=promotion)
                 existing_move.save()
 
-            existing_game_move = GameMove.get_or_none((GameMove.game == game_model) & (GameMove.move == existing_move))
+            existing_game_move = GameMove.get_or_none((GameMove.game == game_model) & (GameMove.move == existing_move) & (GameMove.order == order))
             if not existing_game_move:
-                existing_game_move = GameMove.create(game=game_model, move=existing_move)
+                existing_game_move = GameMove.create(game=game_model, move=existing_move, order=order)
                 existing_game_move.save()
+            order += 1
         game_model.save()
 
    

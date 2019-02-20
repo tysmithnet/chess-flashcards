@@ -49,8 +49,9 @@ def random_move_challenge():
         random_move_index = random.randint(5, len(game.moves))
         opportunity_board = chess.Board()
         threat_board = chess.Board()
+        game_moves = Enumerable(game.moves).order_by(lambda x: x.order).to_list()
         for i in range(random_move_index + 1):
-            game_move = game.moves[i]
+            game_move = game_moves[i]
             src = chess.SQUARE_NAMES[game_move.move.move_src]
             dst = chess.SQUARE_NAMES[game_move.move.move_dst]
             move = chess.Move.from_uci("{}{}".format(src, dst))
@@ -64,7 +65,9 @@ def random_move_challenge():
             promotion = str(move.promotion) if move.promotion else None
             is_castle = opportunity_board.is_castling(move)
             is_enpassant = opportunity_board.is_en_passant(move)
+            print("BEFORE: {}".format(copy.fen()))
             copy.push(move)
+            print("AFTER : {}".format(copy.fen()))
             is_check = opportunity_board.is_check()
             is_checkmate = opportunity_board.is_checkmate()
             is_stalemate = opportunity_board.is_stalemate()
