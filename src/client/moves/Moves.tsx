@@ -1,9 +1,10 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board } from "../board/Board";
-import { IBaseProps, IMove } from "../root";
+import { IBaseProps, IMove, IRootState } from "../root";
 import { randomMoveChallengeRequestFactory } from "./moves.action";
-import {IRandomMoveChallenge, IRootState} from "./moves.domain";
+import {IRandomMoveChallenge } from "./moves.domain";
+import "./moves.styles";
 
 export interface IProps extends IBaseProps {
     challenge: IRandomMoveChallenge;
@@ -22,8 +23,15 @@ export class Moves extends React.Component<IProps, IState> {
             return <p>Loading...</p>;
         }
         return (
-            <div>
-                <Board position={this.props.challenge.position} legalMoves={this.props.challenge.moves}/>
+            <div className={"move-container"}>
+                <div className="quiz-area">
+                    <div>
+                        <div className="title">TITLE</div>
+                        <div className="board-area">
+                            <Board position={this.props.challenge.position} legalMoves={this.props.challenge.moves} />
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -35,7 +43,7 @@ export class Moves extends React.Component<IProps, IState> {
 
 function mapStateToProps(state: IRootState): IProps {
     return {
-        challenge: state.challenge,
+        challenge: state.moves.challenge,
     };
 }
 

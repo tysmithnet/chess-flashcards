@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IBaseProps } from "../root";
 import { IRandomMoveChallenge } from "./moves.domain";
+import "./moves.styles";
 export interface IProps extends IBaseProps {
     challenge: IRandomMoveChallenge;
 }
