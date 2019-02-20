@@ -130,6 +130,9 @@ export function applyMove(position: string[], move: IMove): string[] {
     const from = convertSquare(move.src);
     const to = convertSquare(move.dst);
     const piece = copy[from.i];
+    if (!piece) {
+        throw new Error("Move attempted to be made where no piece exists");
+    }
 
     // castling
     if (piece.toLowerCase() === "k") {
@@ -148,15 +151,15 @@ export function applyMove(position: string[], move: IMove): string[] {
         }
         if (move.src === "e8") {
             if (move.dst === "g8") {
-                copy[7] = null;
-                copy[6] = "k";
-                copy[5] = "r";
-                copy[4] = null;
+                copy[56 + 7] = null;
+                copy[56 + 6] = "k";
+                copy[56 + 5] = "r";
+                copy[56 + 4] = null;
             } else if (move.dst === "c8") {
-                copy[0] = null;
-                copy[2] = "k";
-                copy[3] = "r";
-                copy[4] = null;
+                copy[56 + 0] = null;
+                copy[56 + 2] = "k";
+                copy[56 + 3] = "r";
+                copy[56 + 4] = null;
             }
         }
     } else {
