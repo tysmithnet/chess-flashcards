@@ -1,21 +1,16 @@
 import * as React from "react";
-import { IBaseProps, IMove } from "../root";
-export interface IMoveCollection {
-    position: string[];
-    checks: IMove[];
-    captures: IMove[];
-    legalMoves: IMove[];
-    checkmates: IMove[];
-    stalemates: IMove[];
-}
+import { IBaseProps } from "../root";
+import { IRandomMoveChallenge } from "./moves.domain";
 export interface IProps extends IBaseProps {
-    position: string[];
+    challenge: IRandomMoveChallenge;
 }
 export interface IState {
 }
-export declare class Moves extends React.Component<IBaseProps, IState> {
+export declare class Moves extends React.Component<IProps, IState> {
+    constructor(props: IProps);
     render(): JSX.Element;
+    componentDidMount(): void;
 }
-export declare const connectedComponent: React.ComponentClass<Pick<IBaseProps, never>, any> & {
-    WrappedComponent: React.ComponentType<IBaseProps>;
+export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
+    WrappedComponent: React.ComponentType<IProps>;
 };

@@ -14,6 +14,14 @@ export interface IBaseProps {
 export interface IMove {
     src: string;
     dst: string;
+    is_whites_move?: boolean;
+    is_capture?: boolean;
+    is_check?: boolean;
+    is_checkmate?: boolean;
+    is_stalemate?: boolean;
+    is_castle?: boolean;
+    is_enpassant?: boolean;
+    is_insufficient_material?: boolean;
 }
 export interface IOpening {
     id: string;

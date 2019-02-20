@@ -33,7 +33,6 @@ class Position(BaseModel):
     is_castle = pw.BooleanField(default=False)
     is_enpassant = pw.BooleanField(default=False)
     is_insufficient_material = pw.BooleanField(default=False)
-    queen_promotion = pw.CharField(null=True)
 
 Position.add_index(Position.fen, unique=True)
 
@@ -44,6 +43,7 @@ class Move(BaseModel):
     piece = pw.CharField(null=False)
     move_src = pw.IntegerField(null=False)
     move_dst = pw.IntegerField(null=False)
+    promotion = pw.CharField(null=True)
 
 Move.add_index(Move.start_position, Move.end_position, unique=True)
 
