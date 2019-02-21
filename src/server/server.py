@@ -39,17 +39,25 @@ def random_move_challenge():
         curs = conn.cursor()
         game = None
         i = 0
-        while not game:
+        while True:
             curs.execute("select id from game order by random() limit 1;")
             id = curs.fetchone()[0]
             game = Game.get_by_id(id)
             num_moves = len(game.moves)
             if num_moves < 5:
+                continue
+            random_move_index = random.randint(5, len(game.moves) - 1)
+            opportunity_board = chess.Board()
+            threat_board = chess.Board()
+            game_moves = Enumerable(game.moves).order_by(lambda x: x.order).to_list()
+            opportunity_board.turn = not opportunity_board.turn
+            is_non_active_player_in_check = opportunity_board.is_check()
+            opportunity_board.turn = not opportunity_board.turn
+            if opportunity_board.is_check() or is_non_active_player_in_check:
+                continue
+            else:
                 break
-        random_move_index = random.randint(5, len(game.moves))
-        opportunity_board = chess.Board()
-        threat_board = chess.Board()
-        game_moves = Enumerable(game.moves).order_by(lambda x: x.order).to_list()
+
         for i in range(random_move_index + 1):
             game_move = game_moves[i]
             src = chess.SQUARE_NAMES[game_move.move.move_src]
@@ -63,15 +71,13 @@ def random_move_challenge():
             copy = chess.Board(fen=opportunity_board.fen())
             is_capture = copy.is_capture(move)
             promotion = str(move.promotion) if move.promotion else None
-            is_castle = opportunity_board.is_castling(move)
-            is_enpassant = opportunity_board.is_en_passant(move)
-            print("BEFORE: {}".format(copy.fen()))
+            is_castle = copy.is_castling(move)
+            is_enpassant = copy.is_en_passant(move)
             copy.push(move)
-            print("AFTER : {}".format(copy.fen()))
-            is_check = opportunity_board.is_check()
-            is_checkmate = opportunity_board.is_checkmate()
-            is_stalemate = opportunity_board.is_stalemate()
-            is_insufficient_material = opportunity_board.is_insufficient_material()
+            is_check = copy.is_check()
+            is_checkmate = copy.is_checkmate()
+            is_stalemate = copy.is_stalemate()
+            is_insufficient_material = copy.is_insufficient_material()
             if is_capture or is_check or is_checkmate:
                 opportunities.append({
                     "src": chess.SQUARE_NAMES[move.from_square],
@@ -84,7 +90,7 @@ def random_move_challenge():
                     "is_castle": is_castle,
                     "is_enpassant": is_enpassant,
                     "is_insufficient_material": is_insufficient_material,
-                    "is_whites_move": opportunity_board.turn
+                    "is_whites_move": copy.turn
                 })
 
         
@@ -95,13 +101,13 @@ def random_move_challenge():
             copy = chess.Board(fen=threat_board.fen())
             is_capture = copy.is_capture(move)
             promotion = str(move.promotion) if move.promotion else None
-            is_castle = threat_board.is_castling(move)
-            is_enpassant = threat_board.is_en_passant(move)
+            is_castle = copy.is_castling(move)
+            is_enpassant = copy.is_en_passant(move)
             copy.push(move)
-            is_check = threat_board.is_check()
-            is_checkmate = threat_board.is_checkmate()
-            is_stalemate = threat_board.is_stalemate()
-            is_insufficient_material = threat_board.is_insufficient_material()
+            is_check = copy.is_check()
+            is_checkmate = copy.is_checkmate()
+            is_stalemate = copy.is_stalemate()
+            is_insufficient_material = copy.is_insufficient_material()
             if is_capture or is_check or is_checkmate:
                 threats.append({
                     "src": chess.SQUARE_NAMES[move.from_square],
@@ -114,7 +120,7 @@ def random_move_challenge():
                     "is_castle": is_castle,
                     "is_enpassant": is_enpassant,
                     "is_insufficient_material": is_insufficient_material,
-                    "is_whites_move": threat_board.turn
+                    "is_whites_move": copy.turn
                 })
 
         return jsonify({
