@@ -1,6 +1,7 @@
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
+import { IRootState as IGamesState } from "../games";
 import { IRootState as IMoveState } from "../moves";
 import { IRootState as IOpeningsState } from "../openings";
 export interface IRootState {
@@ -8,6 +9,7 @@ export interface IRootState {
     auth: IAuthState;
     openings: IOpeningsState;
     moves: IMoveState;
+    games: IGamesState;
 }
 export interface IBaseProps {
     dispatch?: Dispatch;

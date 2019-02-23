@@ -131,7 +131,7 @@ def random_move_challenge():
             "threats": threats,
         })
 
-@app.route("/search/games")
+@app.route("/api/search/games")
 def search_games():
     query = request.args.get("q")
     with sqlite3.connect("./games.db") as conn:
