@@ -1,3 +1,4 @@
+import re
 import chess
 import chess.pgn
 import os
@@ -129,6 +130,55 @@ def random_move_challenge():
             "opportunities": opportunities,
             "threats": threats,
         })
+
+@app.route("/search/games")
+def search_games():
+    query = request.args.get("q")
+    with sqlite3.connect("./games.db") as conn:
+        curs = conn.cursor()
+        curs.execute("select * from gameheader where game_id in (select distinct(game_id) from gameheader where value like ?)", ("%{}%".format(query),))
+        rows = []
+        while True:
+            res = curs.fetchone()
+            if not res:
+                break
+            rows.append(res)
+        inflated = []
+        for row in rows:
+            inflated.append({
+                "id": row[1],
+                "key": row[2],
+                "value": row[3]
+            })
+        groups = Enumerable(inflated).group_by(key=lambda x: x["id"], key_names=["id"]).to_list()
+        results = []
+        for group in groups:
+            name_builder = {
+                "event": "??",
+                "white": "??",
+                "black": "??",
+                "result": "??",
+                "eco": "??"
+            }
+            for row in group.data:
+                if re.match(r"^\s*event\s*$", row["key"], re.I):
+                    name_builder["event"] = row["value"]
+                elif re.match(r"^\s*eco\s*$", row["key"], re.I):
+                    name_builder["eco"] = row["value"]
+                elif re.match(r"^\s*white\s*$", row["key"], re.I):
+                    name_builder["white"] = row["value"]
+                elif re.match(r"^\s*black\s*$", row["key"], re.I):
+                    name_builder["black"] = row["value"]
+                elif re.match(r"^\s*result\s*$", row["key"], re.I):
+                    name_builder["result"] = row["value"]
+                
+            title = "{} v {} {} {} {}".format(name_builder["white"], name_builder["black"], name_builder["result"], name_builder["event"], name_builder["eco"])
+            results.append({
+                "id": group.key.id,
+                "title": title,
+            })
+                
+    return jsonify(results)
 
 
 @app.route("/", defaults={"path": ""})
