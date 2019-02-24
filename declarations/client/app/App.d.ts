@@ -22,6 +22,8 @@ export interface IProps extends IBaseProps {
     routes?: IRoute[];
     classes?: IClasses;
 }
-export declare function App(props: IProps): JSX.Element;
-declare const styledComponent: React.ComponentType<Pick<Pick<IProps, never>, never> & import("@material-ui/styles/withStyles").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">>;
-export default styledComponent;
+export declare class App extends React.Component<IProps> {
+    render(): JSX.Element;
+}
+declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof App, Pick<IProps, never>>;
+export default connectedComponent;

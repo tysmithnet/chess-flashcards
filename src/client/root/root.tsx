@@ -1,4 +1,4 @@
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import { createMuiTheme, CssBaseline, MuiThemeProvider } from "@material-ui/core";
 import { install, ThemeProvider } from "@material-ui/styles";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -19,11 +19,18 @@ const theme = createMuiTheme({ typography: { useNextVariants: true } });
  */
 function render(component: JSX.Element) {
     ReactDOM.render(
+        // <CssBaseline>
+        //     <AppContainer>
+        //         <ThemeProvider theme={theme}>
+        //             <Provider store={store}>
+        //                 {component}
+        //             </Provider>
+        //         </ThemeProvider>
+        //     </AppContainer>
+        // </CssBaseline>,
         <AppContainer>
             <Provider store={store}>
-                <ThemeProvider theme={theme}>
-                    {component}
-                </ThemeProvider>
+                {component}
             </Provider>
         </AppContainer>,
         document.getElementById("root"),
