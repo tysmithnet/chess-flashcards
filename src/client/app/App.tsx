@@ -11,7 +11,7 @@ import * as React from "react";
 import { hot } from "react-hot-loader";
 import { observe } from "react-performance-observer";
 import { connect } from "react-redux";
-import { Route } from "react-router";
+import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import { IUser } from "../auth";
 import { isTest } from "../globals";
@@ -128,6 +128,10 @@ export interface IProps extends IBaseProps {
     classes?: IClasses;
     theme?: Theme;
 }
+
+function fourOhFour() {
+    return <h1 className="not-found">Not found!</h1>;
+}
 /**
  * The root of the application. It"s primary responsibility is providing
  * an environment in which more focused components can provide value.
@@ -150,93 +154,85 @@ export class App extends React.Component<IProps, IState> {
 
     public render() {
         const open = this.state.open;
+        const toAdd = routes
+            .map(r => {
+                return {
+                    link: (
+                        <ListItem button={true} key={r.path}>
+                            <ListItemIcon><InboxIcon /></ListItemIcon>
+                            <ListItemText primary={r.display}>
+                                <Link key={r.path} to={r.path}>
+                                    {r.display}
+                                </Link>
+                            </ListItemText>
+                        </ListItem>
+
+                    ),
+                    route: (
+                        <Route
+                            key={r.path}
+                            path={r.path}
+                            component={r.component}
+                            exact={r.exact}
+                        />
+                    ),
+                };
+            });
         return (
             <ConnectedRouter history={getHistory()}>
                 <div className={this.classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    className={classNames(this.classes.appBar, {
-                        [this.classes.appBarShift]: open,
-                    })}
-                >
-                    <Toolbar disableGutters={!open}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleOpen}
-                            className={classNames(this.classes.menuButton, open && this.classes.hide)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" noWrap={true}>
-                            Persistent drawer
+                    <CssBaseline />
+                    <AppBar
+                        position="fixed"
+                        className={classNames(this.classes.appBar, {
+                            [this.classes.appBarShift]: open,
+                        })}
+                    >
+                        <Toolbar disableGutters={!open}>
+                            <IconButton
+                                color="inherit"
+                                aria-label="Open drawer"
+                                onClick={this.handleOpen}
+                                className={classNames(this.classes.menuButton, open && this.classes.hide)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography variant="h6" color="inherit" noWrap={true}>
+                                Persistent drawer
                                 </Typography>
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    className={this.classes.drawer}
-                    variant="persistent"
-                    anchor="left"
-                    open={open}
-                    classes={{
-                        paper: this.classes.drawerPaper,
-                    }}
-                >
-                    <div className={this.classes.drawerHeader}>
-                        <IconButton onClick={this.handleClose}>
-                            {this.theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <List>
-                        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-                            <ListItem button={true} key={text}>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider />
-                    <List>
-                        {["All mail", "Trash", "Spam"].map((text) => (
-                            <ListItem button={true} key={text}>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Drawer>
-                <main
-                    className={classNames(this.classes.content, {
-                        [this.classes.contentShift]: open,
-                    })}
-                >
-                    <div className={this.classes.drawerHeader} />
-                    <Typography paragraph={true}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                        ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-                        facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-                        gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-                        donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                        adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-                        Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-                        imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-                        arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-                        donec massa sapien faucibus et molestie ac.
-                            </Typography>
-                    <Typography paragraph={true}>
-                        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-                        facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-                        tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-                        consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-                        vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-                        hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-                        tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-                        nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-                        accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-                        </Typography>
-                </main>
-            </div>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        className={this.classes.drawer}
+                        variant="persistent"
+                        anchor="left"
+                        open={open}
+                        classes={{
+                            paper: this.classes.drawerPaper,
+                        }}
+                    >
+                        <div className={this.classes.drawerHeader}>
+                            <IconButton onClick={this.handleClose}>
+                                {this.theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <List>
+                            {toAdd.map(x => x.link)}
+                        </List>
+                    </Drawer>
+                    <main
+                        className={classNames(this.classes.content, {
+                            [this.classes.contentShift]: open,
+                        })}
+                    >
+                        <div className={this.classes.drawerHeader} />
+                        <Switch>
+                            {toAdd.map(x => x.route)}
+                            <Route render={fourOhFour} />
+                        </Switch>
+                    </main>
+                </div>
             </ConnectedRouter >
         );
     }
