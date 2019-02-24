@@ -158,15 +158,12 @@ export class App extends React.Component<IProps, IState> {
             .map(r => {
                 return {
                     link: (
-                        <ListItem button={true} key={r.path}>
-                            <ListItemIcon><InboxIcon /></ListItemIcon>
-                            <ListItemText primary={r.display}>
-                                <Link key={r.path} to={r.path}>
-                                    {r.display}
-                                </Link>
-                            </ListItemText>
-                        </ListItem>
-
+                        <Link key={r.path} to={r.path}>
+                            <ListItem button={true} key={r.path}>
+                                <ListItemIcon><InboxIcon /></ListItemIcon>
+                                <ListItemText primary={r.display}>{r.display}</ListItemText>
+                            </ListItem>
+                        </Link>
                     ),
                     route: (
                         <Route
