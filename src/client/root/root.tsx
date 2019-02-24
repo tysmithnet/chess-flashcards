@@ -1,5 +1,5 @@
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import { install } from "@material-ui/styles";
+import { install, ThemeProvider } from "@material-ui/styles";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
@@ -10,7 +10,7 @@ import { sagaMiddleware, store } from "./root.store";
 
 install();
 
-const theme = createMuiTheme();
+const theme = createMuiTheme({ typography: { useNextVariants: true } });
 
 /**
  * Render a component and connect the root store to it
@@ -19,11 +19,13 @@ const theme = createMuiTheme();
  */
 function render(component: JSX.Element) {
     ReactDOM.render(
-        <MuiThemeProvider theme={theme}>
-            <AppContainer>
-                <Provider store={store}>{component}</Provider>
-            </AppContainer>
-        </MuiThemeProvider>,
+        <AppContainer>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    {component}
+                </ThemeProvider>
+            </Provider>
+        </AppContainer>,
         document.getElementById("root"),
     );
 }

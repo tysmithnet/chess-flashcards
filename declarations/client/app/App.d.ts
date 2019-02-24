@@ -23,5 +23,5 @@ export interface IProps extends IBaseProps {
     classes?: IClasses;
 }
 export declare function App(props: IProps): JSX.Element;
-declare const styledComponent: React.ComponentType<Pick<Pick<IProps, never>, never> & import("@material-ui/styles/withStyles").StyledComponentProps<string>>;
+declare const styledComponent: React.ComponentType<Pick<Pick<IProps, never>, never> & import("@material-ui/styles/withStyles").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">>;
 export default styledComponent;

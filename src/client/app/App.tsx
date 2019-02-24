@@ -1,5 +1,5 @@
 import { AppBar, Button, CssBaseline, Divider, Drawer, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
-import { createMuiTheme, MuiThemeProvider, Theme } from "@material-ui/core/styles";
+import { createMuiTheme, MuiThemeProvider, Theme, createStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import InboxIcon from "@material-ui/icons/Inbox";
@@ -59,7 +59,7 @@ export interface IClasses {
     contentShift: any;
 }
 
-const styles = (theme: Theme): any => ({
+const styles = (theme: Theme) => createStyles({
     root: {
         display: "flex",
     },
@@ -306,5 +306,5 @@ function mapStateToProps(state: IRootState): IProps {
 // in the browser
 const hotModule = hot(module)(App);
 const connectedComponent = connect(mapStateToProps)(hotModule);
-const styledComponent = withStyles(styles)(connectedComponent);
+const styledComponent = withStyles(styles, {withTheme: true})(connectedComponent);
 export default styledComponent;
