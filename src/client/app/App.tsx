@@ -1,3 +1,4 @@
+import {CssBaseline, Grid, Button} from "@material-ui/core";
 import { ConnectedRouter } from "connected-react-router";
 import * as React from "react";
 import { hot } from "react-hot-loader";
@@ -11,7 +12,6 @@ import { getHistory, IRootState } from "../root";
 import { IProps } from "./app.domain";
 import "./app.styles";
 import { routes } from "./routes";
-
 // register a metric tracking routine
 if (!isTest) {
     observe(measurements => {
@@ -77,21 +77,28 @@ export class App extends React.Component<IProps> {
                 };
             });
         return (
-            <ConnectedRouter history={getHistory()}>
-                <div className="app">
-                    <div className="menu-wrapper">
-                        <Menu
-                            links={toAdd.map(x => x.link as any)}
-                        />
-                    </div>
-                    <div className="routes-wrapper">
-                        <Switch>
-                            {toAdd.map(x => x.route)}
-                            <Route render={fourOhFour} />
-                        </Switch>
-                    </div>
-                </div>
-            </ConnectedRouter>
+            <CssBaseline>
+                <ConnectedRouter history={getHistory()}>
+                    <Grid container={true}>
+                        <Grid item={true} xs={12}>
+                            <Button>HI!</Button>
+                        </Grid>
+                    </Grid>
+                    {/* <div className="app">
+                        <div className="menu-wrapper">
+                            <Menu
+                                links={toAdd.map(x => x.link as any)}
+                            />
+                        </div>
+                        <div className="routes-wrapper">
+                            <Switch>
+                                {toAdd.map(x => x.route)}
+                                <Route render={fourOhFour} />
+                            </Switch>
+                        </div>
+                    </div> */}
+                </ConnectedRouter>
+            </CssBaseline>
         );
     }
 }
