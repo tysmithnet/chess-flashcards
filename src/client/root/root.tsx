@@ -6,11 +6,18 @@ import { AppContainer } from "react-hot-loader";
 import { Provider } from "react-redux";
 import App from "../app/App";
 import { rootSaga } from "./root.saga";
-import { sagaMiddleware, store } from "./root.store";
+import { configureStore, sagaMiddleware } from "./root.store";
 
-install();
+// install();
 
 const theme = createMuiTheme({ typography: { useNextVariants: true } });
+const store = configureStore({
+    app: null,
+    auth: null,
+    games: null,
+    moves: null,
+    openings: null,
+});
 
 /**
  * Render a component and connect the root store to it
@@ -19,20 +26,20 @@ const theme = createMuiTheme({ typography: { useNextVariants: true } });
  */
 function render(component: JSX.Element) {
     ReactDOM.render(
-        // <CssBaseline>
-        //     <AppContainer>
-        //         <ThemeProvider theme={theme}>
-        //             <Provider store={store}>
-        //                 {component}
-        //             </Provider>
-        //         </ThemeProvider>
-        //     </AppContainer>
-        // </CssBaseline>,
-        <AppContainer>
-            <Provider store={store}>
-                {component}
-            </Provider>
-        </AppContainer>,
+        <CssBaseline>
+            <AppContainer>
+                <ThemeProvider theme={theme}>
+                    <Provider store={store}>
+                        {component}
+                    </Provider>
+                </ThemeProvider>
+            </AppContainer>
+        </CssBaseline>,
+        // <AppContainer>
+        //     <Provider store={store}>
+        //         {component}
+        //     </Provider>
+        // </AppContainer>,
         document.getElementById("root"),
     );
 }
