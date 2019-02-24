@@ -4,7 +4,7 @@
     ],
     "rules": {
         "arrow-parens": false,
-        "completed-docs": true,
+        "completed-docs": false,
         "jsx-no-multiline-js": false,
         "object-literal-sort-keys": false,
         "max-classes-per-file": false,

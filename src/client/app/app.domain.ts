@@ -8,23 +8,6 @@ import { IBaseProps } from "../root";
  * @interface IProps
  * @extends {IBaseProps}
  */
-export interface IProps extends IBaseProps {
-    /**
-     * The currently logged in user
-     *
-     * @type {IUser}
-     * @memberof IProps
-     */
-    user?: IUser;
-
-    /**
-     * Currently active routes
-     *
-     * @type {IRoute[]}
-     * @memberof IProps
-     */
-    routes: IRoute[];
-}
 
 /**
  * State for the App component

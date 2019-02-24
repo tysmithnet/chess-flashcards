@@ -12,7 +12,7 @@
             "*": ["typings/*"]
          },
         "lib": [
-            "webworker", "es6", "dom"
+            "webworker", "es6", "dom", "dom.iterable"
         ],
         "typeRoots": [
             "typings",

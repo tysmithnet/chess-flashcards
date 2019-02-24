@@ -27,6 +27,4 @@ export declare class Moves extends React.Component<IProps, IState> {
     private handleMove;
     private showFeedback;
 }
-export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
-    WrappedComponent: React.ComponentType<IProps>;
-};
+export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Moves, Pick<IProps, never>>;

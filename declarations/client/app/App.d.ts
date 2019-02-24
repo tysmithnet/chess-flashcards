@@ -1,10 +1,27 @@
 import * as React from "react";
-import { IProps } from "./app.domain";
-import "./app.styles";
-export declare class App extends React.Component<IProps> {
-    render(): React.ReactNode;
+import { IUser } from "../auth";
+import { IBaseProps } from "../root";
+import { IRoute } from "./app.domain";
+export interface IClasses {
+    root: any;
+    appBar: any;
+    appBarShift: any;
+    menuButton: any;
+    hide: any;
+    drawer: any;
+    drawerPaper: any;
+    drawerHeader: any;
+    content: any;
+    contentShift: any;
 }
-declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
-    WrappedComponent: React.ComponentType<IProps>;
-};
-export default connectedComponent;
+export interface IState {
+    open: boolean;
+}
+export interface IProps extends IBaseProps {
+    user?: IUser;
+    routes?: IRoute[];
+    classes?: IClasses;
+}
+export declare function App(props: IProps): JSX.Element;
+declare const styledComponent: React.ComponentType<Pick<Pick<IProps, never>, never> & import("@material-ui/styles/withStyles").StyledComponentProps<string>>;
+export default styledComponent;

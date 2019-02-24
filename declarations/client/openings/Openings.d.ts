@@ -45,6 +45,4 @@ export declare class Openings extends React.Component<IProps, IState> {
     private hideDialog;
     private handleSearchTextChange;
 }
-export declare const connectedComponent: React.ComponentClass<Pick<IProps, never>, any> & {
-    WrappedComponent: React.ComponentType<IProps>;
-};
+export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Openings, Pick<IProps, never>>;

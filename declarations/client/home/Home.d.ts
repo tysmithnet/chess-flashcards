@@ -3,6 +3,4 @@ import "./home.styles";
 export declare class Home extends React.Component {
     render(): JSX.Element;
 }
-export declare const connectedComponent: React.ComponentClass<Pick<{}, never>, any> & {
-    WrappedComponent: React.ComponentType<{}>;
-};
+export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Home, Pick<{}, never>>;

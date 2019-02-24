@@ -1,1 +1,1 @@
-export declare function rootSaga(): IterableIterator<import("redux-saga/effects").GenericAllEffect<IterableIterator<import("redux-saga/effects").GenericAllEffect<IterableIterator<import("redux-saga/effects").ForkEffect>>> | IterableIterator<import("redux-saga/effects").AllEffect>>>;
+export declare function rootSaga(): IterableIterator<import("@redux-saga/types").CombinatorEffect<"ALL", IterableIterator<import("@redux-saga/types").CombinatorEffect<"ALL", IterableIterator<import("@redux-saga/types").SimpleEffect<"FORK", import("redux-saga/effects").ForkEffectDescriptor>>>>>>;

@@ -4,6 +4,7 @@ import { IRootState as IAuthState } from "../auth";
 import { IRootState as IGamesState } from "../games";
 import { IRootState as IMoveState } from "../moves";
 import { IRootState as IOpeningsState } from "../openings";
+import { Theme } from "@material-ui/core";
 /**
  * Root of the state tree
  *
@@ -55,6 +56,8 @@ export interface IBaseProps {
      * @memberof IBaseProps
      */
     createWorker?: () => Worker;
+
+    theme?: Theme;
 }
 
 export interface IMove {
