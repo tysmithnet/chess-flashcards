@@ -10,6 +10,24 @@ user_roles = db.Table(
         "role.id"), primary_key=True),
 )
 
+open_moves = db.Table(
+    "opening_move",
+    db.Column("opening_id", db.Integer, db.ForeignKey(
+        "opening.id"), primary_key=True),
+    db.Column("move_id", db.Integer, db.ForeignKey(
+        "move.id"), primary_key=True),
+    db.Column("order", db.Integer)
+)
+
+game_moves = db.Table(
+    "game_move",
+    db.Column("game_id", db.Integer, db.ForeignKey(
+        "game.id"), primary_key=True),
+    db.Column("move_id", db.Integer, db.ForeignKey(
+        "move.id"), primary_key=True),
+    db.Column("order", db.Integer)
+)
+
 
 @login.user_loader
 def load_user(id):
@@ -42,20 +60,12 @@ class Role(db.Model):
         "User", secondary=user_roles, back_populates="roles")
 
 
-game_moves = db.Table(
-    "game_move",
-    db.Column("game_id", db.Integer, db.ForeignKey(
-        "game.id"), primary_key=True),
-    db.Column("move_id", db.Integer, db.ForeignKey(
-        "move.id"), primary_key=True),
-)
-
-
 class Game(db.Model):
     __tablename__ = "game"
     id = db.Column(db.Integer, primary_key=True)
     moves = db.relationship(
-        "Move", secondary=user_roles, back_populates="games")
+        "Move", secondary=user_roles, back_populates="games",
+        order_by=game_moves.order)
 
 
 class Move(db.Model):
@@ -71,6 +81,9 @@ class Move(db.Model):
     dst = db.Column(db.Integer, nullable=False)
     games = db.relationship(
         "Game", secondary=game_moves, back_populates="moves", order_by=Game.id)
+    openings = db.relationship(
+        "Opening", secondary=open_moves, back_populates="moves",
+        order_by=open_moves.order)
 
 
 class Position(db.Model):
@@ -95,3 +108,6 @@ class Opening(db.Model):
     __tablename__ = "opening"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(3), primary_key=True)
+    moves = db.relationship("Move", secondary=open_moves,
+                            back_populates="openings",
+                            order_by=open_moves.order)
