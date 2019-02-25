@@ -13,7 +13,9 @@ class UserRole(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(
         "user.id", ondelete="CASCADE"), primary_key=True)
     role_id = db.Column(db.Integer, db.ForeignKey(
-        "user.id", ondelete="CASCADE"), primary_key=True)
+        "role.id", ondelete="CASCADE"), primary_key=True)
+    user = db.relationship("User", back_populates="roles")
+    role = db.relationship("Role", back_populates="users")
 
     def __repr__(self):
         return "UserRole(user_id={}, role_id={})".format(self.user_id,
@@ -25,8 +27,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    roles = db.relationship(
-        "Role", secondary=UserRole, back_populates="users")
+    roles = db.relationship("UserRole", back_populates="user")
 
     def __repr__(self):
         return "User(id={}, username=\"{}\")".format(self.id, self.username)
@@ -41,9 +42,8 @@ class User(UserMixin, db.Model):
 class Role(db.Model):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    users = db.relationship(
-        "User", secondary=UserRole, back_populates="roles")
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    users = db.relationship("UserRole", back_populates="role")
 
     def __repr__(self):
         return "Role(id={}, name=\"{}\")".format(self.id, self.name)
@@ -56,6 +56,8 @@ class OpeningMove(db.Model):
     move_id = db.Column(db.Integer, db.ForeignKey(
         "move.id", ondelete="CASCADE"), primary_key=True)
     order = db.Column(db.Integer, nullable=False)
+    opening = db.relationship("Opening", back_populates="moves")
+    move = db.relationship("Move", back_populates="openings")
 
     def __repr__(self):
         return "OpeningMove(opening_id={}, move_id={}, order={})".format(
@@ -69,6 +71,8 @@ class GameMove(db.Model):
     move_id = db.Column(db.Integer, db.ForeignKey(
         "move.id", ondelete="CASCADE"), primary_key=True)
     order = db.Column(db.Integer, nullable=False)
+    game = db.relationship("Game", back_populates="moves")
+    move = db.relationship("Move", back_populates="games")
 
     def __repr__(self):
         return "GameMove(game_id={}, move_id={}, order={})".format(
@@ -80,9 +84,7 @@ class Game(db.Model):
     __tablename__ = "game"
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship(
-        "Move", secondary="GameMove", back_populates="games",
-        order_by=GameMove.order)
+    moves = db.relationship("GameMove", back_populates="game")
     headers = db.relationship("GameHeader")
 
     def __repr__(self):
@@ -106,13 +108,10 @@ class Move(db.Model):
         "position.id", ondelete="CASCADE"), nullable=False)
     src = db.Column(db.Integer, nullable=False)
     dst = db.Column(db.Integer, nullable=False)
-    start_pos = db.relationship("Position")
-    end_pos = db.relationship("Position")
-    games = db.relationship(
-        "Game", secondary=GameMove, back_populates="moves", order_by=Game.id)
-    openings = db.relationship(
-        "Opening", secondary=GameMove, back_populates="moves",
-        order_by=Game.id)
+    start_pos = db.relationship("Position", foreign_keys=[start_pos_id])
+    end_pos = db.relationship("Position", foreign_keys=[end_pos_id])
+    games = db.relationship("GameMove", back_populates="move")
+    openings = db.relationship("OpeningMove", back_populates="move")
 
     def __repr__(self):
         return "Move(id={}, start_pos_id={}, end_pos_id={}, src={}, dst={})" \
@@ -123,7 +122,7 @@ class Move(db.Model):
 class Position(db.Model):
     __tablename__ = "position"
     id = db.Column(db.Integer, primary_key=True)
-    pieces = db.Column(db.String(64), nullable=False)
+    pieces = db.Column(db.String(128), nullable=False)
     turn = db.Column(db.Boolean, nullable=False)
     white_can_castle_queenside = db.Column(db.Boolean, nullable=False)
     white_can_castle_kingside = db.Column(db.Boolean, nullable=False)
@@ -148,9 +147,7 @@ class Opening(db.Model):
     eco = db.Column(db.String(3), primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship("Move", secondary=OpeningMove,
-                            back_populates="openings",
-                            order_by=OpeningMove.order)
+    moves = db.relationship("OpeningMove", back_populates="opening")
 
     def __repr__(self):
         return "Opening(id={}, eco=\"{}\", name=\"{}\")".format(
