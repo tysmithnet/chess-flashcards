@@ -45,7 +45,8 @@
             "module": "flask",
             "cwd": "${workspaceFolder}/src/server/",
             "env": {
-                "FLASK_APP": "server.py"
+                "FLASK_APP": "chess-api.py",
+                "FLASK_DEBUG": 1,
             },
             "args": [
                 "run",
