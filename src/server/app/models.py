@@ -55,7 +55,7 @@ class OpeningMove(db.Model):
         "opening.id", ondelete="CASCADE"), primary_key=True)
     move_id = db.Column(db.Integer, db.ForeignKey(
         "move.id", ondelete="CASCADE"), primary_key=True)
-    order = db.Column(db.Integer, nullable=False)
+    move_num = db.Column(db.Integer, nullable=False)
     opening = db.relationship("Opening", back_populates="moves")
     move = db.relationship("Move", back_populates="openings")
 
@@ -70,7 +70,7 @@ class GameMove(db.Model):
         "game.id", ondelete="CASCADE"), primary_key=True)
     move_id = db.Column(db.Integer, db.ForeignKey(
         "move.id", ondelete="CASCADE"), primary_key=True)
-    order = db.Column(db.Integer, nullable=False)
+    move_num = db.Column(db.Integer, nullable=False)
     game = db.relationship("Game", back_populates="moves")
     move = db.relationship("Move", back_populates="games")
 
@@ -84,7 +84,8 @@ class Game(db.Model):
     __tablename__ = "game"
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship("GameMove", back_populates="game")
+    moves = db.relationship(
+        "GameMove", back_populates="game", order_by=GameMove.move_num)
     headers = db.relationship("GameHeader")
 
     def __repr__(self):
@@ -113,6 +114,10 @@ class Move(db.Model):
     games = db.relationship("GameMove", back_populates="move")
     openings = db.relationship("OpeningMove", back_populates="move")
 
+    __table_args__ = (
+        db.UniqueConstraint("start_pos_id", "end_pos_id"),
+    )
+
     def __repr__(self):
         return "Move(id={}, start_pos_id={}, end_pos_id={}, src={}, dst={})" \
             .format(self.id, self.start_pos_id, self.end_pos_id, self.src,
@@ -136,6 +141,14 @@ class Position(db.Model):
     is_stalemate = db.Column(db.Boolean, default=False, nullable=False)
     is_check = db.Column(db.Boolean, default=False, nullable=False)
 
+    __table_args__ = (
+        db.UniqueConstraint(
+            "pieces", "turn", "white_can_castle_queenside",
+            "white_can_castle_kingside", "black_can_castle_queenside",
+            "black_can_castle_kingside", "en_passant_square",
+            "halfmove_clock", "fullmove_number"),
+    )
+
     def __repr__(self):
         return "Position(id={}, pieces=\"{}\", turn={})".format(
             self.id, self.pieces, self.turn)
@@ -144,12 +157,14 @@ class Position(db.Model):
 class Opening(db.Model):
     __tablename__ = "opening"
     id = db.Column(db.Integer, primary_key=True)
-    eco = db.Column(db.String(3), primary_key=True)
+    eco = db.Column(db.String(3), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship("OpeningMove", back_populates="opening")
+    moves = db.relationship(
+        "OpeningMove", back_populates="opening",
+        order_by=OpeningMove.move_num)
 
     def __repr__(self):
         return "Opening(id={}, eco=\"{}\", name=\"{}\")".format(
             self.id, self.eco, self.name
-            )
+        )

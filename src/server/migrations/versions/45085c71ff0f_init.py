@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 935f9a7f38c8
+Revision ID: 45085c71ff0f
 Revises: 
-Create Date: 2019-02-25 14:41:45.277081
+Create Date: 2019-02-26 01:22:53.352643
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '935f9a7f38c8'
+revision = '45085c71ff0f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,7 @@ def upgrade():
     sa.Column('eco', sa.String(length=3), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
     sa.Column('slug', sa.String(length=256), nullable=False),
-    sa.PrimaryKeyConstraint('id', 'eco'),
+    sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('slug')
     )
     op.create_table('position',
@@ -46,7 +46,8 @@ def upgrade():
     sa.Column('is_checkmate', sa.Boolean(), nullable=False),
     sa.Column('is_stalemate', sa.Boolean(), nullable=False),
     sa.Column('is_check', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('pieces', 'turn', 'white_can_castle_queenside', 'white_can_castle_kingside', 'black_can_castle_queenside', 'black_can_castle_kingside', 'en_passant_square', 'halfmove_clock', 'fullmove_number')
     )
     op.create_table('role',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -77,7 +78,8 @@ def upgrade():
     sa.Column('dst', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['end_pos_id'], ['position.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['start_pos_id'], ['position.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('start_pos_id', 'end_pos_id')
     )
     op.create_table('user_role',
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -89,7 +91,7 @@ def upgrade():
     op.create_table('game_move',
     sa.Column('game_id', sa.Integer(), nullable=False),
     sa.Column('move_id', sa.Integer(), nullable=False),
-    sa.Column('order', sa.Integer(), nullable=False),
+    sa.Column('move_num', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['game_id'], ['game.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['move_id'], ['move.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('game_id', 'move_id')
@@ -97,7 +99,7 @@ def upgrade():
     op.create_table('opening_move',
     sa.Column('opening_id', sa.Integer(), nullable=False),
     sa.Column('move_id', sa.Integer(), nullable=False),
-    sa.Column('order', sa.Integer(), nullable=False),
+    sa.Column('move_num', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['move_id'], ['move.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['opening_id'], ['opening.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('opening_id', 'move_id')
