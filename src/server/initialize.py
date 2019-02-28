@@ -74,7 +74,8 @@ def create_position_if_necessary(board):
 def create_move_if_necessary(start_pos, end_pos, src, dst):
     move = session.query(m.Move).filter(
         m.Move.start_pos_id == start_pos.id and
-        m.Move.end_pos_id == end_pos.id
+        m.Move.end_pos_id == end_pos.id and
+        m.Move.src == src and m.Move.dst == dst
     )
     move = move.one_or_none()
     if not move:
@@ -88,11 +89,33 @@ def create_opening_if_necessary(eco, name, slug):
     opening = session.query(m.Opening).filter(
         m.Opening.slug == slug
     )
-    if not opening.one_or_none():
+    opening = opening.one_or_none()
+    if not opening:
         opening = m.Opening(eco=eco, name=name, slug=slug)
         session.add(opening)
         session.commit()
     return opening
+
+
+def create_game_name(game, game_num):
+    headers = game.headers
+    name = str(game_num)
+    if "White" in headers:
+        name += " " + headers["White"]
+    else:
+        name += " NN"
+    name += " v "
+    if "Black" in headers:
+        name += " " + headers["Black"]
+    else:
+        name += " NN"
+    if "Event" in headers:
+        name += " " + headers["Event"]
+    if "Date" in headers:
+        name += " " + headers["Date"]
+    if "Result" in headers:
+        name += " " + headers["Result"]
+    return name
 
 
 # populate openings
@@ -109,6 +132,9 @@ while True:
     name = name.strip()
     name = re.sub(r"\s+", " ", name)
     slug = "{} - {}".format(eco, name)
+    slug = re.sub(r"[^0-9a-zA-Z$_.+!*-]", "-", slug)
+    slug = re.sub(r"-+", "-", slug)
+    print(slug)
     opening = create_opening_if_necessary(eco, name, slug)
 
     # create moves
@@ -132,3 +158,47 @@ while True:
         starting_pos = ending_pos
         move_num += 1
 
+# populate games
+cwd = os.path.abspath(os.path.dirname(__file__))
+game_dir = os.path.join(cwd, "games")
+game_filenames = os.listdir(game_dir)
+game_num = 0
+for game_file in game_filenames:
+    pgn = open(os.path.join(game_dir, game_file))
+    player_count = 0
+    while True:
+        game = chess.pgn.read_game(pgn)
+        game_num += 1
+        if not game or player_count > 400:
+            break
+        player_count += 1
+        board = chess.Board()
+        starting_pos = create_position_if_necessary(board)
+        visitor = MoveVisitor()
+        game.accept(visitor)
+        moves = visitor.moves
+        name = create_game_name(game, game_num)
+        slug = re.sub(r"[^0-9a-zA-Z$_.+!*-]", "-", name)
+        slug = re.sub(r"-+", "-", slug)
+        print(slug)
+        db_game = m.Game(name=name, slug=slug)
+        for key in game.headers:
+            value = game.headers[key]
+            h = m.GameHeader(key=key, value=value)
+            db_game.headers.append(h)
+        session.add(db_game)
+        session.commit()
+        ending_pos = None
+        move_num = 1
+        for move in moves:
+            board.push(move)
+            ending_pos = create_position_if_necessary(board)
+            db_move = create_move_if_necessary(
+                starting_pos, ending_pos, move.from_square,
+                move.to_square)
+            game_move = m.GameMove(
+                game=db_game, move=db_move, move_num=move_num)
+            session.add(game_move)
+            session.commit()
+            starting_pos = ending_pos
+            move_num += 1

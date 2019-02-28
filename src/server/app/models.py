@@ -25,8 +25,9 @@ class UserRole(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
+    username = db.Column(
+        db.String(64), index=True, unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     roles = db.relationship("UserRole", back_populates="user")
 
     def __repr__(self):
@@ -70,7 +71,7 @@ class GameMove(db.Model):
         "game.id", ondelete="CASCADE"), primary_key=True)
     move_id = db.Column(db.Integer, db.ForeignKey(
         "move.id", ondelete="CASCADE"), primary_key=True)
-    move_num = db.Column(db.Integer, nullable=False)
+    move_num = db.Column(db.Integer, primary_key=True, nullable=False)
     game = db.relationship("Game", back_populates="moves")
     move = db.relationship("Move", back_populates="games")
 
@@ -83,6 +84,7 @@ class GameMove(db.Model):
 class Game(db.Model):
     __tablename__ = "game"
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
     moves = db.relationship(
         "GameMove", back_populates="game", order_by=GameMove.move_num)
