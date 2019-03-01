@@ -2,12 +2,14 @@
 from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Api
 from contextlib import contextmanager
 
 app = Flask(__name__)
 app.secret_key = "!%NDAKDadddadXAN_!*(#%!##%!#!DDADA"
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+api = Api(app)
 
 @contextmanager
 def session_scope():
@@ -23,8 +25,4 @@ def session_scope():
         session.close()
 
 from app import models, auth
-
-@app.route("/")
-@auth.requires_login()
-def hello_world():
-    return "hello"
+from resources.game import GameResource
