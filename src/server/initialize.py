@@ -45,44 +45,28 @@ def create_position_if_necessary(board):
     is_checkmate = board.is_checkmate()
     is_stalemate = board.is_stalemate()
     en_passant = board.ep_square
-    position = session.query(m.Position)\
-        .filter(
-            m.Position.pieces == pieces and m.Position.turn == is_white and
-            m.Position.white_can_castle_kingside == white_kingside and
-            m.Position.white_can_castle_queenside == white_queenside and
-            m.Position.black_can_castle_kingside == black_kingside and
-            m.Position.black_can_castle_queenside == black_queenside and
-            m.Position.en_passant_square == en_passant and
-            m.Position.fullmove_number == full_move and
-            m.Position.halfmove_clock == half_move)
-    position = position.one_or_none()
-    if not position:
-        position = m.Position(
-            pieces=pieces, turn=is_white,
-            white_can_castle_kingside=white_kingside,
-            white_can_castle_queenside=white_queenside,
-            black_can_castle_kingside=black_kingside,
-            black_can_castle_queenside=black_queenside,
-            fullmove_number=full_move, halfmove_clock=half_move,
-            en_passant_square=en_passant, is_check=is_check,
-            is_checkmate=is_checkmate, is_stalemate=is_stalemate)
-        session.add(position)
-        session.commit()
+    position_id = None
+    with db.engine.connect() as con:
+        if en_passant:
+            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square={} and fullmove_number={} and halfmove_clock={}".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside), en_passant, full_move, half_move))
+        else:
+            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square is null and fullmove_number={} and halfmove_clock={}".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside), full_move, half_move))
+        position_id = res.fetchone()
+    if position_id:
+        return m.Position.query.get(position_id[0])
+    
+    position = m.Position(
+        pieces=pieces, turn=is_white,
+        white_can_castle_kingside=white_kingside,
+        white_can_castle_queenside=white_queenside,
+        black_can_castle_kingside=black_kingside,
+        black_can_castle_queenside=black_queenside,
+        fullmove_number=full_move, halfmove_clock=half_move,
+        en_passant_square=en_passant, is_check=is_check,
+        is_checkmate=is_checkmate, is_stalemate=is_stalemate)
+    session.add(position)
+    session.commit()
     return position
-
-
-def create_move_if_necessary(start_pos, end_pos, src, dst):
-    move = session.query(m.Move).filter(
-        m.Move.start_pos_id == start_pos.id and
-        m.Move.end_pos_id == end_pos.id and
-        m.Move.src == src and m.Move.dst == dst
-    )
-    move = move.one_or_none()
-    if not move:
-        move = m.Move(start_pos=start_pos, end_pos=end_pos, src=src, dst=dst)
-        session.add(move)
-        session.commit()
-    return move
 
 
 def create_opening_if_necessary(eco, name, slug):
@@ -140,6 +124,10 @@ while True:
     # create moves
     board = chess.Board()
     starting_pos = create_position_if_necessary(board)
+    first_opening_position = m.OpeningPosition(
+        opening=opening, position=starting_pos)
+    session.add(first_opening_position)
+    session.commit()
     visitor = MoveVisitor()
     game.accept(visitor)
     moves = visitor.moves
@@ -148,12 +136,9 @@ while True:
     for move in moves:
         board.push(move)
         ending_pos = create_position_if_necessary(board)
-        db_move = create_move_if_necessary(
-            starting_pos, ending_pos, move.from_square,
-            move.to_square)
-        opening_move = m.OpeningMove(
-            opening=opening, move=db_move, move_num=move_num)
-        session.add(opening_move)
+        opening_position = m.OpeningPosition(
+            opening=opening, position=ending_pos)
+        session.add(opening_position)
         session.commit()
         starting_pos = ending_pos
         move_num += 1
@@ -188,17 +173,17 @@ for game_file in game_filenames:
             db_game.headers.append(h)
         session.add(db_game)
         session.commit()
+        first_game_position = m.GamePosition(
+            game=db_game, position=starting_pos)
+        session.add(first_game_position)
+        session.commit()
         ending_pos = None
         move_num = 1
         for move in moves:
             board.push(move)
             ending_pos = create_position_if_necessary(board)
-            db_move = create_move_if_necessary(
-                starting_pos, ending_pos, move.from_square,
-                move.to_square)
-            game_move = m.GameMove(
-                game=db_game, move=db_move, move_num=move_num)
-            session.add(game_move)
+            game_pos = m.GamePosition(game=db_game, position=ending_pos)
+            session.add(game_pos)
             session.commit()
             starting_pos = ending_pos
             move_num += 1

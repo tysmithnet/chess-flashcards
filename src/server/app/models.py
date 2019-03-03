@@ -1,5 +1,6 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
+import chess
 
 
 class UserRole(db.Model):
@@ -44,82 +45,6 @@ class Role(db.Model):
         return "Role(id={}, name=\"{}\")".format(self.id, self.name)
 
 
-class OpeningMove(db.Model):
-    __tablename__ = "opening_move"
-    opening_id = db.Column(db.Integer, db.ForeignKey(
-        "opening.id", ondelete="CASCADE"), primary_key=True)
-    move_id = db.Column(db.Integer, db.ForeignKey(
-        "move.id", ondelete="CASCADE"), primary_key=True)
-    move_num = db.Column(db.Integer, nullable=False)
-    opening = db.relationship("Opening", back_populates="moves")
-    move = db.relationship("Move", back_populates="openings")
-
-    def __repr__(self):
-        return "OpeningMove(opening_id={}, move_id={}, order={})".format(
-            self.opening_id, self.move_id, self.order)
-
-
-class GameMove(db.Model):
-    __tablename__ = "game_move"
-    game_id = db.Column(db.Integer, db.ForeignKey(
-        "game.id", ondelete="CASCADE"), primary_key=True)
-    move_id = db.Column(db.Integer, db.ForeignKey(
-        "move.id", ondelete="CASCADE"), primary_key=True)
-    move_num = db.Column(db.Integer, primary_key=True, nullable=False)
-    game = db.relationship("Game", back_populates="moves")
-    move = db.relationship("Move", back_populates="games")
-
-    def __repr__(self):
-        return "GameMove(game_id={}, move_id={}, order={})".format(
-            self.game_id, self.move_id, self.order
-        )
-
-
-class Game(db.Model):
-    __tablename__ = "game"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), nullable=False)
-    slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship(
-        "GameMove", back_populates="game", order_by=GameMove.move_num)
-    headers = db.relationship("GameHeader")
-
-    def __repr__(self):
-        return "Game(id={})".format
-
-
-class GameHeader(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    game_id = db.Column(db.Integer, db.ForeignKey(
-        "game.id", ondelete="CASCADE"))
-    key = db.Column(db.String(64), nullable=False)
-    value = db.Column(db.String(64), nullable=False)
-
-
-class Move(db.Model):
-    __tablename__ = "move"
-    id = db.Column(db.Integer, primary_key=True)
-    start_pos_id = db.Column(db.Integer, db.ForeignKey(
-        "position.id", ondelete="CASCADE"), nullable=False)
-    end_pos_id = db.Column(db.Integer, db.ForeignKey(
-        "position.id", ondelete="CASCADE"), nullable=False)
-    src = db.Column(db.Integer, nullable=False)
-    dst = db.Column(db.Integer, nullable=False)
-    start_pos = db.relationship("Position", foreign_keys=[start_pos_id])
-    end_pos = db.relationship("Position", foreign_keys=[end_pos_id])
-    games = db.relationship("GameMove", back_populates="move")
-    openings = db.relationship("OpeningMove", back_populates="move")
-
-    __table_args__ = (
-        db.UniqueConstraint("start_pos_id", "end_pos_id"),
-    )
-
-    def __repr__(self):
-        return "Move(id={}, start_pos_id={}, end_pos_id={}, src={}, dst={})" \
-            .format(self.id, self.start_pos_id, self.end_pos_id, self.src,
-                    self.dst)
-
-
 class Position(db.Model):
     __tablename__ = "position"
     id = db.Column(db.Integer, primary_key=True)
@@ -135,7 +60,8 @@ class Position(db.Model):
     is_check = db.Column(db.Boolean, default=False, nullable=False)
     is_checkmate = db.Column(db.Boolean, default=False, nullable=False)
     is_stalemate = db.Column(db.Boolean, default=False, nullable=False)
-    is_check = db.Column(db.Boolean, default=False, nullable=False)
+    games = db.relationship("GamePosition", back_populates="position")
+    openings = db.relationship("OpeningPosition", back_populates="position")
 
     __table_args__ = (
         db.UniqueConstraint(
@@ -145,9 +71,70 @@ class Position(db.Model):
             "halfmove_clock", "fullmove_number"),
     )
 
+    def fen(self):
+        color = "w" if self.turn else "b"
+        castling = ""
+        if self.white_can_castle_kingside:
+            castling += "K"
+        if self.white_can_castle_queenside:
+            castling += "Q"
+        if self.black_can_castle_kingside:
+            castling += "k"
+        if self.black_can_castle_queenside:
+            castling += "q"
+        if castling == "":
+            castling = "-"
+        ep_square = chess.SQUARE_NAMES[self.en_passant_square] \
+            if self.en_passant_square is not None else "-"
+        return "{} {} {} {} {} {}".format(
+            self.pieces, color, castling, ep_square,
+            self.halfmove_clock, self.fullmove_number)
+
     def __repr__(self):
         return "Position(id={}, pieces=\"{}\", turn={})".format(
             self.id, self.pieces, self.turn)
+
+
+class OpeningPosition(db.Model):
+    __tablename__ = "opening_position"
+    opening_id = db.Column(db.Integer, db.ForeignKey(
+        "opening.id", ondelete="CASCADE"), primary_key=True)
+    position_id = db.Column(db.Integer, db.ForeignKey(
+        "position.id", ondelete="CASCADE"), primary_key=True)
+    opening = db.relationship("Opening", back_populates="positions")
+    position = db.relationship("Position", back_populates="openings")
+
+
+class GamePosition(db.Model):
+    __tablename__ = "game_position"
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.id", ondelete="CASCADE"), primary_key=True)
+    position_id = db.Column(db.Integer, db.ForeignKey(
+        "position.id", ondelete="CASCADE"), primary_key=True)
+    game = db.relationship("Game", back_populates="positions")
+    position = db.relationship("Position", back_populates="games")
+
+
+class Game(db.Model):
+    __tablename__ = "game"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), nullable=False)
+    slug = db.Column(db.String(256), nullable=False, unique=True)
+    positions = db.relationship(
+        "GamePosition", back_populates="game",
+        order_by=Position.fullmove_number)
+    headers = db.relationship("GameHeader")
+
+    def __repr__(self):
+        return "Game(id={})".format
+
+
+class GameHeader(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.id", ondelete="CASCADE"))
+    key = db.Column(db.String(64), nullable=False)
+    value = db.Column(db.String(64), nullable=False)
 
 
 class Opening(db.Model):
@@ -156,9 +143,9 @@ class Opening(db.Model):
     eco = db.Column(db.String(3), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
-    moves = db.relationship(
-        "OpeningMove", back_populates="opening",
-        order_by=OpeningMove.move_num)
+    positions = db.relationship(
+        "OpeningPosition", back_populates="opening",
+        order_by=Position.fullmove_number)
 
     def __repr__(self):
         return "Opening(id={}, eco=\"{}\", name=\"{}\")".format(

@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, Role, Game, Move, Position
+from app.models import User, Role, Game, Position
 
 
 @app.shell_context_processor
@@ -9,6 +9,5 @@ def make_shell_context():
         "User": User,
         "Game": Game,
         "Role": Role,
-        "Move": Move,
         "Position": Position
     }

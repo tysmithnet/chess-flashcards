@@ -3,12 +3,14 @@ from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from flask_migrate import Migrate
 from contextlib import contextmanager
 
 app = Flask(__name__)
 app.secret_key = "!%NDAKDadddadXAN_!*(#%!##%!#!DDADA"
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 api = Api(app)
 
 @contextmanager
@@ -25,4 +27,3 @@ def session_scope():
         session.close()
 
 from app import models, auth
-from resources.game import GameResource
