@@ -47,6 +47,7 @@
             "env": {
                 "FLASK_APP": "chess-api.py",
                 "FLASK_DEBUG": 1,
+                "UI_DIR": "${workspaceFolder}/dist/client"
             },
             "args": [
                 "run",

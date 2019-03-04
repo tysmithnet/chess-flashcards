@@ -1,10 +1,17 @@
 # flake8: noqa
-from flask import Flask
+import os
+import sys
+from flask import Flask, send_from_directory
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from flask_migrate import Migrate
 from contextlib import contextmanager
+
+try:
+    UI_DIR = os.environ["UI_DIR"]
+except:
+    sys.exit("UI_DIR environment variable not set")
 
 app = Flask(__name__)
 app.secret_key = "!%NDAKDadddadXAN_!*(#%!##%!#!DDADA"
@@ -28,3 +35,11 @@ def session_scope():
 
 from app import models, auth
 from app.resources import *
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def catch_all(path):
+    possible_path = os.path.join(UI_DIR, path)
+    if os.path.exists(possible_path) and not os.path.isdir(possible_path):
+        return send_from_directory(UI_DIR, path)
+    return send_from_directory(UI_DIR, "index.html")
