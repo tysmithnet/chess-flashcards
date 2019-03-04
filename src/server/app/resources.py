@@ -6,18 +6,22 @@ from flask_restful import Resource
 
 def create_position_response(position):
     return {
-        "pieces": position.pieces,
-        "turn": position.turn,
-        "white_can_castle_queenside": position.white_can_castle_queenside,
-        "white_can_castle_kingside": position.white_can_castle_kingside,
-        "black_can_castle_queenside": position.black_can_castle_queenside,
-        "black_can_castle_kingside": position.black_can_castle_kingside,
-        "en_passant_square": position.en_passant_square,
-        "halfmove_clock": position.halfmove_clock,
-        "fullmove_number": position.fullmove_number,
-        "is_check": position.is_check,
-        "is_checkmate": position.is_checkmate,
-        "is_stalemate": position.is_stalemate,
+        "pieces": position.position.pieces,
+        "turn": position.position.turn,
+        "white_can_castle_queenside":
+            position.position.white_can_castle_queenside,
+        "white_can_castle_kingside":
+            position.position.white_can_castle_kingside,
+        "black_can_castle_queenside":
+            position.position.black_can_castle_queenside,
+        "black_can_castle_kingside":
+            position.position.black_can_castle_kingside,
+        "en_passant_square": position.position.en_passant_square,
+        "halfmove_clock": position.position.halfmove_clock,
+        "fullmove_number": position.position.fullmove_number,
+        "is_check": position.position.is_check,
+        "is_checkmate": position.position.is_checkmate,
+        "is_stalemate": position.position.is_stalemate,
     }
 
 
@@ -54,4 +58,4 @@ class OpeningResource(Resource):
 
 
 api.add_resource(GameResource, "/game/<int:id>")
-api.add_resource(GameResource, "/opening/<int:id>")
+api.add_resource(OpeningResource, "/opening/<int:id>")

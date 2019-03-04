@@ -27,3 +27,4 @@ def session_scope():
         session.close()
 
 from app import models, auth
+from app.resources import *

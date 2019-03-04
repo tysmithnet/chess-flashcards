@@ -121,8 +121,7 @@ class Game(db.Model):
     name = db.Column(db.String(256), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
     positions = db.relationship(
-        "GamePosition", back_populates="game",
-        order_by=Position.fullmove_number)
+        "GamePosition", back_populates="game")
     headers = db.relationship("GameHeader")
 
     def __repr__(self):
@@ -144,8 +143,7 @@ class Opening(db.Model):
     name = db.Column(db.String(120), nullable=False)
     slug = db.Column(db.String(256), nullable=False, unique=True)
     positions = db.relationship(
-        "OpeningPosition", back_populates="opening",
-        order_by=Position.fullmove_number)
+        "OpeningPosition", back_populates="opening")
 
     def __repr__(self):
         return "Opening(id={}, eco=\"{}\", name=\"{}\")".format(
