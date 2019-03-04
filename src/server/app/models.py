@@ -1,4 +1,5 @@
 from app import db
+import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import chess
 
@@ -149,3 +150,43 @@ class Opening(db.Model):
         return "Opening(id={}, eco=\"{}\", name=\"{}\")".format(
             self.id, self.eco, self.name
         )
+
+
+class OpeningPlaylist(db.Model):
+    __tablename__ = "opening_playlist"
+    id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.Integer, db.ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
+    created = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+
+class OpeningPlaylistOpening(db.Model):
+    __tablename__ = "opening_playlist_opening"
+    playlist_id = db.Column(db.Integer, db.ForeignKey(
+        "opening_playlist.id", ondelete="CASCADE"), primary_key=True)
+    opening_id = db.Column(db.Integer, db.ForeignKey(
+        "opening.id", ondelete="CASCADE"), primary_key=True)
+    playlist = db.relationship("OpeningPlaylist", back_populates="openings")
+    opening = db.relationship("Opening", back_populates="playlists")
+
+
+class GamePlaylist(db.Model):
+    __tablename__ = "game_playlist"
+    id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.Integer, db.ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    name = db.Column(db.String(256), nullable=False)
+    created = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+
+
+class GamePlaylistGame(db.Model):
+    __tablename__ = "game_playlist_game"
+    playlist_id = db.Column(db.Integer, db.ForeignKey(
+        "game_playlist.id", ondelete="CASCADE"), primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.id", ondelete="CASCADE"), primary_key=True)
+    playlist = db.relationship("GamePlaylist", back_populates="games")
+    game = db.relationship("Game", back_populates="playlists")
