@@ -160,6 +160,7 @@ class OpeningPlaylist(db.Model):
     name = db.Column(db.String(256), nullable=False)
     created = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    openings = db.relationship("OpeningPlaylistOpening")
 
 
 class OpeningPlaylistOpening(db.Model):
@@ -169,7 +170,7 @@ class OpeningPlaylistOpening(db.Model):
     opening_id = db.Column(db.Integer, db.ForeignKey(
         "opening.id", ondelete="CASCADE"), primary_key=True)
     playlist = db.relationship("OpeningPlaylist", back_populates="openings")
-    opening = db.relationship("Opening", back_populates="playlists")
+    opening = db.relationship("Opening")
 
 
 class GamePlaylist(db.Model):
@@ -180,6 +181,7 @@ class GamePlaylist(db.Model):
     name = db.Column(db.String(256), nullable=False)
     created = db.Column(
         db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    games = db.relationship("GamePlaylistGame")
 
 
 class GamePlaylistGame(db.Model):
@@ -189,4 +191,4 @@ class GamePlaylistGame(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey(
         "game.id", ondelete="CASCADE"), primary_key=True)
     playlist = db.relationship("GamePlaylist", back_populates="games")
-    game = db.relationship("Game", back_populates="playlists")
+    game = db.relationship("Game")

@@ -1,13 +1,15 @@
 from app import app, db
-from app.models import User, Role, Game, Position
+import app.models as m
 
 
 @app.shell_context_processor
 def make_shell_context():
     return {
         "db": db,
-        "User": User,
-        "Game": Game,
-        "Role": Role,
-        "Position": Position
+        "User": m.User,
+        "Game": m.Game,
+        "Role": m.Role,
+        "Position": m.Position,
+        "GamePlaylist": m.GamePlaylist,
+        "OpeningPlaylist": m.OpeningPlaylist,
     }
