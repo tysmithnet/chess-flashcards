@@ -1,10 +1,8 @@
+import { Theme } from "@material-ui/core";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
-import { IRootState as IGamesState } from "../games";
-import { IRootState as IMoveState } from "../moves";
-import { IRootState as IOpeningsState } from "../openings";
-import { Theme } from "@material-ui/core";
+
 /**
  * Root of the state tree
  *
@@ -27,11 +25,6 @@ export interface IRootState {
      * @memberof IRootState
      */
     auth: IAuthState;
-
-    openings: IOpeningsState;
-
-    moves: IMoveState;
-    games: IGamesState;
 }
 
 /**
@@ -60,26 +53,52 @@ export interface IBaseProps {
     theme?: Theme;
 }
 
-export interface IMove {
-    src: string;
-    dst: string;
-    is_whites_move?: boolean;
-    is_capture?: boolean;
-    is_check?: boolean;
-    is_checkmate?: boolean;
-    is_stalemate?: boolean;
-    is_castle?: boolean;
-    is_enpassant?: boolean;
-    is_insufficient_material?: boolean;
+export interface IPosition {
+    pieces: string;
+    turn: boolean;
+    whiteCanCastleKingside: boolean;
+    whiteCanCastleQueenside: boolean;
+    blackCanCastleKingside: boolean;
+    blackCanCastleQueenside: boolean;
+    enPassantSquare: number;
+    halfmoveClock: number;
+    fullmoveNumber: number;
+    isCheck: boolean;
+    isCheckmate: boolean;
+    isStalemate: boolean;
 }
 
 export interface IOpening {
-    id: string;
+    id: number;
+    slug: string;
     ecoId: string;
     ecoName: string;
     variantName: string;
-    moves: IMove[];
-    moveText: string;
+    positions: IPosition[];
+}
+
+export interface IGame {
+    id: number;
+    slug: string;
+    headers: Map<string, string>;
+    positions: IPosition[];
+}
+
+export interface IGamePlaylist {
+    id: number;
+    name: string;
+    games: IGame[];
+}
+
+export interface IOpeningPlaylist {
+    id: number;
+    name: string;
+    openings: IOpening[];
+}
+
+export interface IMove {
+    src: string;
+    dst: string;
 }
 
 export const EMPTY_BOARD = new Array(64);

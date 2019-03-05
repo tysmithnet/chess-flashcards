@@ -195,8 +195,8 @@ export class App extends React.Component<IProps, IState> {
                                 <MenuIcon />
                             </IconButton>
                             <Typography variant="h6" color="inherit" noWrap={true}>
-                                Persistent drawer
-                                </Typography>
+                                Chess Flashcards
+                            </Typography>
                         </Toolbar>
                     </AppBar>
                     <Drawer

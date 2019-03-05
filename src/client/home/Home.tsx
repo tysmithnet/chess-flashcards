@@ -7,15 +7,7 @@ import "./home.styles";
 export class Home extends React.Component {
     public render() {
         return (
-            <div className="home">
-                <div className="jumbo">
-                    <h1>Chess Quiz</h1>
-                    <p>Practice your chess openings, and quiz yourself on best moves, checks, captures, and more!</p>
-                </div>
-                <div className="board">
-                    <Board position={STARTING_POSITION} legalMoves={[]} />
-                </div>
-            </div>
+            <h1>hello world</h1>
         );
     }
 }
