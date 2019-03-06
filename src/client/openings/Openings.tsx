@@ -1,10 +1,15 @@
-import { FilteringState, IntegratedFiltering, IntegratedPaging, PagingState } from "@devexpress/dx-react-grid";
+import { FilteringState, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, PagingState, SearchState } from "@devexpress/dx-react-grid";
 import {
+    DragDropProvider,
     Grid,
+    GroupingPanel,
     PagingPanel,
+    SearchPanel,
     Table,
     TableFilterRow,
     TableHeaderRow,
+    Toolbar,
+    TableGroupRow,
 } from "@devexpress/dx-react-grid-material-ui";
 import { Paper } from "@material-ui/core";
 import * as React from "react";
@@ -15,6 +20,10 @@ import { getOpeningMetaRequestFactory } from "./openings.actions";
 export interface IProps extends IBaseProps {
     openings: IOpening[];
     openingMeta: IOpeningMeta[];
+}
+
+interface IColumnGrouping {
+    columnName: string;
 }
 
 interface IColumnFilter {
@@ -33,6 +42,8 @@ export interface IState {
     pageSize: number;
     pageSizes: number[];
     filters: IColumnFilter[];
+    searchValue: string;
+    grouping: IColumnGrouping[];
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -41,6 +52,8 @@ export class Openings extends React.Component<IProps, IState> {
         this.changeCurrentPage = this.changeCurrentPage.bind(this);
         this.changePageSize = this.changePageSize.bind(this);
         this.changeFilters = this.changeFilters.bind(this);
+        this.changeSearchValue = this.changeSearchValue.bind(this);
+        this.changeGrouping = this.changeGrouping.bind(this);
         this.state = {
             columns: [
                 { name: "id", title: "Id" },
@@ -50,8 +63,10 @@ export class Openings extends React.Component<IProps, IState> {
             ],
             currentPage: 0,
             pageSize: 15,
-            pageSizes: [15, 25, 50],
+            pageSizes: [15, 25, 50, 100, 500, 1000, 5000],
             filters: [],
+            searchValue: "",
+            grouping: [],
         };
     }
 
@@ -74,14 +89,28 @@ export class Openings extends React.Component<IProps, IState> {
                         filters={this.state.filters}
                         onFiltersChange={this.changeFilters}
                     />
+                    <SearchState
+                        value={this.state.searchValue}
+                        onValueChange={this.changeSearchValue}
+                    />
                     <IntegratedFiltering />
                     <IntegratedPaging />
+                    <DragDropProvider />
+                    <GroupingState
+                        grouping={this.state.grouping}
+                        onGroupingChange={this.changeGrouping}
+                    />
+                    <IntegratedGrouping />
                     <Table />
-                    <TableHeaderRow />
+                    <TableHeaderRow showGroupingControls={true}/>
                     <TableFilterRow />
                     <PagingPanel
                         pageSizes={this.state.pageSizes}
                     />
+                    <TableGroupRow />
+                    <Toolbar />
+                    <SearchPanel />
+                    <GroupingPanel showGroupingControls={true} />
                 </Grid>
             </Paper>
         );
@@ -109,6 +138,20 @@ export class Openings extends React.Component<IProps, IState> {
         this.setState({
             ...this.state,
             filters,
+        });
+    }
+
+    private changeSearchValue(value: string) {
+        this.setState({
+            ...this.state,
+            searchValue: value,
+        });
+    }
+
+    private changeGrouping(grouping: IColumnGrouping[]) {
+        this.setState({
+            ...this.state,
+            grouping,
         });
     }
 }

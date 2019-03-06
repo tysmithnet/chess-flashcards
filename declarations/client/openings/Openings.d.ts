@@ -4,6 +4,9 @@ export interface IProps extends IBaseProps {
     openings: IOpening[];
     openingMeta: IOpeningMeta[];
 }
+interface IColumnGrouping {
+    columnName: string;
+}
 interface IColumnFilter {
     columnName: string;
     value: string;
@@ -18,6 +21,8 @@ export interface IState {
     pageSize: number;
     pageSizes: number[];
     filters: IColumnFilter[];
+    searchValue: string;
+    grouping: IColumnGrouping[];
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
@@ -26,6 +31,8 @@ export declare class Openings extends React.Component<IProps, IState> {
     private changeCurrentPage;
     private changePageSize;
     private changeFilters;
+    private changeSearchValue;
+    private changeGrouping;
 }
 export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Openings, Pick<IProps, never>>;
 export {};
