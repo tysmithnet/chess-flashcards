@@ -1,8 +1,9 @@
-import { IntegratedPaging, PagingState } from "@devexpress/dx-react-grid";
+import { FilteringState, IntegratedFiltering, IntegratedPaging, PagingState } from "@devexpress/dx-react-grid";
 import {
     Grid,
     PagingPanel,
     Table,
+    TableFilterRow,
     TableHeaderRow,
 } from "@devexpress/dx-react-grid-material-ui";
 import { Paper } from "@material-ui/core";
@@ -16,6 +17,11 @@ export interface IProps extends IBaseProps {
     openingMeta: IOpeningMeta[];
 }
 
+interface IColumnFilter {
+    columnName: string;
+    value: string;
+}
+
 interface IColumn {
     name: string;
     title: string;
@@ -26,6 +32,7 @@ export interface IState {
     currentPage: number;
     pageSize: number;
     pageSizes: number[];
+    filters: IColumnFilter[];
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -33,6 +40,7 @@ export class Openings extends React.Component<IProps, IState> {
         super(props);
         this.changeCurrentPage = this.changeCurrentPage.bind(this);
         this.changePageSize = this.changePageSize.bind(this);
+        this.changeFilters = this.changeFilters.bind(this);
         this.state = {
             columns: [
                 { name: "id", title: "Id" },
@@ -43,6 +51,7 @@ export class Openings extends React.Component<IProps, IState> {
             currentPage: 0,
             pageSize: 15,
             pageSizes: [15, 25, 50],
+            filters: [],
         };
     }
 
@@ -61,9 +70,15 @@ export class Openings extends React.Component<IProps, IState> {
                         pageSize={this.state.pageSize}
                         onPageSizeChange={this.changePageSize}
                     />
+                    <FilteringState
+                        filters={this.state.filters}
+                        onFiltersChange={this.changeFilters}
+                    />
+                    <IntegratedFiltering />
                     <IntegratedPaging />
                     <Table />
                     <TableHeaderRow />
+                    <TableFilterRow />
                     <PagingPanel
                         pageSizes={this.state.pageSizes}
                     />
@@ -87,6 +102,13 @@ export class Openings extends React.Component<IProps, IState> {
         this.setState({
             ...this.state,
             pageSize: size,
+        });
+    }
+
+    private changeFilters(filters: IColumnFilter[]) {
+        this.setState({
+            ...this.state,
+            filters,
         });
     }
 }
