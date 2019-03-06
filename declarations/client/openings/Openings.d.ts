@@ -10,11 +10,16 @@ interface IColumn {
 }
 export interface IState {
     columns: IColumn[];
+    currentPage: number;
+    pageSize: number;
+    pageSizes: number[];
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
+    private changeCurrentPage;
+    private changePageSize;
 }
 export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Openings, Pick<IProps, never>>;
 export {};
