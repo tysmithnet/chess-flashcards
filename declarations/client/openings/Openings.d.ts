@@ -23,6 +23,7 @@ export interface IState {
     filters: IColumnFilter[];
     searchValue: string;
     grouping: IColumnGrouping[];
+    selection: number[];
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
@@ -33,6 +34,7 @@ export declare class Openings extends React.Component<IProps, IState> {
     private changeFilters;
     private changeSearchValue;
     private changeGrouping;
+    private changeSelection;
 }
 export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Openings, Pick<IProps, never>>;
 export {};

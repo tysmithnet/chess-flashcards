@@ -1,4 +1,4 @@
-import { FilteringState, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, PagingState, SearchState } from "@devexpress/dx-react-grid";
+import { FilteringState, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, IntegratedSelection, PagingState, SearchState, SelectionState } from "@devexpress/dx-react-grid";
 import {
     DragDropProvider,
     Grid,
@@ -7,9 +7,10 @@ import {
     SearchPanel,
     Table,
     TableFilterRow,
-    TableHeaderRow,
-    Toolbar,
     TableGroupRow,
+    TableHeaderRow,
+    TableSelection,
+    Toolbar,
 } from "@devexpress/dx-react-grid-material-ui";
 import { Paper } from "@material-ui/core";
 import * as React from "react";
@@ -44,6 +45,7 @@ export interface IState {
     filters: IColumnFilter[];
     searchValue: string;
     grouping: IColumnGrouping[];
+    selection: number[];
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -54,6 +56,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.changeFilters = this.changeFilters.bind(this);
         this.changeSearchValue = this.changeSearchValue.bind(this);
         this.changeGrouping = this.changeGrouping.bind(this);
+        this.changeSelection = this.changeSelection.bind(this);
         this.state = {
             columns: [
                 { name: "id", title: "Id" },
@@ -67,6 +70,7 @@ export class Openings extends React.Component<IProps, IState> {
             filters: [],
             searchValue: "",
             grouping: [],
+            selection: [],
         };
     }
 
@@ -79,6 +83,10 @@ export class Openings extends React.Component<IProps, IState> {
                     rows={rows}
                     columns={columns}
                 >
+                    <SelectionState
+                        selection={this.state.selection}
+                        onSelectionChange={this.changeSelection}
+                    />
                     <PagingState
                         currentPage={this.state.currentPage}
                         onCurrentPageChange={this.changeCurrentPage}
@@ -100,9 +108,11 @@ export class Openings extends React.Component<IProps, IState> {
                         grouping={this.state.grouping}
                         onGroupingChange={this.changeGrouping}
                     />
+                    <IntegratedSelection />
                     <IntegratedGrouping />
                     <Table />
                     <TableHeaderRow showGroupingControls={true}/>
+                    <TableSelection showSelectAll={true} />
                     <TableFilterRow />
                     <PagingPanel
                         pageSizes={this.state.pageSizes}
@@ -152,6 +162,13 @@ export class Openings extends React.Component<IProps, IState> {
         this.setState({
             ...this.state,
             grouping,
+        });
+    }
+
+    private changeSelection(selection: number[]) {
+        this.setState({
+            ...this.state,
+            selection,
         });
     }
 }
