@@ -14,6 +14,7 @@ const theme = createMuiTheme({ typography: { useNextVariants: true } });
 const store = configureStore({
     app: null,
     auth: null,
+    playlists: null,
 });
 
 /**

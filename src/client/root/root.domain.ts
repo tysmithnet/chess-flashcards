@@ -2,7 +2,7 @@ import { Theme } from "@material-ui/core";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
-
+import { IRootState as IPlaylistsState } from "../playlists";
 /**
  * Root of the state tree
  *
@@ -25,6 +25,8 @@ export interface IRootState {
      * @memberof IRootState
      */
     auth: IAuthState;
+
+    playlists: IPlaylistsState;
 }
 
 /**

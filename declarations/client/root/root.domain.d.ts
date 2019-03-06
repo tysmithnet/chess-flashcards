@@ -2,9 +2,11 @@ import { Theme } from "@material-ui/core";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
+import { IRootState as IPlaylistsState } from "../playlists";
 export interface IRootState {
     app: IAppState;
     auth: IAuthState;
+    playlists: IPlaylistsState;
 }
 export interface IBaseProps {
     dispatch?: Dispatch;

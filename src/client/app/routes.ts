@@ -1,6 +1,7 @@
 import { Admin } from "../admin";
 import { Permissions } from "../auth";
-import {connectedComponent as Home} from "../home";
+import { connectedComponent as Home } from "../home";
+import { connectedComponent as Playlists } from "../playlists";
 import { IRoute } from "./app.domain";
 // Implementation note: I find it easier to debug applications when there is a
 // central place for all statically defined routes.
@@ -22,5 +23,12 @@ export const routes: IRoute[] = [
         exact: true,
         path: "/admin",
         permissions: [Permissions.get("ADMIN")],
+    },
+    {
+        component: Playlists,
+        display: "Playlists",
+        exact: true,
+        path: "/playlists",
+        permissions: [],
     },
 ];
