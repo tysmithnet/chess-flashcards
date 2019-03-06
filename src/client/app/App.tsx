@@ -1,9 +1,8 @@
-import { AppBar, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Button, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@material-ui/core";
 import { createStyles, Theme, withStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import InboxIcon from "@material-ui/icons/Inbox";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import classNames from "classnames";
 import { ConnectedRouter } from "connected-react-router";
@@ -13,7 +12,7 @@ import { observe } from "react-performance-observer";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
-import { IUser } from "../auth";
+import { IUser, LoginDialog, loginRequestFactory } from "../auth";
 import { isTest } from "../globals";
 import { getHistory, IBaseProps, IRootState } from "../root";
 import { IRoute } from "./app.domain";
@@ -41,6 +40,7 @@ export interface IClasses {
     appBar: any;
     appBarShift: any;
     menuButton: any;
+    grow: any;
     hide: any;
     drawer: any;
     drawerPaper: any;
@@ -66,6 +66,9 @@ const styles = (theme: Theme) => createStyles({
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    },
+    grow: {
+        flexGrow: 1,
     },
     menuButton: {
         marginLeft: 12,
@@ -108,6 +111,8 @@ const styles = (theme: Theme) => createStyles({
 
 export interface IState {
     open: boolean;
+    loginDialogOpen: boolean;
+    user: IUser;
 }
 export interface IProps extends IBaseProps {
     /**
@@ -145,11 +150,16 @@ export class App extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             open: false,
+            loginDialogOpen: false,
+            user: null,
         };
         this.classes = props.classes;
         this.theme = props.theme;
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
+        this.handleLoginDialogClose = this.handleLoginDialogClose.bind(this);
+        this.handleLoginDialogOpen = this.handleLoginDialogOpen.bind(this);
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     }
 
     public render() {
@@ -175,6 +185,19 @@ export class App extends React.Component<IProps, IState> {
                     ),
                 };
             });
+        let loginContent = (
+            <LoginDialog
+                isOpen={this.state.loginDialogOpen}
+                onClose={this.handleLoginDialogClose}
+                onSubmit={this.handleLoginSubmit}
+            />);
+        if (this.props.user != null) {
+            loginContent = (
+                <Typography variant="h6" color="inherit" noWrap={true}>
+                    {this.props.user.name}
+                </Typography>
+            );
+        }
         return (
             <ConnectedRouter history={getHistory()}>
                 <div className={this.classes.root}>
@@ -194,9 +217,10 @@ export class App extends React.Component<IProps, IState> {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Typography variant="h6" color="inherit" noWrap={true}>
+                            <Typography variant="h6" color="inherit" noWrap={true} className={this.classes.grow}>
                                 Chess Flashcards
                             </Typography>
+                            <Button color="inherit" onClick={this.handleLoginDialogOpen}>Login</Button>
                         </Toolbar>
                     </AppBar>
                     <Drawer
@@ -230,8 +254,22 @@ export class App extends React.Component<IProps, IState> {
                         </Switch>
                     </main>
                 </div>
+                {loginContent}
             </ConnectedRouter >
         );
+    }
+    private handleLoginDialogOpen() {
+        this.setState({
+            ...this.state,
+            loginDialogOpen: true,
+        });
+    }
+
+    private handleLoginDialogClose() {
+        this.setState({
+            ...this.state,
+            loginDialogOpen: false,
+        });
     }
 
     private handleOpen() {
@@ -245,6 +283,10 @@ export class App extends React.Component<IProps, IState> {
             open: false,
         });
     }
+
+    private handleLoginSubmit(username: string, password: string) {
+        this.props.dispatch(loginRequestFactory(username, password));
+    }
 }
 
 /**
@@ -254,6 +296,7 @@ export class App extends React.Component<IProps, IState> {
 function mapStateToProps(state: IRootState): IProps {
     return {
         routes: state.app.routes,
+        user: state.auth.user,
     };
 }
 

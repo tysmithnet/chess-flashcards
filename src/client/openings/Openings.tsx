@@ -1,4 +1,18 @@
-import { Column, Filter, FilteringState, Grouping, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, IntegratedSelection, PagingState, SearchState, SelectionState, Sorting, SortingState, IntegratedSorting } from "@devexpress/dx-react-grid";
+import { Column,
+    Filter,
+    FilteringState,
+    Grouping,
+    GroupingState,
+    IntegratedFiltering,
+    IntegratedGrouping,
+    IntegratedPaging,
+    IntegratedSelection,
+    IntegratedSorting,
+    PagingState,
+    SearchState,
+    SelectionState,
+    Sorting,
+    SortingState } from "@devexpress/dx-react-grid";
 import {
     DragDropProvider,
     Grid,

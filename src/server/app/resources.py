@@ -93,6 +93,12 @@ class PlaylistMetaResource(Resource):
         pass
 
 
+class LoginResource(Resource):
+    def post(self):
+        pass
+
+
+api.add_resource(LoginResource, "/api/auth")
 api.add_resource(GameResource, "/api/game/<int:id>")
 api.add_resource(OpeningResource, "/api/opening/<int:id>")
 api.add_resource(OpeningMetaResource, "/api/opening/meta")

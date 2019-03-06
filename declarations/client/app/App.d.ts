@@ -8,6 +8,7 @@ export interface IClasses {
     appBar: any;
     appBarShift: any;
     menuButton: any;
+    grow: any;
     hide: any;
     drawer: any;
     drawerPaper: any;
@@ -17,6 +18,8 @@ export interface IClasses {
 }
 export interface IState {
     open: boolean;
+    loginDialogOpen: boolean;
+    user: IUser;
 }
 export interface IProps extends IBaseProps {
     user?: IUser;
@@ -29,8 +32,11 @@ export declare class App extends React.Component<IProps, IState> {
     private theme;
     constructor(props: IProps);
     render(): JSX.Element;
+    private handleLoginDialogOpen;
+    private handleLoginDialogClose;
     private handleOpen;
     private handleClose;
+    private handleLoginSubmit;
 }
-declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "user" | "routes" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">>, Pick<Pick<IProps, "user" | "routes" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">, "innerRef">>;
+declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "user" | "routes" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "grow" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">>, Pick<Pick<IProps, "user" | "routes" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"content" | "hide" | "root" | "appBar" | "appBarShift" | "grow" | "menuButton" | "drawer" | "drawerPaper" | "drawerHeader" | "contentShift">, "innerRef">>;
 export default connectedComponent;
