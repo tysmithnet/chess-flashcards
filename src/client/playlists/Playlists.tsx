@@ -1,9 +1,13 @@
+import {
+    Grid,
+    Table,
+    TableHeaderRow,
+  } from "@devexpress/dx-react-grid-material-ui";
 import { Paper } from "@material-ui/core";
 import * as React from "react";
 import { connect } from "react-redux";
 import { IBaseProps, IRootState } from "../root";
 import { IPlaylistMeta } from "./playlists.domain";
-
 export interface IProps extends IBaseProps {
     gamePlaylistMeta: IPlaylistMeta[];
     openingPlaylistMeta: IPlaylistMeta[];

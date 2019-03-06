@@ -2,11 +2,13 @@ import { Theme } from "@material-ui/core";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
+import { IRootState as IOpeningsState } from "../openings";
 import { IRootState as IPlaylistsState } from "../playlists";
 export interface IRootState {
     app: IAppState;
     auth: IAuthState;
     playlists: IPlaylistsState;
+    openings: IOpeningsState;
 }
 export interface IBaseProps {
     dispatch?: Dispatch;
@@ -30,10 +32,16 @@ export interface IPosition {
 export interface IOpening {
     id: number;
     slug: string;
-    ecoId: string;
-    ecoName: string;
-    variantName: string;
+    eco: string;
+    name: string;
     positions: IPosition[];
+}
+export interface IOpeningMeta {
+    id: number;
+    slug: string;
+    eco: string;
+    name: string;
+    numMoves: number;
 }
 export interface IGame {
     id: number;

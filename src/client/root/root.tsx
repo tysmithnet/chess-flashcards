@@ -15,6 +15,7 @@ const store = configureStore({
     app: null,
     auth: null,
     playlists: null,
+    openings: null,
 });
 
 /**
@@ -33,11 +34,6 @@ function render(component: JSX.Element) {
                 </ThemeProvider>
             </AppContainer>
         </CssBaseline>,
-        // <AppContainer>
-        //     <Provider store={store}>
-        //         {component}
-        //     </Provider>
-        // </AppContainer>,
         document.getElementById("root"),
     );
 }

@@ -6,6 +6,8 @@ import createSagaMiddleware from "redux-saga";
 import { IRootState } from ".";
 import { reducer as app } from "../app";
 import { reducer as auth } from "../auth";
+import { reducer as openings } from "../openings";
+import { reducer as playlists } from "../playlists";
 
 /**
  * Base interface for actions
@@ -36,6 +38,8 @@ export function getHistory() {
 export const reducer = combineReducers({
     app,
     auth,
+    openings,
+    playlists,
     router: connectRouter(history),
 });
 

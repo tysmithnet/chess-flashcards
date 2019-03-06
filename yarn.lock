@@ -567,6 +567,34 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@devexpress/dx-core@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-core/-/dx-core-1.10.3.tgz#906320b215e43519bee98c45d488125b83b7aa7c"
+
+"@devexpress/dx-grid-core@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-grid-core/-/dx-grid-core-1.10.3.tgz#6e0f781166bf199d5f7361a87c1417e6eb84d902"
+
+"@devexpress/dx-react-core@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-core/-/dx-react-core-1.10.3.tgz#52df0f6fcfdbe843ad923f3598c254eae0e72faa"
+  dependencies:
+    "@devexpress/dx-core" "^1.10.3"
+    prop-types "^15.7.2"
+
+"@devexpress/dx-react-grid-material-ui@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-grid-material-ui/-/dx-react-grid-material-ui-1.10.3.tgz#81411f3390a29e8ea651625ab9040131dd22a779"
+  dependencies:
+    classnames "^2.2.6"
+    prop-types "^15.7.2"
+
+"@devexpress/dx-react-grid@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-grid/-/dx-react-grid-1.10.3.tgz#84d363c52a57d47e3c4ef34d992997da1233626c"
+  dependencies:
+    "@devexpress/dx-grid-core" "^1.10.3"
+
 "@emotion/hash@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.7.1.tgz#9833722341379fb7d67f06a4b00ab3c37913da53"
@@ -874,6 +902,13 @@
 "@types/jss@^9.5.6":
   version "9.5.7"
   resolved "https://registry.yarnpkg.com/@types/jss/-/jss-9.5.7.tgz#fa57a6d0b38a3abef8a425e3eb6a53495cb9d5a0"
+  dependencies:
+    csstype "^2.0.0"
+    indefinite-observable "^1.0.1"
+
+"@types/jss@^9.5.8":
+  version "9.5.8"
+  resolved "https://registry.yarnpkg.com/@types/jss/-/jss-9.5.8.tgz#258391f42211c042fc965508d505cbdc579baa5b"
   dependencies:
     csstype "^2.0.0"
     indefinite-observable "^1.0.1"
@@ -2969,7 +3004,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.2.6, classnames@^2.2.5:
+classnames@2.2.6, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 

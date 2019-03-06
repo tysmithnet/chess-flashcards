@@ -1,5 +1,5 @@
 from app import api
-from app.models import Game, Opening, OpeningPlaylist
+from app.models import Game, Opening
 from flask import abort
 from flask_restful import Resource
 
@@ -56,12 +56,28 @@ def create_playlist_meta_response(game_playlists, opening_playlists):
     }
 
 
+def create_opening_meta_response(opening):
+    return {
+        "id": opening.id,
+        "eco": opening.eco,
+        "name": opening.name,
+        "slug": opening.slug,
+        "num_moves": len(opening.positions)
+    }
+
+
 class GameResource(Resource):
     def get(self, id):
         game = Game.query.filter_by(id=id).first_or_404()
         if not game:
             return abort(404)
         return create_game_response(game)
+
+
+class OpeningMetaResource(Resource):
+    def get(self):
+        openings = Opening.query.all()
+        return list(map(create_opening_meta_response, openings))
 
 
 class OpeningResource(Resource):
@@ -77,6 +93,7 @@ class PlaylistMetaResource(Resource):
         pass
 
 
-api.add_resource(GameResource, "/game/<int:id>")
-api.add_resource(OpeningResource, "/opening/<int:id>")
-api.add_resource(PlaylistMetaResource, "/playlist/meta/<int:user_id>")
+api.add_resource(GameResource, "/api/game/<int:id>")
+api.add_resource(OpeningResource, "/api/opening/<int:id>")
+api.add_resource(OpeningMetaResource, "/api/opening/meta")
+api.add_resource(PlaylistMetaResource, "/api/playlist/meta/<int:user_id>")

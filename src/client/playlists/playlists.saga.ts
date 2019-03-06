@@ -3,7 +3,7 @@ import { all, takeLatest } from "redux-saga/effects";
 import { ACTION_TYPES } from "./playlists.actions";
 
 function* getPlaylistMeta() {
-    return null;
+    yield axios.get("/api/playlist/meta");
 }
 
 export function* getPlaylistMetaSaga() {
