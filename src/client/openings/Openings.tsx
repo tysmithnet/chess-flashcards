@@ -1,4 +1,4 @@
-import { FilteringState, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, IntegratedSelection, PagingState, SearchState, SelectionState } from "@devexpress/dx-react-grid";
+import { Column, Filter, FilteringState, Grouping, GroupingState, IntegratedFiltering, IntegratedGrouping, IntegratedPaging, IntegratedSelection, PagingState, SearchState, SelectionState, Sorting, SortingState, IntegratedSorting } from "@devexpress/dx-react-grid";
 import {
     DragDropProvider,
     Grid,
@@ -23,29 +23,16 @@ export interface IProps extends IBaseProps {
     openingMeta: IOpeningMeta[];
 }
 
-interface IColumnGrouping {
-    columnName: string;
-}
-
-interface IColumnFilter {
-    columnName: string;
-    value: string;
-}
-
-interface IColumn {
-    name: string;
-    title: string;
-}
-
 export interface IState {
-    columns: IColumn[];
+    columns: Column[];
     currentPage: number;
     pageSize: number;
     pageSizes: number[];
-    filters: IColumnFilter[];
+    filters: Filter[];
     searchValue: string;
-    grouping: IColumnGrouping[];
+    grouping: Grouping[];
     selection: number[];
+    sorting: Sorting[];
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -57,6 +44,7 @@ export class Openings extends React.Component<IProps, IState> {
         this.changeSearchValue = this.changeSearchValue.bind(this);
         this.changeGrouping = this.changeGrouping.bind(this);
         this.changeSelection = this.changeSelection.bind(this);
+        this.changeSorting = this.changeSorting.bind(this);
         this.state = {
             columns: [
                 { name: "id", title: "Id" },
@@ -71,6 +59,7 @@ export class Openings extends React.Component<IProps, IState> {
             searchValue: "",
             grouping: [],
             selection: [],
+            sorting: [],
         };
     }
 
@@ -101,17 +90,22 @@ export class Openings extends React.Component<IProps, IState> {
                         value={this.state.searchValue}
                         onValueChange={this.changeSearchValue}
                     />
-                    <IntegratedFiltering />
-                    <IntegratedPaging />
-                    <DragDropProvider />
+                    <SortingState
+                        sorting={this.state.sorting}
+                        onSortingChange={this.changeSorting}
+                    />
                     <GroupingState
                         grouping={this.state.grouping}
                         onGroupingChange={this.changeGrouping}
                     />
+                    <DragDropProvider />
+                    <IntegratedSorting />
+                    <IntegratedFiltering />
+                    <IntegratedPaging />
                     <IntegratedSelection />
                     <IntegratedGrouping />
                     <Table />
-                    <TableHeaderRow showGroupingControls={true}/>
+                    <TableHeaderRow showGroupingControls={true} showSortingControls={true} />
                     <TableSelection showSelectAll={true} />
                     <TableFilterRow />
                     <PagingPanel
@@ -144,7 +138,7 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private changeFilters(filters: IColumnFilter[]) {
+    private changeFilters(filters: Filter[]) {
         this.setState({
             ...this.state,
             filters,
@@ -158,7 +152,7 @@ export class Openings extends React.Component<IProps, IState> {
         });
     }
 
-    private changeGrouping(grouping: IColumnGrouping[]) {
+    private changeGrouping(grouping: Grouping[]) {
         this.setState({
             ...this.state,
             grouping,
@@ -169,6 +163,13 @@ export class Openings extends React.Component<IProps, IState> {
         this.setState({
             ...this.state,
             selection,
+        });
+    }
+
+    private changeSorting(sorting: Sorting[]) {
+        this.setState({
+            ...this.state,
+            sorting,
         });
     }
 }
