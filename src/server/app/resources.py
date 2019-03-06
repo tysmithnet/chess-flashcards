@@ -62,7 +62,7 @@ def create_opening_meta_response(opening):
         "eco": opening.eco,
         "name": opening.name,
         "slug": opening.slug,
-        "num_moves": len(opening.positions)
+        "num_moves": len(opening.positions) - 1,
     }
 
 
