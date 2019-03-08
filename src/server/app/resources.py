@@ -1,5 +1,5 @@
 from app import api
-from app.models import Game, Opening, User
+from app.models import Game, Opening, User, GamePlaylist, OpeningPlaylist
 from app.auth import requires_login
 from flask import abort, request, session
 from flask_restful import Resource
@@ -44,17 +44,19 @@ def create_opening_response(opening):
     }
 
 
-def create_playlist_meta_response(game_playlists, opening_playlists):
+def create_playlist_response(game_playlists, opening_playlists):
     return {
         "game_playlists": list(map(lambda x: {
             "id": x.id,
             "name": x.name,
-            "num_items": len(x.games)
+            "created": x.created,
+            "games": list(map(lambda g: g.id, x.games))
         })),
         "opening_playlists": list(map(lambda x: {
             "id": x.id,
             "name": x.name,
-            "num_items": len(x.openings)
+            "created": x.created,
+            "openings": list(map(lambda o: o.id, x.openings))
         }))
     }
 
@@ -91,11 +93,40 @@ class OpeningResource(Resource):
         return create_opening_response(opening)
 
 
-class PlaylistMetaResource(Resource):
+class PlaylistResource(Resource):
+    def __init__(self):
+        self.create_playlist_args = {
+            "name": fields.Str(required=True),
+            "type": fields.Str(required=True),
+            "ids": fields.List(fields.String, required=True)
+        }
+
     @requires_login()
     def get(self):
         user_id = session["user_id"]
-        print(user_id)
+        user = User.query.get(user_id)
+        game_playlists = user.game_playlists
+        opening_playlists = user.opening_playlists
+        return create_playlist_response(game_playlists, opening_playlists)
+
+    @requires_login()
+    def post(self):
+        args = parser.parse(self.create_playlist_args, request)
+        type_of_playlist = args["type"]
+        if type_of_playlist not in ("game", "opening"):
+            return abort(400, "type must be either game or opening")
+        name = args["name"]
+        ids = args["ids"]
+        user_id = session["user_id"]
+        user = User.query.get(user_id)
+        if type_of_playlist == "game":
+            games = Game.query.filter(Game.id.in_(ids))
+            game_playlist = GamePlaylist(name=name, games=games)
+            user.game_playlists.append(game_playlist)
+        else:
+            openings = Opening.query.filter(Opening.id.in_(ids))
+            opening_playlist = OpeningPlaylist(name=name, openings=openings)
+            user.opening_playlists.append(opening_playlist)
 
 
 class LoginResource(Resource):
@@ -118,8 +149,8 @@ class LoginResource(Resource):
         return list(map(lambda r: r.name, user.roles))
 
 
-api.add_resource(LoginResource, "/api/auth")
+api.add_resource(LoginResource, "/api/login")
 api.add_resource(GameResource, "/api/game/<int:id>")
 api.add_resource(OpeningResource, "/api/opening/<int:id>")
 api.add_resource(OpeningMetaResource, "/api/opening/meta")
-api.add_resource(PlaylistMetaResource, "/api/playlist/meta")
+api.add_resource(PlaylistResource, "/api/playlist")
