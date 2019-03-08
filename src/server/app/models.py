@@ -25,6 +25,8 @@ class User(db.Model):
         db.String(64), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     roles = db.relationship("UserRole", back_populates="user")
+    game_playlists = db.relationship("GamePlaylist")
+    opening_playlists = db.relationship("OpeningPlaylist")
 
     def __repr__(self):
         return "User(id={}, username=\"{}\")".format(self.id, self.username)
