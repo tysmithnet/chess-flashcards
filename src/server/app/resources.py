@@ -1,6 +1,7 @@
 from app import api
-from app.models import Game, Opening
-from flask import abort, request
+from app.models import Game, Opening, User
+from app.auth import requires_login
+from flask import abort, request, session
 from flask_restful import Resource
 from webargs import fields
 from webargs.flaskparser import parser
@@ -91,8 +92,10 @@ class OpeningResource(Resource):
 
 
 class PlaylistMetaResource(Resource):
-    def get(self, user_id):
-        pass
+    @requires_login()
+    def get(self):
+        user_id = session["user_id"]
+        print(user_id)
 
 
 class LoginResource(Resource):
@@ -106,11 +109,17 @@ class LoginResource(Resource):
         args = parser.parse(self.login_request_args, request)
         username = args["username"]
         password = args["password"]
-        print("{} - {}".format(username, password))
+        user = User.query.filter_by(username=username).one_or_none()
+        if not user:
+            abort(401)
+        if not user.check_password(password):
+            return abort(401)
+        session["user_id"] = user.id
+        return list(map(lambda r: r.name, user.roles))
 
 
 api.add_resource(LoginResource, "/api/auth")
 api.add_resource(GameResource, "/api/game/<int:id>")
 api.add_resource(OpeningResource, "/api/opening/<int:id>")
 api.add_resource(OpeningMetaResource, "/api/opening/meta")
-api.add_resource(PlaylistMetaResource, "/api/playlist/meta/<int:user_id>")
+api.add_resource(PlaylistMetaResource, "/api/playlist/meta")
