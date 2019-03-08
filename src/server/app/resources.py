@@ -1,7 +1,9 @@
 from app import api
 from app.models import Game, Opening
-from flask import abort
+from flask import abort, request
 from flask_restful import Resource
+from webargs import fields
+from webargs.flaskparser import parser
 
 
 def create_position_response(position):
@@ -94,8 +96,17 @@ class PlaylistMetaResource(Resource):
 
 
 class LoginResource(Resource):
+    def __init__(self):
+        self.login_request_args = {
+            "username": fields.Str(required=True),
+            "password": fields.Str(required=True)
+        }
+
     def post(self):
-        pass
+        args = parser.parse(self.login_request_args, request)
+        username = args["username"]
+        password = args["password"]
+        print("{} - {}".format(username, password))
 
 
 api.add_resource(LoginResource, "/api/auth")
