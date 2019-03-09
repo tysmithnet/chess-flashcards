@@ -39,6 +39,9 @@ from app.resources import *
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def catch_all(path):
+    parts = [p for p in path.split("/") if p != ""]
+    if len(parts) and parts[0] == "api":
+        return abort(404)
     possible_path = os.path.join(UI_DIR, path)
     if os.path.exists(possible_path) and not os.path.isdir(possible_path):
         return send_from_directory(UI_DIR, path)
