@@ -26,7 +26,7 @@ import {
     TableSelection,
     Toolbar,
 } from "@devexpress/dx-react-grid-material-ui";
-import { Paper } from "@material-ui/core";
+import { Paper, Button, Menu, MenuItem } from "@material-ui/core";
 import * as React from "react";
 import { connect } from "react-redux";
 import { IBaseProps, IOpening, IOpeningMeta, IRootState } from "../root";
@@ -47,6 +47,7 @@ export interface IState {
     grouping: Grouping[];
     selection: number[];
     sorting: Sorting[];
+    actionsButtonAnchor: HTMLButtonElement;
 }
 
 export class Openings extends React.Component<IProps, IState> {
@@ -59,6 +60,9 @@ export class Openings extends React.Component<IProps, IState> {
         this.changeGrouping = this.changeGrouping.bind(this);
         this.changeSelection = this.changeSelection.bind(this);
         this.changeSorting = this.changeSorting.bind(this);
+        this.handleActionsClick = this.handleActionsClick.bind(this);
+        this.handleActionsClose = this.handleActionsClose.bind(this);
+
         this.state = {
             columns: [
                 { name: "id", title: "Id" },
@@ -74,6 +78,7 @@ export class Openings extends React.Component<IProps, IState> {
             grouping: [],
             selection: [],
             sorting: [],
+            actionsButtonAnchor: null,
         };
     }
 
@@ -82,6 +87,12 @@ export class Openings extends React.Component<IProps, IState> {
         const rows = this.props.openingMeta || [];
         return (
             <Paper>
+                <Button onClick={this.handleActionsClick}>Actions</Button>
+                <Menu id="simple-menu" anchorEl={this.state.actionsButtonAnchor} open={Boolean(this.state.actionsButtonAnchor)} onClose={this.handleActionsClose}>
+                    <MenuItem onClick={this.handleActionsClose}>Profile</MenuItem>
+                    <MenuItem onClick={this.handleActionsClose}>My account</MenuItem>
+                    <MenuItem onClick={this.handleActionsClose}>Logout</MenuItem>
+                </Menu>
                 <Grid
                     rows={rows}
                     columns={columns}
@@ -136,6 +147,20 @@ export class Openings extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         this.props.dispatch(getOpeningMetaRequestFactory());
+    }
+
+    private handleActionsClick(event: React.MouseEvent<HTMLButtonElement>) {
+        this.setState({
+            ...this.state,
+            actionsButtonAnchor: event.currentTarget,
+        });
+    }
+
+    private handleActionsClose() {
+        this.setState({
+            ...this.state,
+            actionsButtonAnchor: null,
+        });
     }
 
     private changeCurrentPage(pageNumber: number) {

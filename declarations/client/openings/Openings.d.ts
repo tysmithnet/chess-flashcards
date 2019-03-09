@@ -15,11 +15,14 @@ export interface IState {
     grouping: Grouping[];
     selection: number[];
     sorting: Sorting[];
+    actionsButtonAnchor: HTMLButtonElement;
 }
 export declare class Openings extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
     componentDidMount(): void;
+    private handleActionsClick;
+    private handleActionsClose;
     private changeCurrentPage;
     private changePageSize;
     private changeFilters;
