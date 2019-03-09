@@ -1,5 +1,6 @@
-from app import api
-from app.models import Game, Opening, User, GamePlaylist, OpeningPlaylist
+from app import api, session_scope
+from app.models import Game, Opening, User, GamePlaylist, OpeningPlaylist, \
+    OpeningPlaylistOpening, GamePlaylistGame
 from app.auth import requires_login
 from flask import abort, request, session
 from flask_restful import Resource
@@ -44,20 +45,22 @@ def create_opening_response(opening):
     }
 
 
-def create_playlist_response(game_playlists, opening_playlists):
+def create_game_playlist_response(game_playlist):
     return {
-        "game_playlists": list(map(lambda x: {
-            "id": x.id,
-            "name": x.name,
-            "created": x.created,
-            "games": list(map(lambda g: g.id, x.games))
-        })),
-        "opening_playlists": list(map(lambda x: {
-            "id": x.id,
-            "name": x.name,
-            "created": x.created,
-            "openings": list(map(lambda o: o.id, x.openings))
-        }))
+        "id": game_playlist.id,
+        "name": game_playlist.name,
+        "created": str(game_playlist.created),
+        "games": list(map(lambda g: g.game.id, game_playlist.games))
+    }
+
+
+def create_opening_playlist_response(opening_playlist):
+    return {
+        "id": opening_playlist.id,
+        "name": opening_playlist.name,
+        "created": str(opening_playlist.created),
+        "openings": list(map(
+            lambda o: o.opening.id, opening_playlist.openings))
     }
 
 
@@ -93,42 +96,6 @@ class OpeningResource(Resource):
         return create_opening_response(opening)
 
 
-class PlaylistResource(Resource):
-    def __init__(self):
-        self.create_playlist_args = {
-            "name": fields.Str(required=True),
-            "type": fields.Str(required=True),
-            "ids": fields.List(fields.String, required=True)
-        }
-
-    @requires_login()
-    def get(self):
-        user_id = session["user_id"]
-        user = User.query.get(user_id)
-        game_playlists = user.game_playlists
-        opening_playlists = user.opening_playlists
-        return create_playlist_response(game_playlists, opening_playlists)
-
-    @requires_login()
-    def post(self):
-        args = parser.parse(self.create_playlist_args, request)
-        type_of_playlist = args["type"]
-        if type_of_playlist not in ("game", "opening"):
-            return abort(400, "type must be either game or opening")
-        name = args["name"]
-        ids = args["ids"]
-        user_id = session["user_id"]
-        user = User.query.get(user_id)
-        if type_of_playlist == "game":
-            games = Game.query.filter(Game.id.in_(ids))
-            game_playlist = GamePlaylist(name=name, games=games)
-            user.game_playlists.append(game_playlist)
-        else:
-            openings = Opening.query.filter(Opening.id.in_(ids))
-            opening_playlist = OpeningPlaylist(name=name, openings=openings)
-            user.opening_playlists.append(opening_playlist)
-
-
 class LoginResource(Resource):
     def __init__(self):
         self.login_request_args = {
@@ -149,8 +116,141 @@ class LoginResource(Resource):
         return list(map(lambda r: r.name, user.roles))
 
 
+class OpeningPlaylistResource(Resource):
+    def __init__(self):
+        self.create_playlist_args = {
+            "name": fields.Str(required=True),
+            "ids": fields.List(fields.Integer, required=True)
+        }
+        self.update_playlist_args = {
+            "name": fields.Str(),
+            "ids": fields.List(fields.Integer)
+        }
+
+    def get(self, user_id=None, id=None):
+        if user_id is not None:
+            user = User.query.get(user_id)
+            if user is None:
+                return abort(404)
+            return list(map(
+                create_opening_playlist_response, user.opening_playlists))
+        if id is not None:
+            playlist = OpeningPlaylist.query.get(id)
+            if playlist is None:
+                return abort(404)
+            return create_opening_playlist_response(playlist)
+        return abort(400)
+
+    @requires_login()
+    def post(self):
+        with session_scope() as s:
+            args = parser.parse(self.create_playlist_args)
+            user_id = session["user_id"]
+            openings = Opening.query.filter(Opening.id.in_(args["ids"]))
+            playlist = OpeningPlaylist(name=args["name"], owner=user_id)
+            s.add(playlist)
+            for opening in openings:
+                new_link = OpeningPlaylistOpening(
+                    playlist=playlist, opening=opening)
+                s.add(new_link)
+            s.commit()
+            return create_opening_playlist_response(playlist)
+
+    @requires_login()
+    def put(self, id):
+        with session_scope() as s:
+            playlist = OpeningPlaylist.query.get(id)
+            if playlist is None:
+                return abort(404)
+            args = parser.parse(self.update_playlist_args)
+            if "name" in args:
+                playlist.name = args["name"]
+            if "ids" in args:
+                for opening_link in playlist.openings:
+                    s.delete(opening_link)
+                openings = Opening.query.filter(Opening.id.in_(args["ids"]))
+                for opening in openings:
+                    new_link = OpeningPlaylistOpening(
+                        playlist=playlist, opening=opening)
+                    s.add(new_link)
+            s.commit()
+            return create_opening_playlist_response(playlist)
+
+
+class GamePlaylistResource(Resource):
+    def __init__(self):
+        self.create_playlist_args = {
+            "name": fields.Str(required=True),
+            "ids": fields.List(fields.Integer, required=True)
+        }
+        self.update_playlist_args = {
+            "name": fields.Str(),
+            "ids": fields.List(fields.Integer)
+        }
+
+    def get(self, user_id=None, id=None):
+        if user_id is not None:
+            user = User.query.get(user_id)
+            if user is None:
+                return abort(404)
+            return list(map(
+                create_game_playlist_response, user.game_playlists))
+        if id is not None:
+            playlist = GamePlaylist.query.get(id)
+            if playlist is None:
+                return abort(404)
+            return create_game_playlist_response(playlist)
+        return abort(400)
+
+    @requires_login()
+    def post(self):
+        with session_scope() as s:
+            args = parser.parse(self.create_playlist_args)
+            user_id = session["user_id"]
+            games = Game.query.filter(Game.id.in_(args["ids"]))
+            playlist = GamePlaylist(name=args["name"], owner=user_id)
+            s.add(playlist)
+            for game in games:
+                new_link = GamePlaylistGame(
+                    playlist=playlist, game=game)
+                s.add(new_link)
+            s.commit()
+            return create_game_playlist_response(playlist)
+
+    @requires_login()
+    def put(self, id):
+        with session_scope() as s:
+            playlist = GamePlaylist.query.get(id)
+            if playlist is None:
+                return abort(404)
+            args = parser.parse(self.update_playlist_args)
+            if "name" in args:
+                playlist.name = args["name"]
+            if "ids" in args:
+                for game_link in playlist.games:
+                    s.delete(game_link)
+                games = Game.query.filter(Game.id.in_(args["ids"]))
+                for game in games:
+                    new_link = GamePlaylistGame(
+                        playlist=playlist, game=game)
+                    s.add(new_link)
+            s.commit()
+            return create_game_playlist_response(playlist)
+
+
 api.add_resource(LoginResource, "/api/login")
 api.add_resource(GameResource, "/api/game/<int:id>")
 api.add_resource(OpeningResource, "/api/opening/<int:id>")
 api.add_resource(OpeningMetaResource, "/api/opening/meta")
-api.add_resource(PlaylistResource, "/api/playlist")
+api.add_resource(
+    OpeningPlaylistResource,
+    "/api/playlist/opening",
+    "/api/playlist/opening/<int:id>",
+    "/api/user/<int:user_id>/playlist/opening",
+)
+api.add_resource(
+    GamePlaylistResource,
+    "/api/playlist/game",
+    "/api/playlist/game/<int:id>",
+    "/api/user/<int:user_id>/playlist/game",
+)
