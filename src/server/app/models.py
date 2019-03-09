@@ -54,7 +54,7 @@ class Permission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     description = db.Column(db.Text)
-    roles = db.relationship("RolePermission", back_populates="role")
+    roles = db.relationship("RolePermission", back_populates="permission")
 
 
 class RolePermission(db.Model):
