@@ -35,8 +35,6 @@ openings = []
 def create_position_if_necessary(board):
     pieces = board.board_fen()
     is_white = board.turn
-    half_move = board.halfmove_clock
-    full_move = board.fullmove_number
     white_kingside = bool(board.castling_rights & chess.BB_H1)
     white_queenside = bool(board.castling_rights & chess.BB_A1)
     black_kingside = bool(board.castling_rights & chess.BB_H8)
@@ -48,9 +46,9 @@ def create_position_if_necessary(board):
     position_id = None
     with db.engine.connect() as con:
         if en_passant:
-            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square={} and fullmove_number={} and halfmove_clock={}".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside), en_passant, full_move, half_move))
+            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square={} ".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside), en_passant))
         else:
-            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square is null and fullmove_number={} and halfmove_clock={}".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside), full_move, half_move))
+            res = con.execute("select id from position where pieces='{}' and turn={} and white_can_castle_kingside={} and white_can_castle_queenside={} and black_can_castle_kingside={} and black_can_castle_queenside={} and en_passant_square is null".format(pieces, int(is_white), int(white_kingside), int(white_queenside), int(black_kingside), int(black_queenside)))
         position_id = res.fetchone()
     if position_id:
         return m.Position.query.get(position_id[0])
@@ -153,7 +151,7 @@ for game_file in game_filenames:
     while True:
         game = chess.pgn.read_game(pgn)
         game_num += 1
-        if not game or player_count > 400:
+        if not game or player_count > 10:
             break
         player_count += 1
         board = chess.Board()

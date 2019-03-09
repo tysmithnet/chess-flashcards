@@ -26,9 +26,10 @@ import {
     TableSelection,
     Toolbar,
 } from "@devexpress/dx-react-grid-material-ui";
-import { Paper, Button, Menu, MenuItem } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import * as React from "react";
 import { connect } from "react-redux";
+import { connectedComponent as AddToPlaylistButton } from "../playlists/AddToPlaylistButton";
 import { IBaseProps, IOpening, IOpeningMeta, IRootState } from "../root";
 import { getOpeningMetaRequestFactory } from "./openings.actions";
 
@@ -85,14 +86,10 @@ export class Openings extends React.Component<IProps, IState> {
     public render() {
         const columns = this.state.columns;
         const rows = this.props.openingMeta || [];
+        const selectedOpenings = this.state.selection.map(i => this.props.openingMeta[i]);
         return (
             <Paper>
-                <Button onClick={this.handleActionsClick}>Actions</Button>
-                <Menu id="simple-menu" anchorEl={this.state.actionsButtonAnchor} open={Boolean(this.state.actionsButtonAnchor)} onClose={this.handleActionsClose}>
-                    <MenuItem onClick={this.handleActionsClose}>Profile</MenuItem>
-                    <MenuItem onClick={this.handleActionsClose}>My account</MenuItem>
-                    <MenuItem onClick={this.handleActionsClose}>Logout</MenuItem>
-                </Menu>
+                <AddToPlaylistButton buttonText={"Add to Playlist"} selectedOpenings={selectedOpenings}  />
                 <Grid
                     rows={rows}
                     columns={columns}

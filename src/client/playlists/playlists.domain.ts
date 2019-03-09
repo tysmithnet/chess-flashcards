@@ -1,10 +1,10 @@
 export interface IRootState {
-    gamePlaylistMeta: IPlaylistMeta[];
-    openingPlaylistMeta: IPlaylistMeta[];
+    gamePlaylistMeta: IPlaylist[];
+    openingPlaylistMeta: IPlaylist[];
 }
 
-export interface IPlaylistMeta {
+export interface IPlaylist {
     id: number;
     name: string;
-    numItems: number;
+    ids: number[];
 }

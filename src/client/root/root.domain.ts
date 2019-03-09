@@ -81,6 +81,12 @@ export interface IOpening {
     positions: IPosition[];
 }
 
+export interface IGameMeta {
+    id: number;
+    slug: string;
+    numMoves: number;
+}
+
 export interface IOpeningMeta {
     id: number;
     slug: string;

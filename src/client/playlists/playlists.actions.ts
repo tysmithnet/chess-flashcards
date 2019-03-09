@@ -1,5 +1,5 @@
 import { IAction } from "../root";
-import { IPlaylistMeta } from "./playlists.domain";
+import { IPlaylist } from "./playlists.domain";
 
 export const ACTION_TYPES = {
     PLAYLIST_META: {
@@ -18,11 +18,11 @@ export function playlistMetaRequestFactory(): IPlaylistMetaRequest {
 }
 
 export interface IPlaylistMetaSuccess extends IAction {
-    games: IPlaylistMeta[];
-    openings: IPlaylistMeta[];
+    games: IPlaylist[];
+    openings: IPlaylist[];
 }
 
-export function playlistMetaSuccessFactory(games: IPlaylistMeta[], openings: IPlaylistMeta[]): IPlaylistMetaSuccess {
+export function playlistMetaSuccessFactory(games: IPlaylist[], openings: IPlaylist[]): IPlaylistMetaSuccess {
     return {
         type: ACTION_TYPES.PLAYLIST_META.FAILURE,
         games,

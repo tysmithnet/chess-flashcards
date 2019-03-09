@@ -1,9 +1,9 @@
 import * as React from "react";
 import { IBaseProps } from "../root";
-import { IPlaylistMeta } from "./playlists.domain";
+import { IPlaylist } from "./playlists.domain";
 export interface IProps extends IBaseProps {
-    gamePlaylistMeta: IPlaylistMeta[];
-    openingPlaylistMeta: IPlaylistMeta[];
+    gamePlaylistMeta: IPlaylist[];
+    openingPlaylistMeta: IPlaylist[];
 }
 export declare class Playlists extends React.Component<IProps, {}> {
     constructor(props: IProps);

@@ -36,6 +36,11 @@ export interface IOpening {
     name: string;
     positions: IPosition[];
 }
+export interface IGameMeta {
+    id: number;
+    slug: string;
+    numMoves: number;
+}
 export interface IOpeningMeta {
     id: number;
     slug: string;
