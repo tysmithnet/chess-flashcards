@@ -1,5 +1,4 @@
 import { Admin } from "../admin";
-import { Permissions } from "../auth";
 import { connectedComponent as Home } from "../home";
 import { connectedComponent as Openings } from "../openings";
 import { connectedComponent as Playlists } from "../playlists";
@@ -23,7 +22,7 @@ export const routes: IRoute[] = [
         display: "Admin",
         exact: true,
         path: "/admin",
-        permissions: [Permissions.get("ADMIN")],
+        permissions: [],
     },
     {
         component: Playlists,

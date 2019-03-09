@@ -11,4 +11,3 @@ export interface IUser {
     username: string;
     permissions: IPermission[];
 }
-export declare const Permissions: Map<string, IPermission>;
