@@ -7,3 +7,4 @@ coverage
 colony
 __pycache__
 venv
+.vscode/.ropeproject
