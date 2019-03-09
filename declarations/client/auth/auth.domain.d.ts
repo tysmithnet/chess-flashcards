@@ -8,7 +8,7 @@ export interface IPermission {
 }
 export interface IUser {
     id: string;
-    name: string;
+    username: string;
     permissions: IPermission[];
 }
 export declare const Permissions: Map<string, IPermission>;

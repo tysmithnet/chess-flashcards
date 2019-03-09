@@ -67,7 +67,7 @@ export interface IUser {
      * @type {string}
      * @memberof IUser
      */
-    name: string;
+    username: string;
 
     /**
      * Permissions associated with the account

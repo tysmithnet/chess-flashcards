@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 9e652480efe2
+Revision ID: 20220db1fcec
 Revises: 
-Create Date: 2019-03-03 02:51:01.333426
+Create Date: 2019-03-08 18:53:22.391121
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9e652480efe2'
+revision = '20220db1fcec'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,6 +33,13 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('slug')
     )
+    op.create_table('permission',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('position',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('pieces', sa.String(length=128), nullable=False),
@@ -42,13 +49,11 @@ def upgrade():
     sa.Column('black_can_castle_queenside', sa.Boolean(), nullable=False),
     sa.Column('black_can_castle_kingside', sa.Boolean(), nullable=False),
     sa.Column('en_passant_square', sa.Integer(), nullable=True),
-    sa.Column('halfmove_clock', sa.Integer(), nullable=False),
-    sa.Column('fullmove_number', sa.Integer(), nullable=False),
     sa.Column('is_check', sa.Boolean(), nullable=False),
     sa.Column('is_checkmate', sa.Boolean(), nullable=False),
     sa.Column('is_stalemate', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('pieces', 'turn', 'white_can_castle_queenside', 'white_can_castle_kingside', 'black_can_castle_queenside', 'black_can_castle_kingside', 'en_passant_square', 'halfmove_clock', 'fullmove_number')
+    sa.UniqueConstraint('pieces', 'turn', 'white_can_castle_queenside', 'white_can_castle_kingside', 'black_can_castle_queenside', 'black_can_castle_kingside', 'en_passant_square')
     )
     op.create_table('role',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -71,12 +76,28 @@ def upgrade():
     sa.ForeignKeyConstraint(['game_id'], ['game.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('game_playlist',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('owner', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=256), nullable=False),
+    sa.Column('created', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['owner'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('game_position',
     sa.Column('game_id', sa.Integer(), nullable=False),
     sa.Column('position_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['game_id'], ['game.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['position_id'], ['position.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('game_id', 'position_id')
+    )
+    op.create_table('opening_playlist',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('owner', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=256), nullable=False),
+    sa.Column('created', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['owner'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('opening_position',
     sa.Column('opening_id', sa.Integer(), nullable=False),
@@ -85,6 +106,13 @@ def upgrade():
     sa.ForeignKeyConstraint(['position_id'], ['position.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('opening_id', 'position_id')
     )
+    op.create_table('role_permission',
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.Column('permission_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['permission_id'], ['permission.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('role_id', 'permission_id')
+    )
     op.create_table('user_role',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=False),
@@ -92,19 +120,39 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('user_id', 'role_id')
     )
+    op.create_table('game_playlist_game',
+    sa.Column('playlist_id', sa.Integer(), nullable=False),
+    sa.Column('game_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['game_id'], ['game.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['playlist_id'], ['game_playlist.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('playlist_id', 'game_id')
+    )
+    op.create_table('opening_playlist_opening',
+    sa.Column('playlist_id', sa.Integer(), nullable=False),
+    sa.Column('opening_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['opening_id'], ['opening.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['playlist_id'], ['opening_playlist.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('playlist_id', 'opening_id')
+    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('opening_playlist_opening')
+    op.drop_table('game_playlist_game')
     op.drop_table('user_role')
+    op.drop_table('role_permission')
     op.drop_table('opening_position')
+    op.drop_table('opening_playlist')
     op.drop_table('game_position')
+    op.drop_table('game_playlist')
     op.drop_table('game_header')
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_table('user')
     op.drop_table('role')
     op.drop_table('position')
+    op.drop_table('permission')
     op.drop_table('opening')
     op.drop_table('game')
     # ### end Alembic commands ###

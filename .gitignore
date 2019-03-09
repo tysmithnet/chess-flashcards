@@ -8,4 +8,4 @@ colony
 __pycache__
 venv
 .vscode/.ropeproject
-app.db
+src/server/app.db

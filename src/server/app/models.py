@@ -43,9 +43,28 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     users = db.relationship("UserRole", back_populates="role")
+    permissions = db.relationship("RolePermission", back_populates="role")
 
     def __repr__(self):
         return "Role(id={}, name=\"{}\")".format(self.id, self.name)
+
+
+class Permission(db.Model):
+    __tablename__ = "permission"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    description = db.Column(db.Text)
+    roles = db.relationship("RolePermission", back_populates="role")
+
+
+class RolePermission(db.Model):
+    __tablename__ = "role_permission"
+    role_id = db.Column(db.Integer, db.ForeignKey(
+        "role.id", ondelete="CASCADE"), primary_key=True)
+    permission_id = db.Column(db.Integer, db.ForeignKey(
+        "permission.id", ondelete="CASCADE"), primary_key=True)
+    role = db.relationship("Role", back_populates="permissions")
+    permission = db.relationship("Permission", back_populates="roles")
 
 
 class Position(db.Model):
@@ -58,8 +77,6 @@ class Position(db.Model):
     black_can_castle_queenside = db.Column(db.Boolean, nullable=False)
     black_can_castle_kingside = db.Column(db.Boolean, nullable=False)
     en_passant_square = db.Column(db.Integer)
-    halfmove_clock = db.Column(db.Integer, nullable=False)
-    fullmove_number = db.Column(db.Integer, nullable=False)
     is_check = db.Column(db.Boolean, default=False, nullable=False)
     is_checkmate = db.Column(db.Boolean, default=False, nullable=False)
     is_stalemate = db.Column(db.Boolean, default=False, nullable=False)
@@ -70,8 +87,7 @@ class Position(db.Model):
         db.UniqueConstraint(
             "pieces", "turn", "white_can_castle_queenside",
             "white_can_castle_kingside", "black_can_castle_queenside",
-            "black_can_castle_kingside", "en_passant_square",
-            "halfmove_clock", "fullmove_number"),
+            "black_can_castle_kingside", "en_passant_square"),
     )
 
     def fen(self):

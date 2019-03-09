@@ -3,31 +3,26 @@ import { all, put, takeLatest } from "redux-saga/effects";
 import { ACTION_TYPES, ILoginRequest } from "./auth.action";
 import { Permissions } from "./auth.domain";
 
-/**
- * Attempt to login using the provided credentials
- * @param id Who to log in as
- * @param password Password for id
- */
-function* loginUser(id: string, password: string) {
+function* loginUser(username: string, password: string) {
     try {
-        const res = yield axios.post("/api/auth", {
-            id,
+        const res = yield axios.post("/api/login", {
+            username,
             password,
         });
         const result = yield res.data;
-        const permissions = [];
+        const roles = [];
         for (const p of result.permissions) {
             const lookup = Permissions.get(p);
             if (lookup) {
-                permissions.push(lookup);
+                roles.push(lookup);
             }
         }
         yield put({
             type: ACTION_TYPES.LOGIN_SUCCESS,
             user: {
                 id: result.id,
-                name: result.name,
-                permissions,
+                username: result.username,
+                roles,
             },
         });
     } catch (error) {

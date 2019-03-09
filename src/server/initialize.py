@@ -61,7 +61,6 @@ def create_position_if_necessary(board):
         white_can_castle_queenside=white_queenside,
         black_can_castle_kingside=black_kingside,
         black_can_castle_queenside=black_queenside,
-        fullmove_number=full_move, halfmove_clock=half_move,
         en_passant_square=en_passant, is_check=is_check,
         is_checkmate=is_checkmate, is_stalemate=is_stalemate)
     session.add(position)

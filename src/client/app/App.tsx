@@ -194,7 +194,7 @@ export class App extends React.Component<IProps, IState> {
         if (this.props.user != null) {
             loginContent = (
                 <Typography variant="h6" color="inherit" noWrap={true}>
-                    {this.props.user.name}
+                    {this.props.user.username}
                 </Typography>
             );
         }

@@ -8,6 +8,14 @@ from webargs import fields
 from webargs.flaskparser import parser
 
 
+def create_user_response(user):
+    return {
+        "id": user.id,
+        "username": user.username,
+        "roles": list(map(lambda x: x.name, user.roles))
+    }
+
+
 def create_position_response(position):
     return {
         "pieces": position.position.pieces,
@@ -113,7 +121,7 @@ class LoginResource(Resource):
         if not user.check_password(password):
             return abort(401)
         session["user_id"] = user.id
-        return list(map(lambda r: r.name, user.roles))
+        return create_user_response(user)
 
 
 class OpeningPlaylistResource(Resource):
