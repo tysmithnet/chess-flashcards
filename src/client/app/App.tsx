@@ -112,7 +112,6 @@ const styles = (theme: Theme) => createStyles({
 export interface IState {
     open: boolean;
     loginDialogOpen: boolean;
-    user: IUser;
 }
 export interface IProps extends IBaseProps {
     /**
@@ -151,7 +150,6 @@ export class App extends React.Component<IProps, IState> {
         this.state = {
             open: false,
             loginDialogOpen: false,
-            user: null,
         };
         this.classes = props.classes;
         this.theme = props.theme;
@@ -185,12 +183,7 @@ export class App extends React.Component<IProps, IState> {
                     ),
                 };
             });
-        let loginContent = (
-            <LoginDialog
-                isOpen={this.state.loginDialogOpen}
-                onClose={this.handleLoginDialogClose}
-                onSubmit={this.handleLoginSubmit}
-            />);
+        let loginContent = (<Button color="inherit" onClick={this.handleLoginDialogOpen}>Login</Button>);
         if (this.props.user != null) {
             loginContent = (
                 <Typography variant="h6" color="inherit" noWrap={true}>
@@ -220,7 +213,7 @@ export class App extends React.Component<IProps, IState> {
                             <Typography variant="h6" color="inherit" noWrap={true} className={this.classes.grow}>
                                 Chess Flashcards
                             </Typography>
-                            <Button color="inherit" onClick={this.handleLoginDialogOpen}>Login</Button>
+                            {loginContent}
                         </Toolbar>
                     </AppBar>
                     <Drawer
@@ -254,7 +247,11 @@ export class App extends React.Component<IProps, IState> {
                         </Switch>
                     </main>
                 </div>
-                {loginContent}
+                <LoginDialog
+                    isOpen={this.state.loginDialogOpen}
+                    onClose={this.handleLoginDialogClose}
+                    onSubmit={this.handleLoginSubmit}
+                />
             </ConnectedRouter >
         );
     }
@@ -285,6 +282,10 @@ export class App extends React.Component<IProps, IState> {
     }
 
     private handleLoginSubmit(username: string, password: string) {
+        this.setState({
+            ...this.state,
+            loginDialogOpen: false,
+        });
         this.props.dispatch(loginRequestFactory(username, password));
     }
 }

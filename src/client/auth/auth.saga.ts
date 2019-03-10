@@ -1,5 +1,6 @@
 import axios from "axios";
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, fork, put, takeLatest } from "redux-saga/effects";
+import { getPlaylistRequestFactory } from "../playlists";
 import { ACTION_TYPES, ILoginRequest } from "./auth.action";
 
 function* loginUser(username: string, password: string) {
@@ -9,6 +10,7 @@ function* loginUser(username: string, password: string) {
             password,
         });
         const result = yield res.data;
+        yield put(getPlaylistRequestFactory());
         yield put({
             type: ACTION_TYPES.LOGIN_SUCCESS,
             user: {

@@ -1,19 +1,19 @@
 import { IAction } from "../root";
-import { ACTION_TYPES, IPlaylistMetaRequest, IPlaylistMetaSuccess } from "./playlists.actions";
+import { ACTION_TYPES, IGetPlaylistRequest, IGetPlaylistSuccess } from "./playlists.actions";
 import { IRootState } from "./playlists.domain";
 
-function handlePlaylistMetaSuccess(state: IRootState, action: IPlaylistMetaSuccess): IRootState {
+function handleGetPlaylistSuccess(state: IRootState, action: IGetPlaylistSuccess): IRootState {
     return {
         ...state,
-        gamePlaylistMeta: action.games,
-        openingPlaylistMeta: action.openings,
+        gamePlaylists: action.game,
+        openingPlaylists: action.opening,
     };
 }
 
 export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
-        case ACTION_TYPES.PLAYLIST_META.SUCCESS:
-            return handlePlaylistMetaSuccess(state, action as IPlaylistMetaSuccess);
+        case ACTION_TYPES.GET_PLAYLIST.SUCCESS:
+            return handleGetPlaylistSuccess(state, action as IGetPlaylistSuccess);
     }
     return {
         ...state,

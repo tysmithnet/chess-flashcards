@@ -19,7 +19,6 @@ export interface IClasses {
 export interface IState {
     open: boolean;
     loginDialogOpen: boolean;
-    user: IUser;
 }
 export interface IProps extends IBaseProps {
     user?: IUser;

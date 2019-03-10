@@ -143,9 +143,9 @@ class PlaylistResource(Resource):
             opening_playlists = OpeningPlaylist.query.filter_by(owner=user_id)
             game_playlists = GamePlaylist.query.filter_by(owner=user_id)
             return {
-                "opening_playlists": list(map(
+                "opening": list(map(
                     create_opening_playlist_response, opening_playlists)),
-                "game_playlists": 
+                "game":
                     list(map(create_game_playlist_response, game_playlists))
             }
         if cat == "opening":

@@ -1,6 +1,6 @@
 export interface IRootState {
-    gamePlaylistMeta: IPlaylist[];
-    openingPlaylistMeta: IPlaylist[];
+    gamePlaylists: IPlaylist[];
+    openingPlaylists: IPlaylist[];
 }
 
 export interface IPlaylist {

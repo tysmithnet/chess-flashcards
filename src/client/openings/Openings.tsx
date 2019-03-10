@@ -89,7 +89,7 @@ export class Openings extends React.Component<IProps, IState> {
         const selectedOpenings = this.state.selection.map(i => this.props.openingMeta[i]);
         return (
             <Paper>
-                <AddToPlaylistButton buttonText={"Add to Playlist"} selectedOpenings={selectedOpenings}  />
+                <AddToPlaylistButton type={"opening"} buttonText={"Add to Playlist"} selectedOpenings={selectedOpenings}  />
                 <Grid
                     rows={rows}
                     columns={columns}
