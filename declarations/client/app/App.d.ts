@@ -3,7 +3,7 @@ import * as React from "react";
 import { IUser } from "../auth";
 import { IBaseProps } from "../root";
 import { IRoute } from "./app.domain";
-export interface IClasses {
+interface IClasses {
     root: any;
     appBar: any;
     appBarShift: any;

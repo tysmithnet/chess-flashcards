@@ -2,10 +2,7 @@ import {
     Column,
     Filter,
     FilteringState,
-    Grouping,
-    GroupingState,
     IntegratedFiltering,
-    IntegratedGrouping,
     IntegratedPaging,
     IntegratedSelection,
     IntegratedSorting,
@@ -17,37 +14,48 @@ import {
 import {
     DragDropProvider,
     Grid,
-    GroupingPanel,
     PagingPanel,
     SearchPanel,
     Table,
     TableFilterRow,
-    TableGroupRow,
     TableHeaderRow,
     TableSelection,
     Toolbar,
   } from "@devexpress/dx-react-grid-material-ui";
-import { Button, Paper } from "@material-ui/core";
+import { Button, createStyles, IconButton, Paper, Theme, withStyles } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import * as React from "react";
 import { connect } from "react-redux";
 import { IBaseProps, IPlaylist, IRootState } from "../root";
 import { deletePlaylistRequestFactory } from "./playlists.actions";
-export interface IProps extends IBaseProps {
+interface IProps extends IBaseProps {
     playlists: IPlaylist[];
+    theme?: Theme;
+    classes?: IClasses;
 }
 
-export interface IState {
+interface IState {
     columns: Column[];
     currentPage: number;
     pageSize: number;
     pageSizes: number[];
     filters: Filter[];
     searchValue: string;
-    grouping: Grouping[];
     selection: number[];
     sorting: Sorting[];
     actionsButtonAnchor: HTMLButtonElement;
 }
+
+interface IClasses {
+    button: any;
+}
+
+const styles = (theme: Theme) => createStyles({
+    button: {
+        margin: theme.spacing.unit,
+      },
+});
 
 export class Playlists extends React.Component<IProps, IState> {
     constructor(props: IProps) {
@@ -56,24 +64,27 @@ export class Playlists extends React.Component<IProps, IState> {
         this.changePageSize = this.changePageSize.bind(this);
         this.changeFilters = this.changeFilters.bind(this);
         this.changeSearchValue = this.changeSearchValue.bind(this);
-        this.changeGrouping = this.changeGrouping.bind(this);
         this.changeSelection = this.changeSelection.bind(this);
         this.changeSorting = this.changeSorting.bind(this);
         this.handleActionsClick = this.handleActionsClick.bind(this);
         this.handleActionsClose = this.handleActionsClose.bind(this);
         this.deleteSelected = this.deleteSelected.bind(this);
+        this.createActionsCell = this.createActionsCell.bind(this);
+        this.handleDeletePlaylist = this.handleDeletePlaylist.bind(this);
+        this.handleViewPlaylist = this.handleViewPlaylist.bind(this);
+
         this.state = {
             columns: [
-                { name: "id", title: "Id"},
-                { name: "type", title: "Type"},
-                { name: "name", title: "Name"},
+                { name: "id", title: "Id" },
+                { name: "type", title: "Type" },
+                { name: "name", title: "Name" },
+                { name: null, title: "Actions", getCellValue: this.createActionsCell },
             ],
             currentPage: 0,
             pageSize: 10,
             pageSizes: [5, 10, 15, 25, 50, 100],
             filters: [],
             searchValue: "",
-            grouping: [],
             selection: [],
             sorting: [],
             actionsButtonAnchor: null,
@@ -111,30 +122,48 @@ export class Playlists extends React.Component<IProps, IState> {
                         sorting={this.state.sorting}
                         onSortingChange={this.changeSorting}
                     />
-                    <GroupingState
-                        grouping={this.state.grouping}
-                        onGroupingChange={this.changeGrouping}
-                    />
                     <DragDropProvider />
                     <IntegratedSorting />
                     <IntegratedFiltering />
                     <IntegratedPaging />
                     <IntegratedSelection />
-                    <IntegratedGrouping />
                     <Table />
-                    <TableHeaderRow showGroupingControls={true} showSortingControls={true} />
+                    <TableHeaderRow showSortingControls={true} />
                     <TableSelection showSelectAll={true} />
                     <TableFilterRow />
                     <PagingPanel
                         pageSizes={this.state.pageSizes}
                     />
-                    <TableGroupRow />
                     <Toolbar />
                     <SearchPanel />
-                    <GroupingPanel showGroupingControls={true} />
                 </Grid>
             </Paper>
         );
+    }
+
+    private createActionsCell(playlist: IPlaylist) {
+        return (
+            <React.Fragment>
+                <IconButton className={this.props.classes.button} aria-label="Delete" data-type={playlist.type} data-id={playlist.id}>
+                    <DeleteIcon />
+                </IconButton>
+                <IconButton className={this.props.classes.button} aria-label="View" data-type={playlist.type} data-id={playlist.id}>
+                    <VisibilityIcon />
+                </IconButton>
+            </React.Fragment>
+        );
+    }
+
+    private handleDeletePlaylist(event: React.MouseEvent<HTMLButtonElement>) {
+        const type = event.currentTarget.getAttribute("data-type");
+        const id = parseInt(event.currentTarget.getAttribute("data-id"), 10);
+        // todo: delete
+    }
+
+    private handleViewPlaylist(event: React.MouseEvent<HTMLButtonElement>) {
+        const type = event.currentTarget.getAttribute("data-type");
+        const id = parseInt(event.currentTarget.getAttribute("data-id"), 10);
+        // todo: view
     }
 
     private deleteSelected() {
@@ -184,13 +213,6 @@ export class Playlists extends React.Component<IProps, IState> {
         });
     }
 
-    private changeGrouping(grouping: Grouping[]) {
-        this.setState({
-            ...this.state,
-            grouping,
-        });
-    }
-
     private changeSelection(selection: number[]) {
         this.setState({
             ...this.state,
@@ -212,4 +234,5 @@ function mapStateToProps(state: IRootState): IProps {
     };
 }
 
-export const connectedComponent = connect(mapStateToProps)(Playlists);
+const styledComponent = withStyles(styles, { withTheme: true})(Playlists);
+export const connectedComponent = connect(mapStateToProps)(styledComponent);

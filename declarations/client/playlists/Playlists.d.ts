@@ -1,24 +1,30 @@
-import { Column, Filter, Grouping, Sorting } from "@devexpress/dx-react-grid";
+import { Column, Filter, Sorting } from "@devexpress/dx-react-grid";
+import { Theme } from "@material-ui/core";
 import * as React from "react";
 import { IBaseProps, IPlaylist } from "../root";
-export interface IProps extends IBaseProps {
+interface IProps extends IBaseProps {
     playlists: IPlaylist[];
+    theme?: Theme;
+    classes?: IClasses;
 }
-export interface IState {
+interface IState {
     columns: Column[];
     currentPage: number;
     pageSize: number;
     pageSizes: number[];
     filters: Filter[];
     searchValue: string;
-    grouping: Grouping[];
     selection: number[];
     sorting: Sorting[];
     actionsButtonAnchor: HTMLButtonElement;
 }
+interface IClasses {
+    button: any;
+}
 export declare class Playlists extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
+    private createActionsCell;
     private deleteSelected;
     private handleActionsClick;
     private handleActionsClose;
@@ -26,8 +32,8 @@ export declare class Playlists extends React.Component<IProps, IState> {
     private changePageSize;
     private changeFilters;
     private changeSearchValue;
-    private changeGrouping;
     private changeSelection;
     private changeSorting;
 }
-export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Playlists, Pick<IProps, never>>;
+export declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "playlists" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"button">>, Pick<Pick<IProps, "playlists" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"button">, "innerRef">>;
+export {};

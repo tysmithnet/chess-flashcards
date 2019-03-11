@@ -35,7 +35,7 @@ if (!isTest) {
 
 const drawerWidth = "240";
 
-export interface IClasses {
+interface IClasses {
     root: any;
     appBar: any;
     appBarShift: any;
