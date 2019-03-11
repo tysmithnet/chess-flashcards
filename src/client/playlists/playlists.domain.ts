@@ -1,6 +1,7 @@
-import { IPlaylist } from "../root";
+import { IRootState as IMasterListState } from "./master-list";
+import { IRootState as IViewerState } from "./viewer";
 
 export interface IRootState {
-    playlists: IPlaylist[];
-    currentPlaylist: IPlaylist;
+    masterList: IMasterListState;
+    viewer: IViewerState;
 }

@@ -1,3 +1,4 @@
-import { IAction } from "../root";
-import { IRootState } from "./playlists.domain";
-export declare function reducer(state: IRootState, action: IAction): IRootState;
+export declare const reducer: import("redux").Reducer<{
+    masterList: import("./master-list").IRootState;
+    viewer: import("./Viewer").IRootState;
+}, import("redux").AnyAction>;

@@ -1,4 +1,4 @@
-import { IAction, IPlaylist, PlaylistType } from "../root";
+import { IAction, IPlaylist, PlaylistType } from "../../root";
 
 export const ACTION_TYPES = {
     GET_PLAYLIST: {

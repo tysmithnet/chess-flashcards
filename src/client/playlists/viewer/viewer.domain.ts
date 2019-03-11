@@ -1,5 +1,8 @@
-import { IPlaylist } from "../../root";
+import { IGame, IOpening, IPlaylist, IPosition } from "../../root";
 
 export interface IRootState {
-    currentPlaylist: IPlaylist;
+    playlist: IPlaylist;
+    opening: IOpening;
+    position: IPosition;
+    game: IGame;
 }

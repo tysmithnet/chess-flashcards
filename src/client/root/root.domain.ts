@@ -1,5 +1,7 @@
 import { Theme } from "@material-ui/core";
 import { RouterState } from "connected-react-router";
+import { History, Location } from "history";
+import { match } from "react-router";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
@@ -18,6 +20,12 @@ export interface IBaseProps {
     dispatch?: Dispatch;
     createWorker?: () => Worker;
     theme?: Theme;
+}
+
+export interface IRoutedProps {
+    history: History;
+    location: Location;
+    match: match;
 }
 
 export interface IPosition {

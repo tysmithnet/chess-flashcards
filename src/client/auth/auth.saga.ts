@@ -1,6 +1,6 @@
 import axios from "axios";
 import { all, fork, put, takeLatest } from "redux-saga/effects";
-import { getPlaylistRequestFactory } from "../playlists";
+import { getPlaylistRequestFactory } from "../playlists/master-list";
 import { ACTION_TYPES, ILoginRequest, loginUserFailureFactory, loginUserSuccessFactory } from "./auth.action";
 
 function* loginUser(action: ILoginRequest) {

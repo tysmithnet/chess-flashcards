@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { IUser } from "../auth";
 import { IBaseProps, IGameMeta, IOpeningMeta, IPlaylist, IRootState, PlaylistType } from "../root";
-import { createPlaylistRequestFactory, getPlaylistRequestFactory, updatePlaylistRequestFactory } from "./playlists.actions";
+import { createPlaylistRequestFactory, getPlaylistRequestFactory, updatePlaylistRequestFactory } from "./master-list";
 
 export interface IProps extends IBaseProps {
     type: PlaylistType;
@@ -163,7 +163,7 @@ function mapStateToProps(state: IRootState, ownProps: IProps): IProps {
     return {
         type: ownProps.type,
         user: state.auth.user,
-        playlists: state.playlists.playlists,
+        playlists: state.playlists.masterList.playlists,
         buttonText: ownProps.buttonText,
         selectedOpenings: ownProps.selectedOpenings,
         selectedGames: ownProps.selectedGames,
