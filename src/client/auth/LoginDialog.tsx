@@ -10,7 +10,7 @@ import { IBaseProps } from "../root";
 export interface IProps extends IBaseProps {
     isOpen: boolean;
     onSubmit: (username: string, password: string) => void;
-    onClose: () => void;
+    onClose: (event?: React.SyntheticEvent, reason?: string) => void;
 }
 
 export interface IState {
@@ -29,6 +29,7 @@ export class LoginDialog extends React.Component<IProps, IState> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.handleKeyUp = this.handleKeyUp.bind(this);
     }
 
     public render() {
@@ -42,6 +43,7 @@ export class LoginDialog extends React.Component<IProps, IState> {
                     id="username"
                     label="username"
                     onChange={this.handleUsernameChange}
+                    onKeyUp={this.handleKeyUp}
                     fullWidth={true}
                 />
                 <TextField
@@ -50,6 +52,7 @@ export class LoginDialog extends React.Component<IProps, IState> {
                   label="password"
                   type="password"
                   onChange={this.handlePasswordChange}
+                  onKeyUp={this.handleKeyUp}
                   fullWidth={true}
                 />
               </DialogContent>
@@ -63,6 +66,15 @@ export class LoginDialog extends React.Component<IProps, IState> {
               </DialogActions>
             </Dialog>
         );
+    }
+
+    private handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.keyCode === 13) {
+            this.props.onClose(event, "submit");
+            this.props.onSubmit(this.state.username, this.state.password);
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     private handleSubmit() {
