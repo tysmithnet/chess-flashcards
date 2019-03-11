@@ -1,5 +1,4 @@
-import { IAction } from "../root";
-import { IPlaylist } from "./playlists.domain";
+import { IAction, IPlaylist, PlaylistType } from "../root";
 export declare const ACTION_TYPES: {
     GET_PLAYLIST: {
         REQUEST: string;
@@ -18,10 +17,10 @@ export declare const ACTION_TYPES: {
     };
 };
 export interface IGetPlaylistRequest extends IAction {
-    playlistType?: "game" | "opening";
+    playlistType?: PlaylistType;
     id?: number;
 }
-export declare function getPlaylistRequestFactory(type?: "game" | "opening"): IGetPlaylistRequest;
+export declare function getPlaylistRequestFactory(type?: PlaylistType): IGetPlaylistRequest;
 export interface IGetPlaylistSuccess extends IAction {
     game: IPlaylist[];
     opening: IPlaylist[];
@@ -35,11 +34,11 @@ export declare function getPlaylistFailureFactory(message: string): {
     message: string;
 };
 export interface ICreatePlaylistRequest extends IAction {
-    playlistType: "opening" | "game";
+    playlistType: PlaylistType;
     name: string;
     ids: number[];
 }
-export declare function createPlaylistRequestFactory(playlistType: "opening" | "game", name: string, ids: number[]): ICreatePlaylistRequest;
+export declare function createPlaylistRequestFactory(playlistType: PlaylistType, name: string, ids: number[]): ICreatePlaylistRequest;
 export interface ICreatePlaylistSuccess extends IAction {
     playlist: IPlaylist;
 }
@@ -48,12 +47,12 @@ export interface ICreatePlaylistFailure extends IAction {
 }
 export declare function createPlaylistFailureFactory(): ICreatePlaylistFailure;
 export interface IUpdatePlaylistRequest extends IAction {
-    playlistType: "opening" | "game";
+    playlistType: PlaylistType;
     id: number;
     name: string;
     ids: number[];
 }
-export declare function updatePlaylistRequestFactory(playlistType: "opening" | "game", id: number, name?: string, ids?: number[]): IUpdatePlaylistRequest;
+export declare function updatePlaylistRequestFactory(playlistType: PlaylistType, id: number, name?: string, ids?: number[]): IUpdatePlaylistRequest;
 export interface IUpdatePlaylistSuccess extends IAction {
     playlist: IPlaylist;
 }

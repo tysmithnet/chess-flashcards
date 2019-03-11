@@ -56,18 +56,20 @@ def create_opening_response(opening):
 def create_game_playlist_response(game_playlist):
     return {
         "id": game_playlist.id,
+        "type": "game",
         "name": game_playlist.name,
         "created": str(game_playlist.created),
-        "games": list(map(lambda g: g.game.id, game_playlist.games))
+        "ids": list(map(lambda g: g.game.id, game_playlist.games))
     }
 
 
 def create_opening_playlist_response(opening_playlist):
     return {
         "id": opening_playlist.id,
+        "type": "opening",
         "name": opening_playlist.name,
         "created": str(opening_playlist.created),
-        "openings": list(map(
+        "ids": list(map(
             lambda o: o.opening.id, opening_playlist.openings))
     }
 
@@ -132,8 +134,8 @@ class PlaylistResource(Resource):
         }
 
         self.update_playlist_args = {
-            "name": fields.Str(),
-            "ids": fields.List(fields.Integer)
+            "name": fields.Str(allow_missing=True),
+            "ids": fields.List(fields.Integer, allow_missing=True)
         }
 
     @requires_login()

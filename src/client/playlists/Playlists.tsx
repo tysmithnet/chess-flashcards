@@ -6,8 +6,7 @@ import {
 import { Paper } from "@material-ui/core";
 import * as React from "react";
 import { connect } from "react-redux";
-import { IBaseProps, IRootState } from "../root";
-import { IPlaylist } from "./playlists.domain";
+import { IBaseProps, IPlaylist, IRootState } from "../root";
 export interface IProps extends IBaseProps {
     gamePlaylistMeta: IPlaylist[];
     openingPlaylistMeta: IPlaylist[];

@@ -2,12 +2,11 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuIt
 import * as React from "react";
 import { connect } from "react-redux";
 import { IUser } from "../auth";
-import { IBaseProps, IGameMeta, IOpeningMeta, IRootState } from "../root";
+import { IBaseProps, IGameMeta, IOpeningMeta, IPlaylist, IRootState, PlaylistType } from "../root";
 import { createPlaylistRequestFactory, getPlaylistRequestFactory, updatePlaylistRequestFactory } from "./playlists.actions";
-import { IPlaylist } from "./playlists.domain";
 
 export interface IProps extends IBaseProps {
-    type: "opening" | "game";
+    type: PlaylistType;
     user?: IUser;
     gamePlaylists?: IPlaylist[];
     openingPlaylists?: IPlaylist[];

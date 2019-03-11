@@ -54,19 +54,19 @@ export interface IGame {
     headers: Map<string, string>;
     positions: IPosition[];
 }
-export interface IGamePlaylist {
-    id: number;
-    name: string;
-    games: IGame[];
-}
-export interface IOpeningPlaylist {
-    id: number;
-    name: string;
-    openings: IOpening[];
-}
 export interface IMove {
     src: string;
     dst: string;
+}
+export declare enum PlaylistType {
+    opening = "opening",
+    game = "game"
+}
+export interface IPlaylist {
+    id: number;
+    type: PlaylistType;
+    name: string;
+    ids: number[];
 }
 export declare const EMPTY_BOARD: any[];
 export declare const STARTING_POSITION: string[];

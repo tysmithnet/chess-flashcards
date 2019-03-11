@@ -102,21 +102,21 @@ export interface IGame {
     positions: IPosition[];
 }
 
-export interface IGamePlaylist {
-    id: number;
-    name: string;
-    games: IGame[];
-}
-
-export interface IOpeningPlaylist {
-    id: number;
-    name: string;
-    openings: IOpening[];
-}
-
 export interface IMove {
     src: string;
     dst: string;
+}
+
+export enum PlaylistType {
+    opening = "opening",
+    game = "game",
+}
+
+export interface IPlaylist {
+    id: number;
+    type: PlaylistType;
+    name: string;
+    ids: number[];
 }
 
 export const EMPTY_BOARD = new Array(64);

@@ -2,6 +2,7 @@
     "compilerOptions": {
         "declaration": true,
         "declarationDir": "../declarations/client",
+        "esModuleInterop": true,
         "noImplicitAny": true,
         "removeComments": true,
         "jsx": "react",

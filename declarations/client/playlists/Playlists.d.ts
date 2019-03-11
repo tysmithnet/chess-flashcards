@@ -1,6 +1,5 @@
 import * as React from "react";
-import { IBaseProps } from "../root";
-import { IPlaylist } from "./playlists.domain";
+import { IBaseProps, IPlaylist } from "../root";
 export interface IProps extends IBaseProps {
     gamePlaylistMeta: IPlaylist[];
     openingPlaylistMeta: IPlaylist[];

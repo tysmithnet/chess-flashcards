@@ -1,5 +1,4 @@
-import { IAction } from "../root";
-import { IPlaylist } from "./playlists.domain";
+import { IAction, IPlaylist, PlaylistType } from "../root";
 
 export const ACTION_TYPES = {
     GET_PLAYLIST: {
@@ -20,11 +19,11 @@ export const ACTION_TYPES = {
 };
 
 export interface IGetPlaylistRequest extends IAction {
-    playlistType?: "game" | "opening";
+    playlistType?: PlaylistType;
     id?: number;
 }
 
-export function getPlaylistRequestFactory(type?: "game" | "opening"): IGetPlaylistRequest {
+export function getPlaylistRequestFactory(type?: PlaylistType): IGetPlaylistRequest {
     return {
         type: ACTION_TYPES.GET_PLAYLIST.REQUEST,
         playlistType: type,
@@ -56,12 +55,12 @@ export function getPlaylistFailureFactory(message: string) {
 }
 
 export interface ICreatePlaylistRequest extends IAction {
-    playlistType: "opening" | "game";
+    playlistType: PlaylistType;
     name: string;
     ids: number[];
 }
 
-export function createPlaylistRequestFactory(playlistType: "opening" | "game", name: string, ids: number[]): ICreatePlaylistRequest {
+export function createPlaylistRequestFactory(playlistType: PlaylistType, name: string, ids: number[]): ICreatePlaylistRequest {
     return {
         type: ACTION_TYPES.CREATE_PLAYLIST.REQUEST,
         playlistType,
@@ -90,13 +89,13 @@ export function createPlaylistFailureFactory(): ICreatePlaylistFailure {
 }
 
 export interface IUpdatePlaylistRequest extends IAction {
-    playlistType: "opening" | "game";
+    playlistType: PlaylistType;
     id: number;
     name: string;
     ids: number[];
 }
 
-export function updatePlaylistRequestFactory(playlistType: "opening" | "game", id: number, name?: string, ids?: number[]): IUpdatePlaylistRequest {
+export function updatePlaylistRequestFactory(playlistType: PlaylistType, id: number, name?: string, ids?: number[]): IUpdatePlaylistRequest {
     return {
         type: ACTION_TYPES.UPDATE_PLAYLIST.REQUEST,
         id,

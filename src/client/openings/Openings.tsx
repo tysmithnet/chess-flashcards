@@ -30,7 +30,7 @@ import { Paper } from "@material-ui/core";
 import * as React from "react";
 import { connect } from "react-redux";
 import { connectedComponent as AddToPlaylistButton } from "../playlists/AddToPlaylistButton";
-import { IBaseProps, IOpening, IOpeningMeta, IRootState } from "../root";
+import { IBaseProps, IOpening, IOpeningMeta, IRootState, PlaylistType } from "../root";
 import { getOpeningMetaRequestFactory } from "./openings.actions";
 
 export interface IProps extends IBaseProps {
@@ -89,7 +89,7 @@ export class Openings extends React.Component<IProps, IState> {
         const selectedOpenings = this.state.selection.map(i => this.props.openingMeta[i]);
         return (
             <Paper>
-                <AddToPlaylistButton type={"opening"} buttonText={"Add to Playlist"} selectedOpenings={selectedOpenings}  />
+                <AddToPlaylistButton type={PlaylistType.opening} buttonText={"Add to Playlist"} selectedOpenings={selectedOpenings}  />
                 <Grid
                     rows={rows}
                     columns={columns}

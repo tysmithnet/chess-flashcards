@@ -1,9 +1,8 @@
 import * as React from "react";
 import { IUser } from "../auth";
-import { IBaseProps, IGameMeta, IOpeningMeta } from "../root";
-import { IPlaylist } from "./playlists.domain";
+import { IBaseProps, IGameMeta, IOpeningMeta, IPlaylist, PlaylistType } from "../root";
 export interface IProps extends IBaseProps {
-    type: "opening" | "game";
+    type: PlaylistType;
     user?: IUser;
     gamePlaylists?: IPlaylist[];
     openingPlaylists?: IPlaylist[];
