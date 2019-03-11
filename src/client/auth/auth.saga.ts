@@ -1,47 +1,37 @@
 import axios from "axios";
 import { all, fork, put, takeLatest } from "redux-saga/effects";
 import { getPlaylistRequestFactory } from "../playlists";
-import { ACTION_TYPES, ILoginRequest } from "./auth.action";
+import { ACTION_TYPES, ILoginRequest, loginUserFailureFactory, loginUserSuccessFactory } from "./auth.action";
 
-function* loginUser(username: string, password: string) {
+function* loginUser(action: ILoginRequest) {
     try {
         const res = yield axios.post("/api/login", {
-            username,
-            password,
+            username: action.username,
+            password: action.password,
         });
-        const result = yield res.data;
+        const user = yield res.data;
         yield put(getPlaylistRequestFactory());
-        yield put({
-            type: ACTION_TYPES.LOGIN_SUCCESS,
-            user: {
-                id: result.id,
-                username: result.username,
-            },
-        });
+        yield put(loginUserSuccessFactory(user));
     } catch (error) {
-        yield put({
-            error,
-            type: ACTION_TYPES.LOGIN_FAILURE,
-        });
+        yield put(loginUserFailureFactory(error));
     }
 }
 
-/**
- * Respond to login requests
- *
- * @export
- */
-export function* loginSaga() {
-    yield takeLatest(ACTION_TYPES.LOGIN_REQUEST, (action: ILoginRequest) => {
-        return loginUser(action.id, action.password);
-    });
+function* loginSaga() {
+    yield takeLatest(ACTION_TYPES.LOGIN_USER.REQUEST, loginUser);
 }
 
-/**
- * Root saga for the auth domain
- *
- * @export
- */
+function* checkLoggedInUserSaga() {
+    try {
+        const res = yield axios.get("/api/login");
+        const user = yield res.data;
+        yield put(getPlaylistRequestFactory());
+        yield put(loginUserSuccessFactory(user));
+    } catch (err) {
+        console.log("No user logged in");
+    }
+}
+
 export function* rootSaga() {
-    yield all([loginSaga()]);
+    yield all([checkLoggedInUserSaga(), loginSaga()]);
 }

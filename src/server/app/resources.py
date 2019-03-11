@@ -113,6 +113,14 @@ class LoginResource(Resource):
             "password": fields.Str(required=True)
         }
 
+    @requires_login()
+    def get(self):
+        user_id = session["user_id"]
+        u = User.query.get(user_id)
+        if not u:
+            return abort(401)
+        return create_user_response(u)
+
     def post(self):
         args = parser.parse(self.login_request_args, request)
         username = args["username"]

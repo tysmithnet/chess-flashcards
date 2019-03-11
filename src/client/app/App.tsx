@@ -12,7 +12,7 @@ import { observe } from "react-performance-observer";
 import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { Link } from "react-router-dom";
-import { IUser, LoginDialog, loginRequestFactory } from "../auth";
+import { IUser, LoginDialog, loginUserRequestFactory } from "../auth";
 import { isTest } from "../globals";
 import { getHistory, IBaseProps, IRootState } from "../root";
 import { IRoute } from "./app.domain";
@@ -286,7 +286,7 @@ export class App extends React.Component<IProps, IState> {
             ...this.state,
             loginDialogOpen: false,
         });
-        this.props.dispatch(loginRequestFactory(username, password));
+        this.props.dispatch(loginUserRequestFactory(username, password));
     }
 }
 

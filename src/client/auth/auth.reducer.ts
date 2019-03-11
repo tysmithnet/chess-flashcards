@@ -24,7 +24,7 @@ function handleLoginSuccess(
  */
 export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
-        case ACTION_TYPES.LOGIN_SUCCESS:
+        case ACTION_TYPES.LOGIN_USER.SUCCESS:
             return handleLoginSuccess(state, action as ILoginSuccess);
     }
     return { ...state };
