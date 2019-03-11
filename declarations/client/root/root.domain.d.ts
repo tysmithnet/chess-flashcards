@@ -10,7 +10,7 @@ export interface IRootState {
     auth: IAuthState;
     playlists: IPlaylistsState;
     openings: IOpeningsState;
-    router?: RouterState;
+    router: RouterState;
 }
 export interface IBaseProps {
     dispatch?: Dispatch;

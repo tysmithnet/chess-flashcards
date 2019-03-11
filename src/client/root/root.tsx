@@ -16,6 +16,7 @@ const store = configureStore({
     auth: null,
     playlists: null,
     openings: null,
+    router: null,
 });
 
 /**

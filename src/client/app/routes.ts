@@ -27,7 +27,7 @@ export const routes: IRoute[] = [
     {
         component: Playlists,
         display: "Playlists",
-        exact: true,
+        exact: false,
         path: "/playlists",
         permissions: [],
     },
