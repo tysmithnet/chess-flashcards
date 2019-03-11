@@ -14,7 +14,10 @@ const theme = createMuiTheme({ typography: { useNextVariants: true } });
 const store = configureStore({
     app: null,
     auth: null,
-    playlists: null,
+    playlists: {
+        masterList: null,
+        viewer: null,
+    },
     openings: null,
     router: null,
 });

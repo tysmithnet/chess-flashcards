@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { IBaseProps, IRootState } from "../root";
 import { connectedComponent as MasterList } from "./master-list";
-import { connectedComponent as Viewer } from "./Viewer";
+import { connectedComponent as Viewer } from "./viewer";
 
 interface IProps extends IBaseProps {
 
