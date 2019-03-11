@@ -4,8 +4,7 @@ import { IBaseProps, IGameMeta, IOpeningMeta, IPlaylist, PlaylistType } from "..
 export interface IProps extends IBaseProps {
     type: PlaylistType;
     user?: IUser;
-    gamePlaylists?: IPlaylist[];
-    openingPlaylists?: IPlaylist[];
+    playlists?: IPlaylist[];
     selectedOpenings?: IOpeningMeta[];
     selectedGames?: IGameMeta[];
     buttonText?: string;

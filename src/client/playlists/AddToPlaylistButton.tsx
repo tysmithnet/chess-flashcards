@@ -8,8 +8,7 @@ import { createPlaylistRequestFactory, getPlaylistRequestFactory, updatePlaylist
 export interface IProps extends IBaseProps {
     type: PlaylistType;
     user?: IUser;
-    gamePlaylists?: IPlaylist[];
-    openingPlaylists?: IPlaylist[];
+    playlists?: IPlaylist[];
     selectedOpenings?: IOpeningMeta[];
     selectedGames?: IGameMeta[];
     buttonText?: string;
@@ -47,7 +46,7 @@ class AddToPlaylistButton extends React.Component<IProps, IState> {
         let items = [
             <MenuItem key="create" onClick={this.handleCreateNew}>Create Playlist</MenuItem>,
         ];
-        const existing = (this.props.openingPlaylists || []).map(o => {
+        const existing = (this.props.playlists || []).map(o => {
             return <MenuItem key={o.id} data-id={o.id} onClick={this.handleAddToPlaylist}>{o.name}</MenuItem>;
         });
         items = [...items, ...existing];
@@ -96,14 +95,8 @@ class AddToPlaylistButton extends React.Component<IProps, IState> {
             ...this.state,
             anchor: null,
         });
-        let playlist: IPlaylist = null;
         const id = parseInt(event.currentTarget.getAttribute("data-id"), 10);
-        // tslint:disable-next-line:prefer-conditional-expression
-        if (this.props.type === "opening") {
-            playlist = this.props.openingPlaylists.find(p => p.id === id);
-        } else {
-            playlist = this.props.gamePlaylists.find(p => p.id === id);
-        }
+        const playlist = this.props.playlists.find(p => p.type === this.props.type && p.id === id);
         const ids = [...playlist.ids, ...this.props.selectedOpenings.map(o => o.id)];
         this.props.dispatch(updatePlaylistRequestFactory(this.props.type, id, null, ids));
     }
@@ -170,8 +163,7 @@ function mapStateToProps(state: IRootState, ownProps: IProps): IProps {
     return {
         type: ownProps.type,
         user: state.auth.user,
-        gamePlaylists: state.playlists.gamePlaylists,
-        openingPlaylists: state.playlists.openingPlaylists,
+        playlists: state.playlists.playlists,
         buttonText: ownProps.buttonText,
         selectedOpenings: ownProps.selectedOpenings,
         selectedGames: ownProps.selectedGames,

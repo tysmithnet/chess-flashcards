@@ -6,10 +6,13 @@ import {
     ACTION_TYPES,
     createPlaylistFailureFactory,
     createPlaylistSuccessFactory,
+    deletePlaylistsFailureFactory,
+    deletePlaylistsSuccessFactory,
     getPlaylistFailureFactory,
     getPlaylistRequestFactory,
     getPlaylistSuccessFactory,
     ICreatePlaylistRequest,
+    IDeletePlaylistsRequest,
     IGetPlaylistRequest,
     IUpdatePlaylistRequest,
     updatePlaylistFailureFactory} from "./playlists.actions";
@@ -93,6 +96,35 @@ function* updatePlaylist(action: IUpdatePlaylistRequest) {
     }
 }
 
+function* deletePlaylists(action: IDeletePlaylistsRequest) {
+    try {
+        const games = action.playlists.filter(p => p.type === PlaylistType.game).map(p => p.id);
+        const openings = action.playlists.filter(p => p.type === PlaylistType.opening).map(p => p.id);
+        const reqs = [];
+        if (games.length) {
+            const req = axios.delete("/api/playlist/game", {
+                data: {
+                    ids: games,
+                },
+            });
+            reqs.push(req);
+        }
+        if (openings.length) {
+            const req = axios.delete("/api/playlist/opening", {
+                data: {
+                    ids: openings,
+                },
+            });
+            reqs.push(req);
+        }
+        yield all(reqs);
+        yield put(deletePlaylistsSuccessFactory());
+        yield put(getPlaylistRequestFactory());
+    } catch (err) {
+        yield put(deletePlaylistsFailureFactory(err));
+    }
+}
+
 function* getPlaylistMetaSaga() {
     yield takeLatest(ACTION_TYPES.GET_PLAYLIST.REQUEST, getPlaylistMeta);
 }
@@ -105,6 +137,10 @@ function* updatePlaylistSaga() {
     yield takeLatest(ACTION_TYPES.UPDATE_PLAYLIST.REQUEST, updatePlaylist);
 }
 
+function* deletePlaylistsSaga() {
+    yield takeLatest(ACTION_TYPES.DELETE_PLAYLISTS.REQUEST, deletePlaylists);
+}
+
 export function* rootSaga() {
-    yield all([getPlaylistMetaSaga(), createPlaylistSaga(), updatePlaylistSaga()]);
+    yield all([getPlaylistMetaSaga(), createPlaylistSaga(), updatePlaylistSaga(), deletePlaylistsSaga()]);
 }

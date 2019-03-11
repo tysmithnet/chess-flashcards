@@ -15,6 +15,11 @@ export declare const ACTION_TYPES: {
         SUCCESS: string;
         FAILURE: string;
     };
+    DELETE_PLAYLISTS: {
+        REQUEST: string;
+        SUCCESS: string;
+        FAILURE: string;
+    };
 };
 export interface IGetPlaylistRequest extends IAction {
     playlistType?: PlaylistType;
@@ -61,3 +66,14 @@ export interface IUpdatePlaylistFailure extends IAction {
     message: string;
 }
 export declare function updatePlaylistFailureFactory(message: string): IUpdatePlaylistFailure;
+export interface IDeletePlaylistsRequest extends IAction {
+    playlists: IPlaylist[];
+}
+export declare function deletePlaylistRequestFactory(playlists: IPlaylist[]): IDeletePlaylistsRequest;
+export interface IDeletePlaylistsSuccess extends IAction {
+}
+export declare function deletePlaylistsSuccessFactory(): IDeletePlaylistsSuccess;
+export interface IDeletePlaylistsFailure extends IAction {
+    message: string;
+}
+export declare function deletePlaylistsFailureFactory(message: string): IDeletePlaylistsFailure;

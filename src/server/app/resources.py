@@ -146,6 +146,10 @@ class PlaylistResource(Resource):
             "ids": fields.List(fields.Integer, allow_missing=True)
         }
 
+        self.delete_playlists_args = {
+            "ids": fields.List(fields.Integer, required=True)
+        }
+
     @requires_login()
     def get(self, cat=None, id=None):
         user_id = session["user_id"]
@@ -248,6 +252,32 @@ class PlaylistResource(Resource):
                     playlist.games.append(link)
                 s.commit()
                 return create_game_playlist_response(playlist)
+            else:
+                return abort(404)
+
+    @requires_login()
+    def delete(self, cat):
+        with session_scope() as s:
+            args = parser.parse(self.delete_playlists_args)
+            ids = args["ids"]
+            if cat == "opening":
+                for i in ids:
+                    playlist = OpeningPlaylist.query.get(i)
+                    if playlist is None:
+                        continue
+                    for link in playlist.openings:
+                        s.delete(link)
+                    s.delete(playlist)
+                s.commit()
+            elif cat == "game":
+                for i in ids:
+                    playlist = GamePlaylist.query.get(i)
+                    if playlist is None:
+                        continue
+                    for link in playlist.games:
+                        s.delete(link)
+                    s.delete(playlist)
+                s.commit()
             else:
                 return abort(404)
 

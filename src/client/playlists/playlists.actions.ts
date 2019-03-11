@@ -16,6 +16,11 @@ export const ACTION_TYPES = {
         SUCCESS: "@playlists/UpdatePlaylistSuccess",
         FAILURE: "@playlists/UpdatePlaylistFailure",
     },
+    DELETE_PLAYLISTS: {
+        REQUEST: "@playlists/DeletePlaylistsRequest",
+        SUCCESS: "@playlists/DeletePlaylistsSuccess",
+        FAILURE: "@playlists/DeletePlaylistsFailure",
+    },
 };
 
 export interface IGetPlaylistRequest extends IAction {
@@ -123,6 +128,36 @@ export interface IUpdatePlaylistFailure extends IAction {
 export function updatePlaylistFailureFactory(message: string): IUpdatePlaylistFailure {
     return {
         type: ACTION_TYPES.UPDATE_PLAYLIST.FAILURE,
+        message,
+    };
+}
+
+export interface IDeletePlaylistsRequest extends IAction {
+    playlists: IPlaylist[];
+}
+
+export function deletePlaylistRequestFactory(playlists: IPlaylist[]): IDeletePlaylistsRequest {
+    return {
+        type: ACTION_TYPES.DELETE_PLAYLISTS.REQUEST,
+        playlists,
+    };
+}
+
+export interface IDeletePlaylistsSuccess extends IAction { }
+
+export function deletePlaylistsSuccessFactory(): IDeletePlaylistsSuccess {
+    return {
+        type: ACTION_TYPES.DELETE_PLAYLISTS.SUCCESS,
+    };
+}
+
+export interface IDeletePlaylistsFailure extends IAction {
+    message: string;
+}
+
+export function deletePlaylistsFailureFactory(message: string): IDeletePlaylistsFailure {
+    return {
+        type: ACTION_TYPES.DELETE_PLAYLISTS.FAILURE,
         message,
     };
 }

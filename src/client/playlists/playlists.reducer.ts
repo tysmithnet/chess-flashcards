@@ -5,8 +5,7 @@ import { IRootState } from "./playlists.domain";
 function handleGetPlaylistSuccess(state: IRootState, action: IGetPlaylistSuccess): IRootState {
     return {
         ...state,
-        gamePlaylists: action.game,
-        openingPlaylists: action.opening,
+        playlists: [...(action.opening || []), ...(action.game || [])],
     };
 }
 
