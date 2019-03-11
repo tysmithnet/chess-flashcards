@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Route, Switch } from "react-router";
 import { IBaseProps, IRootState } from "../root";
 import { connectedComponent as MasterList } from "./MasterList";
+import { connectedComponent as Viewer } from "./Viewer";
 
 interface IProps extends IBaseProps {
 
@@ -16,6 +17,7 @@ class Playlists extends React.Component<IProps> {
     public render() {
         return (
             <Switch>
+                <Route path={"/playlists/:type/:id"} component={Viewer}/>
                 <Route component={MasterList} />
             </Switch>
         );
