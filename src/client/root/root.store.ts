@@ -9,19 +9,7 @@ import { reducer as auth } from "../auth";
 import { reducer as openings } from "../openings";
 import { reducer as playlists } from "../playlists";
 
-/**
- * Base interface for actions
- *
- * @export
- * @interface IAction
- */
 export interface IAction {
-    /**
-     * Identifying type name for the action
-     *
-     * @type {string}
-     * @memberof IAction
-     */
     type: string;
 }
 
@@ -43,9 +31,6 @@ export const reducer = combineReducers({
     router: connectRouter(history),
 });
 
-/**
- * The saga middleware
- */
 export const sagaMiddleware = createSagaMiddleware();
 
 export function configureStore(state: IRootState) {

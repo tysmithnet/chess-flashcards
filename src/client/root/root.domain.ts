@@ -1,4 +1,5 @@
 import { Theme } from "@material-ui/core";
+import { RouterState } from "connected-react-router";
 import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
@@ -10,6 +11,7 @@ export interface IRootState {
     auth: IAuthState;
     playlists: IPlaylistsState;
     openings: IOpeningsState;
+    router: RouterState;
 }
 
 export interface IBaseProps {
