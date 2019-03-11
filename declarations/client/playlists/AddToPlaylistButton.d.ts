@@ -18,6 +18,7 @@ export interface IState {
 declare class AddToPlaylistButton extends React.Component<IProps, IState> {
     constructor(props: IProps);
     render(): JSX.Element;
+    private handlePlaylistNameKeyDown;
     private handleAddToPlaylist;
     private handleNewPlaylistNameChange;
     private handleCreatePlaylistDialogCancel;

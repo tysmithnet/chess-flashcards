@@ -32,6 +32,7 @@ class AddToPlaylistButton extends React.Component<IProps, IState> {
         this.handleCreatePlaylistSubmit = this.handleCreatePlaylistSubmit.bind(this);
         this.handleNewPlaylistNameChange = this.handleNewPlaylistNameChange.bind(this);
         this.handleAddToPlaylist = this.handleAddToPlaylist.bind(this);
+        this.handlePlaylistNameKeyDown = this.handlePlaylistNameKeyDown.bind(this);
         this.state = {
             anchor: null,
             isCreatePlaylistFormOpen: false,
@@ -67,6 +68,7 @@ class AddToPlaylistButton extends React.Component<IProps, IState> {
                             label="Playlist Name"
                             value={this.state.newPlaylistName}
                             onChange={this.handleNewPlaylistNameChange}
+                            onKeyDown={this.handlePlaylistNameKeyDown}
                             fullWidth={true}
                         />
                     </DialogContent>
@@ -81,6 +83,12 @@ class AddToPlaylistButton extends React.Component<IProps, IState> {
                     </Dialog>
             </React.Fragment>
         );
+    }
+
+    private handlePlaylistNameKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.keyCode === 13) {
+            return this.handleCreatePlaylistSubmit();
+        }
     }
 
     private handleAddToPlaylist(event: React.MouseEvent<HTMLElement>) {

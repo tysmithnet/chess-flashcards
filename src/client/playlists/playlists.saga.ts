@@ -63,6 +63,7 @@ function* createPlaylist(action: ICreatePlaylistRequest) {
             name: data.name,
             ids: data.ids,
         }));
+        yield put(getPlaylistRequestFactory());
     } catch (err) {
         yield put(createPlaylistFailureFactory());
     }
