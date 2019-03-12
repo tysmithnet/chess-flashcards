@@ -1,5 +1,9 @@
+import { createStyles, Paper, Theme, withStyles } from "@material-ui/core";
+import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
+import { Board } from "../../board/Board";
+import {fenToArray} from "../../common/fen";
 import {
     IBaseProps,
     IGame,
@@ -12,6 +16,17 @@ import {
 } from "../../root";
 import { loadNextItemRequestFactory, loadNextPositionRequestFactory, loadPlaylistRequestFactory } from "./viewer.actions";
 
+interface IClasses {
+    boardArea: any;
+}
+
+const styles = (theme: Theme) => createStyles({
+    boardArea: {
+        width: 500,
+        height: 500,
+    },
+});
+
 interface IProps extends IBaseProps {
     playlistType: PlaylistType;
     playlistId: number;
@@ -19,6 +34,8 @@ interface IProps extends IBaseProps {
     opening: IOpening;
     game: IGame;
     position: IPosition;
+    classes?: IClasses;
+    theme?: Theme;
 }
 
 export class Viewer extends React.Component<IProps> {
@@ -27,7 +44,17 @@ export class Viewer extends React.Component<IProps> {
     }
 
     public render() {
-        return <h1>{`${this.props.playlistType} - ${this.props.playlistId}`}</h1>;
+        if (!this.props.position) {
+            return <p>Loading...</p>;
+        }
+        const fen = fenToArray(this.props.position.pieces);
+        return (
+            <Paper>
+                <div className={this.props.classes.boardArea}>
+                    <Board position={fen} legalMoves={[]} />
+                </div>
+            </Paper>
+        );
     }
 
     public componentDidUpdate(prevProps: IProps) {
@@ -57,4 +84,5 @@ function mapStateToProps(state: IRootState, ownProps: IRoutedProps): IProps {
     };
 }
 
-export const connectedComponent = connect(mapStateToProps)(Viewer);
+const styledComponent = withStyles(styles, { withTheme: true})(Viewer);
+export const connectedComponent = connect(mapStateToProps)(styledComponent);
