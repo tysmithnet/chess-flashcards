@@ -3,7 +3,7 @@ import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Board } from "../../board/Board";
-import {fenToArray} from "../../common/fen";
+import {arrayToFen, fenToArray} from "../../common/chess";
 import {
     IBaseProps,
     IGame,
