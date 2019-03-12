@@ -59,13 +59,11 @@ export function loadPlaylistFailureFactory(message: string): ILoadPlaylistFailur
 }
 
 export interface ILoadNextItemRequest extends IAction {
-    playlist: IPlaylist;
 }
 
-export function loadNextItemRequestFactory(playlist: IPlaylist): ILoadNextItemRequest {
+export function loadNextItemRequestFactory(): ILoadNextItemRequest {
     return {
         type: ACTION_TYPES.LOAD_NEXT_ITEM.REQUEST,
-        playlist,
     };
 }
 
@@ -94,19 +92,11 @@ export function loadNextItemFailureFactory(message: string): ILoadNextItemFailur
 }
 
 export interface ILoadNextPositionRequest extends IAction {
-    playlist: IPlaylist;
-    opening: IOpening;
-    game: IGame;
-    currentPosition: IPosition;
 }
 
 export function loadNextPositionRequestFactory(playlist: IPlaylist, opening: IOpening, game: IGame, currentPosition: IPosition): ILoadNextPositionRequest {
     return {
         type: ACTION_TYPES.LOAD_NEXT_POSITION.REQUEST,
-        playlist,
-        opening,
-        game,
-        currentPosition,
     };
 }
 

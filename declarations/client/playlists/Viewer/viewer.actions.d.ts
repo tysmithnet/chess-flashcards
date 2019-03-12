@@ -1,4 +1,4 @@
-import { IAction, IGame, IOpening, IPlaylist, IPosition, PlaylistType } from "../../root";
+import { IAction, IGame, IMove, IOpening, IPlaylist, IPosition, PlaylistType } from "../../root";
 export declare const ACTION_TYPES: {
     LOAD_PLAYLIST: {
         REQUEST: string;
@@ -11,6 +11,11 @@ export declare const ACTION_TYPES: {
         FAILURE: string;
     };
     LOAD_NEXT_POSITION: {
+        REQUEST: string;
+        SUCCESS: string;
+        FAILURE: string;
+    };
+    CHECK_MOVE: {
         REQUEST: string;
         SUCCESS: string;
         FAILURE: string;
@@ -30,9 +35,8 @@ export interface ILoadPlaylistFailure extends IAction {
 }
 export declare function loadPlaylistFailureFactory(message: string): ILoadPlaylistFailure;
 export interface ILoadNextItemRequest extends IAction {
-    playlist: IPlaylist;
 }
-export declare function loadNextItemRequestFactory(playlist: IPlaylist): ILoadNextItemRequest;
+export declare function loadNextItemRequestFactory(): ILoadNextItemRequest;
 export interface ILoadNextItemSuccess extends IAction {
     opening: IOpening;
     game: IGame;
@@ -43,10 +47,6 @@ export interface ILoadNextItemFailure extends IAction {
 }
 export declare function loadNextItemFailureFactory(message: string): ILoadNextItemFailure;
 export interface ILoadNextPositionRequest extends IAction {
-    playlist: IPlaylist;
-    opening: IOpening;
-    game: IGame;
-    currentPosition: IPosition;
 }
 export declare function loadNextPositionRequestFactory(playlist: IPlaylist, opening: IOpening, game: IGame, currentPosition: IPosition): ILoadNextPositionRequest;
 export interface ILoadNextPositionSuccess extends IAction {
@@ -57,3 +57,16 @@ export interface ILoadNextPositionFailure extends IAction {
     message: string;
 }
 export declare function loadNextPositionFailureFactory(message: string): ILoadNextPositionFailure;
+export interface ICheckMoveRequest extends IAction {
+    move: IMove;
+}
+export declare function checkMoveRequestFactory(move: IMove): ICheckMoveRequest;
+export interface ICheckMoveSuccess extends IAction {
+    move: IMove;
+    success: boolean;
+}
+export declare function checkMoveSuccessFactory(move: IMove, success: boolean): ICheckMoveSuccess;
+export interface ICheckMoveFailure extends IAction {
+    message: string;
+}
+export declare function checkMoveFailureFactory(message: string): ICheckMoveFailure;

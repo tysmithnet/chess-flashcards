@@ -7,6 +7,7 @@ import {arrayToFen, fenToArray} from "../../common/chess";
 import {
     IBaseProps,
     IGame,
+    IMove,
     IOpening,
     IPlaylist,
     IPosition,
@@ -14,7 +15,11 @@ import {
     IRoutedProps,
     PlaylistType,
 } from "../../root";
-import { loadNextItemRequestFactory, loadNextPositionRequestFactory, loadPlaylistRequestFactory } from "./viewer.actions";
+import {
+    checkMoveRequestFactory,
+    loadNextItemRequestFactory,
+    loadNextPositionRequestFactory,
+    loadPlaylistRequestFactory } from "./viewer.actions";
 
 interface IClasses {
     boardArea: any;
@@ -41,6 +46,7 @@ interface IProps extends IBaseProps {
 export class Viewer extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
+        this.handleMove = this.handleMove.bind(this);
     }
 
     public render() {
@@ -57,19 +63,23 @@ export class Viewer extends React.Component<IProps> {
         );
     }
 
-    public componentDidUpdate(prevProps: IProps) {
+    public componentDidUpdate() {
         if (!this.props.playlist) {
             this.props.dispatch(loadPlaylistRequestFactory(this.props.playlistType, this.props.playlistId));
             return;
         }
         if (!this.props.opening && !this.props.game) {
-            this.props.dispatch(loadNextItemRequestFactory(this.props.playlist));
+            this.props.dispatch(loadNextItemRequestFactory());
             return;
         }
         if (!this.props.position) {
             this.props.dispatch(loadNextPositionRequestFactory(this.props.playlist, this.props.opening, this.props.game, this.props.position));
             return;
         }
+    }
+
+    private handleMove(src: string, dst: string) {
+        this.props.dispatch(checkMoveRequestFactory({src, dst}));
     }
 }
 

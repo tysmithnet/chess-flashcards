@@ -17,7 +17,8 @@ interface IProps extends IBaseProps {
 export declare class Viewer extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
-    componentDidUpdate(prevProps: IProps): void;
+    componentDidUpdate(): void;
+    private handleMove;
 }
 export declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"boardArea">>, Pick<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"boardArea">, "innerRef"> & IRoutedProps>;
 export {};
