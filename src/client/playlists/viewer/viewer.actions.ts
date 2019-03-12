@@ -1,4 +1,4 @@
-import { IAction, IGame, IOpening, IPlaylist, IPosition, PlaylistType } from "../../root";
+import { IAction, IGame, IMove, IOpening, IPlaylist, IPosition, PlaylistType } from "../../root";
 
 export const ACTION_TYPES = {
     LOAD_PLAYLIST: {
@@ -15,6 +15,11 @@ export const ACTION_TYPES = {
         REQUEST: "@playlists.viewer/LoadNextPositionRequest",
         SUCCESS: "@playlists.viewer/LoadNextPositionSuccess",
         FAILURE: "@playlists.viewer/LoadNextPositionFailure",
+    },
+    CHECK_MOVE: {
+        REQUEST: "@playlists.viewer/CheckMoveRequest",
+        SUCCESS: "@playlists.viewer/CheckMoveSuccess",
+        FAILURE: "@playlists.viewer/CheckMoveFailure",
     },
 };
 
@@ -123,6 +128,41 @@ export interface ILoadNextPositionFailure extends IAction {
 export function loadNextPositionFailureFactory(message: string): ILoadNextPositionFailure {
     return {
         type: ACTION_TYPES.LOAD_NEXT_POSITION.FAILURE,
+        message,
+    };
+}
+
+export interface ICheckMoveRequest extends IAction {
+    move: IMove;
+}
+
+export function checkMoveRequestFactory(move: IMove): ICheckMoveRequest {
+    return {
+        type: ACTION_TYPES.CHECK_MOVE.REQUEST,
+        move,
+    };
+}
+
+export interface ICheckMoveSuccess extends IAction {
+    move: IMove;
+    success: boolean;
+}
+
+export function checkMoveSuccessFactory(move: IMove, success: boolean): ICheckMoveSuccess {
+    return {
+        type: ACTION_TYPES.LOAD_PLAYLIST.SUCCESS,
+        move,
+        success,
+    };
+}
+
+export interface ICheckMoveFailure extends IAction {
+    message: string;
+}
+
+export function checkMoveFailureFactory(message: string): ICheckMoveFailure {
+    return {
+        type: ACTION_TYPES.LOAD_PLAYLIST.FAILURE,
         message,
     };
 }

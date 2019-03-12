@@ -51,7 +51,7 @@ export class Viewer extends React.Component<IProps> {
         return (
             <Paper>
                 <div className={this.props.classes.boardArea}>
-                    <Board position={fen} legalMoves={[]} />
+                    <Board position={fen} legalMoves={[]} onMove={this.handleMove} />
                 </div>
             </Paper>
         );
