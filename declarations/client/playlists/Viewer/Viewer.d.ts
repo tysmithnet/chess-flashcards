@@ -11,7 +11,7 @@ interface IProps extends IBaseProps {
 export declare class Viewer extends React.Component<IProps> {
     constructor(props: IProps);
     render(): JSX.Element;
-    componentDidMount(): void;
+    componentDidUpdate(prevProps: IProps): void;
 }
 export declare const connectedComponent: import("react-redux").ConnectedComponentClass<typeof Viewer, Pick<IProps, never> & IRoutedProps>;
 export {};

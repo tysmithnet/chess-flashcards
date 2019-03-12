@@ -29,8 +29,6 @@ def create_position_response(position):
         "black_can_castle_kingside":
             position.position.black_can_castle_kingside,
         "en_passant_square": position.position.en_passant_square,
-        "halfmove_clock": position.position.halfmove_clock,
-        "fullmove_number": position.position.fullmove_number,
         "is_check": position.position.is_check,
         "is_checkmate": position.position.is_checkmate,
         "is_stalemate": position.position.is_stalemate,
