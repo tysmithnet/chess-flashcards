@@ -94,7 +94,7 @@ export function loadNextItemFailureFactory(message: string): ILoadNextItemFailur
 export interface ILoadNextPositionRequest extends IAction {
 }
 
-export function loadNextPositionRequestFactory(playlist: IPlaylist, opening: IOpening, game: IGame, currentPosition: IPosition): ILoadNextPositionRequest {
+export function loadNextPositionRequestFactory(): ILoadNextPositionRequest {
     return {
         type: ACTION_TYPES.LOAD_NEXT_POSITION.REQUEST,
     };
@@ -140,7 +140,7 @@ export interface ICheckMoveSuccess extends IAction {
 
 export function checkMoveSuccessFactory(move: IMove, success: boolean): ICheckMoveSuccess {
     return {
-        type: ACTION_TYPES.LOAD_PLAYLIST.SUCCESS,
+        type: ACTION_TYPES.CHECK_MOVE.SUCCESS,
         move,
         success,
     };
@@ -152,7 +152,7 @@ export interface ICheckMoveFailure extends IAction {
 
 export function checkMoveFailureFactory(message: string): ICheckMoveFailure {
     return {
-        type: ACTION_TYPES.LOAD_PLAYLIST.FAILURE,
+        type: ACTION_TYPES.CHECK_MOVE.FAILURE,
         message,
     };
 }

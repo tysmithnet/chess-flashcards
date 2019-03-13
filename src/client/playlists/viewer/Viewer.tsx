@@ -73,7 +73,7 @@ export class Viewer extends React.Component<IProps> {
             return;
         }
         if (!this.props.position) {
-            this.props.dispatch(loadNextPositionRequestFactory(this.props.playlist, this.props.opening, this.props.game, this.props.position));
+            this.props.dispatch(loadNextPositionRequestFactory());
             return;
         }
     }

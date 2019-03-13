@@ -48,7 +48,7 @@ export interface ILoadNextItemFailure extends IAction {
 export declare function loadNextItemFailureFactory(message: string): ILoadNextItemFailure;
 export interface ILoadNextPositionRequest extends IAction {
 }
-export declare function loadNextPositionRequestFactory(playlist: IPlaylist, opening: IOpening, game: IGame, currentPosition: IPosition): ILoadNextPositionRequest;
+export declare function loadNextPositionRequestFactory(): ILoadNextPositionRequest;
 export interface ILoadNextPositionSuccess extends IAction {
     position: IPosition;
 }
