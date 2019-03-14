@@ -13,3 +13,7 @@ export interface IGetOpeningMetaSuccess extends IAction {
     meta: IOpeningMeta[];
 }
 export declare function getOpeningMetaSuccessFactory(meta: IOpeningMeta[]): IGetOpeningMetaSuccess;
+export interface IGetOpeningMetaFailure extends IAction {
+    message: string;
+}
+export declare function getOpeningMetaFailureFactory(message: string): IGetOpeningMetaFailure;

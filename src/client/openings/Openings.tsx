@@ -34,7 +34,6 @@ import { IBaseProps, IOpening, IOpeningMeta, IRootState, PlaylistType } from "..
 import { getOpeningMetaRequestFactory } from "./openings.actions";
 
 export interface IProps extends IBaseProps {
-    openings: IOpening[];
     openingMeta: IOpeningMeta[];
 }
 
@@ -212,7 +211,6 @@ export class Openings extends React.Component<IProps, IState> {
 
 function mapStateToProps(state: IRootState): IProps {
     return {
-        openings: null,
         openingMeta: state.openings.meta,
     };
 }

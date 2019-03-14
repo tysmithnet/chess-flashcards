@@ -26,3 +26,14 @@ export function getOpeningMetaSuccessFactory(meta: IOpeningMeta[]): IGetOpeningM
         meta,
     };
 }
+
+export interface IGetOpeningMetaFailure extends IAction {
+    message: string;
+}
+
+export function getOpeningMetaFailureFactory(message: string): IGetOpeningMetaFailure {
+    return {
+        type: ACTION_TYPES.GET_OPENING_META.FAILURE,
+        message,
+    };
+}

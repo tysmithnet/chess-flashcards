@@ -1,8 +1,7 @@
 import { Column, Filter, Grouping, Sorting } from "@devexpress/dx-react-grid";
 import * as React from "react";
-import { IBaseProps, IOpening, IOpeningMeta } from "../root";
+import { IBaseProps, IOpeningMeta } from "../root";
 export interface IProps extends IBaseProps {
-    openings: IOpening[];
     openingMeta: IOpeningMeta[];
 }
 export interface IState {

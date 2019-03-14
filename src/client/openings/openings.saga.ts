@@ -2,15 +2,16 @@ import axios from "axios";
 import { camelArray } from "change-object-case";
 import { all, put, takeLatest } from "redux-saga/effects";
 import { IOpeningMeta } from "../root";
-import { ACTION_TYPES, getOpeningMetaSuccessFactory } from "./openings.actions";
+import { ACTION_TYPES, getOpeningMetaFailureFactory, getOpeningMetaSuccessFactory } from "./openings.actions";
 
 function* getOpeningMeta() {
     try {
         const result = yield axios.get("/api/opening/meta");
-        const converted = camelArray(result.data) as IOpeningMeta[];
+        const data = yield result.data;
+        const converted = camelArray(data) as IOpeningMeta[];
         yield put(getOpeningMetaSuccessFactory(converted));
     } catch (err) {
-        console.error(err);
+        yield put(getOpeningMetaFailureFactory(err));
     }
 }
 
