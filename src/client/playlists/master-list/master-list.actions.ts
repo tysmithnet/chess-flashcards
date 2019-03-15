@@ -2,24 +2,29 @@ import { IAction, IPlaylist, PlaylistType } from "../../root";
 
 export const ACTION_TYPES = {
     GET_PLAYLIST: {
-        REQUEST: "@playlists/GetPlaylistRequest",
-        SUCCESS: "@playlists/GetPlaylistSuccess",
-        FAILURE: "@playlists/GetPlaylistFailure",
+        REQUEST: "@playlists.master-list/GetPlaylistRequest",
+        SUCCESS: "@playlists.master-list/GetPlaylistSuccess",
+        FAILURE: "@playlists.master-list/GetPlaylistFailure",
+    },
+    VIEW_PLAYLIST: {
+        REQUEST: "@playlists.master-list/ViewPlaylistRequest",
+        SUCCESS: "@playlists.master-list/ViewPlaylistSuccess",
+        FAILURE: "@playlists.master-list/ViewPlaylistFailure",
     },
     CREATE_PLAYLIST: {
-        REQUEST: "@playlists/CreatePlaylistRequest",
-        SUCCESS: "@playlists/CreatePlaylistSuccess",
-        FAILURE: "@playlists/CreatePlaylistFailure",
+        REQUEST: "@playlists.master-list/CreatePlaylistRequest",
+        SUCCESS: "@playlists.master-list/CreatePlaylistSuccess",
+        FAILURE: "@playlists.master-list/CreatePlaylistFailure",
     },
     UPDATE_PLAYLIST: {
-        REQUEST: "@playlists/UpdatePlaylistRequest",
-        SUCCESS: "@playlists/UpdatePlaylistSuccess",
-        FAILURE: "@playlists/UpdatePlaylistFailure",
+        REQUEST: "@playlists.master-list/UpdatePlaylistRequest",
+        SUCCESS: "@playlists.master-list/UpdatePlaylistSuccess",
+        FAILURE: "@playlists.master-list/UpdatePlaylistFailure",
     },
     DELETE_PLAYLISTS: {
-        REQUEST: "@playlists/DeletePlaylistsRequest",
-        SUCCESS: "@playlists/DeletePlaylistsSuccess",
-        FAILURE: "@playlists/DeletePlaylistsFailure",
+        REQUEST: "@playlists.master-list/DeletePlaylistsRequest",
+        SUCCESS: "@playlists.master-list/DeletePlaylistsSuccess",
+        FAILURE: "@playlists.master-list/DeletePlaylistsFailure",
     },
 };
 
@@ -52,9 +57,39 @@ export interface IGetPlaylistFailure extends IAction {
     message: string;
 }
 
-export function getPlaylistFailureFactory(message: string) {
+export function getPlaylistFailureFactory(message: string): IGetPlaylistFailure {
     return {
         type: ACTION_TYPES.GET_PLAYLIST.FAILURE,
+        message,
+    };
+}
+
+export interface IViewPlaylistRequest extends IAction {
+    playlist: IPlaylist;
+}
+
+export function viewPlaylistRequestFactory(playlist: IPlaylist): IViewPlaylistRequest {
+    return {
+        type: ACTION_TYPES.VIEW_PLAYLIST.REQUEST,
+        playlist,
+    };
+}
+
+export interface IViewPlaylistSuccess extends IAction { }
+
+export function viewPlaylistSuccessFactory(): IViewPlaylistSuccess {
+    return {
+        type: ACTION_TYPES.VIEW_PLAYLIST.SUCCESS,
+    };
+}
+
+export interface IViewPlaylistFailure extends IAction {
+    message: string;
+}
+
+export function viewPlaylistFailureFactory(message: string): IViewPlaylistFailure {
+    return {
+        type: ACTION_TYPES.VIEW_PLAYLIST.FAILURE,
         message,
     };
 }

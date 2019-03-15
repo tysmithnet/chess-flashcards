@@ -47,6 +47,7 @@ export class Viewer extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
         this.handleMove = this.handleMove.bind(this);
+        this.ensureDataIsLoaded = this.ensureDataIsLoaded.bind(this);
     }
 
     public render() {
@@ -63,7 +64,15 @@ export class Viewer extends React.Component<IProps> {
         );
     }
 
+    public componentDidMount() {
+        this.ensureDataIsLoaded();
+    }
+
     public componentDidUpdate() {
+        this.ensureDataIsLoaded();
+    }
+
+    private ensureDataIsLoaded() {
         if (!this.props.playlist) {
             this.props.dispatch(loadPlaylistRequestFactory(this.props.playlistType, this.props.playlistId));
             return;

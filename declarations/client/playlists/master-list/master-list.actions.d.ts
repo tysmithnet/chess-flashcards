@@ -5,6 +5,11 @@ export declare const ACTION_TYPES: {
         SUCCESS: string;
         FAILURE: string;
     };
+    VIEW_PLAYLIST: {
+        REQUEST: string;
+        SUCCESS: string;
+        FAILURE: string;
+    };
     CREATE_PLAYLIST: {
         REQUEST: string;
         SUCCESS: string;
@@ -34,10 +39,18 @@ export declare function getPlaylistSuccessFactory(game: IPlaylist[], opening: IP
 export interface IGetPlaylistFailure extends IAction {
     message: string;
 }
-export declare function getPlaylistFailureFactory(message: string): {
-    type: string;
+export declare function getPlaylistFailureFactory(message: string): IGetPlaylistFailure;
+export interface IViewPlaylistRequest extends IAction {
+    playlist: IPlaylist;
+}
+export declare function viewPlaylistRequestFactory(playlist: IPlaylist): IViewPlaylistRequest;
+export interface IViewPlaylistSuccess extends IAction {
+}
+export declare function viewPlaylistSuccessFactory(): IViewPlaylistSuccess;
+export interface IViewPlaylistFailure extends IAction {
     message: string;
-};
+}
+export declare function viewPlaylistFailureFactory(message: string): IViewPlaylistFailure;
 export interface ICreatePlaylistRequest extends IAction {
     playlistType: PlaylistType;
     name: string;

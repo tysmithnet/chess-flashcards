@@ -28,7 +28,7 @@ import VisibilityIcon from "@material-ui/icons/Visibility";
 import * as React from "react";
 import { connect } from "react-redux";
 import { IBaseProps, IPlaylist, IRootState } from "../../root";
-import { deletePlaylistRequestFactory } from "./master-list.actions";
+import { deletePlaylistRequestFactory, viewPlaylistRequestFactory } from "./master-list.actions";
 interface IProps extends IBaseProps {
     playlists: IPlaylist[];
     theme?: Theme;
@@ -144,10 +144,22 @@ export class MasterList extends React.Component<IProps, IState> {
     private createActionsCell(playlist: IPlaylist) {
         return (
             <React.Fragment>
-                <IconButton className={this.props.classes.button} aria-label="Delete" data-type={playlist.type} data-id={playlist.id}>
+                <IconButton
+                    className={this.props.classes.button}
+                    aria-label="Delete"
+                    data-type={playlist.type}
+                    data-id={playlist.id}
+                    onClick={this.handleDeletePlaylist}
+                >
                     <DeleteIcon />
                 </IconButton>
-                <IconButton className={this.props.classes.button} aria-label="View" data-type={playlist.type} data-id={playlist.id}>
+                <IconButton
+                    className={this.props.classes.button}
+                    aria-label="View"
+                    data-type={playlist.type}
+                    data-id={playlist.id}
+                    onClick={this.handleViewPlaylist}
+                >
                     <VisibilityIcon />
                 </IconButton>
             </React.Fragment>
@@ -157,13 +169,19 @@ export class MasterList extends React.Component<IProps, IState> {
     private handleDeletePlaylist(event: React.MouseEvent<HTMLButtonElement>) {
         const type = event.currentTarget.getAttribute("data-type");
         const id = parseInt(event.currentTarget.getAttribute("data-id"), 10);
-        // todo: delete
+        const playlist = this.props.playlists.find(p => p.type === type && p.id === id);
+        if (playlist) {
+            this.props.dispatch(deletePlaylistRequestFactory([playlist]));
+        }
     }
 
     private handleViewPlaylist(event: React.MouseEvent<HTMLButtonElement>) {
         const type = event.currentTarget.getAttribute("data-type");
         const id = parseInt(event.currentTarget.getAttribute("data-id"), 10);
-        // todo: view
+        const playlist = this.props.playlists.find(p => p.type === type && p.id === id);
+        if (playlist) {
+            this.props.dispatch(viewPlaylistRequestFactory(playlist));
+        }
     }
 
     private deleteSelected() {

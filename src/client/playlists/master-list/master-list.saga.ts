@@ -1,5 +1,6 @@
 import axios from "axios";
 import cleanDeep from "clean-deep";
+import { push } from "connected-react-router";
 import { all, put, takeLatest } from "redux-saga/effects";
 import { PlaylistType } from "../../root";
 import {
@@ -15,9 +16,11 @@ import {
     IDeletePlaylistsRequest,
     IGetPlaylistRequest,
     IUpdatePlaylistRequest,
-    updatePlaylistFailureFactory} from "./master-list.actions";
+    IViewPlaylistRequest,
+    updatePlaylistFailureFactory,
+    viewPlaylistFailureFactory} from "./master-list.actions";
 
-function* getPlaylistMeta(action: IGetPlaylistRequest) {
+function* getPlaylist(action: IGetPlaylistRequest) {
     try {
         let url = "/api/playlist";
         if (action.playlistType === "opening") {
@@ -46,6 +49,14 @@ function* getPlaylistMeta(action: IGetPlaylistRequest) {
         }
     } catch (err) {
         yield put(getPlaylistFailureFactory(err));
+    }
+}
+
+function* viewPlaylist(action: IViewPlaylistRequest) {
+    try {
+        yield put(push(`/playlists/${action.playlist.type}/${action.playlist.id}`));
+    } catch (err) {
+        yield put(viewPlaylistFailureFactory(err));
     }
 }
 
@@ -125,8 +136,12 @@ function* deletePlaylists(action: IDeletePlaylistsRequest) {
     }
 }
 
-function* getPlaylistMetaSaga() {
-    yield takeLatest(ACTION_TYPES.GET_PLAYLIST.REQUEST, getPlaylistMeta);
+function* getPlaylistSaga() {
+    yield takeLatest(ACTION_TYPES.GET_PLAYLIST.REQUEST, getPlaylist);
+}
+
+function* viewPlaylistSaga() {
+    yield takeLatest(ACTION_TYPES.VIEW_PLAYLIST.REQUEST, viewPlaylist);
 }
 
 function* createPlaylistSaga() {
@@ -142,5 +157,5 @@ function* deletePlaylistsSaga() {
 }
 
 export function* rootSaga() {
-    yield all([getPlaylistMetaSaga(), createPlaylistSaga(), updatePlaylistSaga(), deletePlaylistsSaga()]);
+    yield all([getPlaylistSaga(), viewPlaylistSaga(), createPlaylistSaga(), updatePlaylistSaga(), deletePlaylistsSaga()]);
 }
