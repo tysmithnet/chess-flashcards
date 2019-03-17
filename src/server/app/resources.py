@@ -75,6 +75,15 @@ def create_opening_playlist_response(opening_playlist):
     }
 
 
+def create_game_meta_response(game):
+    return {
+        "id": game.id,
+        "name": game.name,
+        "slug": game.slug,
+        "num_moves": len(game.positions) - 1,
+    }
+
+
 def create_opening_meta_response(opening):
     return {
         "id": opening.id,
@@ -91,6 +100,12 @@ class GameResource(Resource):
         if not game:
             return abort(404)
         return create_game_response(game)
+
+
+class GameMetaResource(Resource):
+    def get(self):
+        games = Game.query.all()
+        return list(map(create_game_meta_response, games))
 
 
 class OpeningMetaResource(Resource):
@@ -331,3 +346,4 @@ api.add_resource(PlaylistResource, "/api/playlist",
                  "/api/playlist/<string:cat>",
                  "/api/playlist/<string:cat>/<int:id>")
 api.add_resource(StatsResource, "/api/stats/<string:cat>/<int:id>")
+api.add_resource(GameMetaResource, "/api/game/meta")
