@@ -16,6 +16,9 @@ function handleLoadNextItemSuccess(state: IRootState, action: ILoadNextItemSucce
         game: state.playlist.type === PlaylistType.game ? action.game : null,
         isLearnMovesMode: false,
         learnMovePositionIndex: 0,
+        attempts: null,
+        successes: null,
+        position: null,
     };
 }
 
@@ -48,6 +51,19 @@ function handleGetStats(state: IRootState, action: IGetStatsSuccess): IRootState
     };
 }
 
+function handleReset(): IRootState {
+    return {
+        attempts: 0,
+        game: null,
+        isLearnMovesMode: false,
+        learnMovePositionIndex: 0,
+        opening: null,
+        playlist: null,
+        position: null,
+        successes: 0,
+    };
+}
+
 export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
         case ACTION_TYPES.LOAD_PLAYLIST.SUCCESS:
@@ -62,6 +78,8 @@ export function reducer(state: IRootState, action: IAction): IRootState {
             return handleChangeLearnPosition(state, action as IChangeLearnPositionRequest);
         case ACTION_TYPES.GET_STATS.SUCCESS:
             return handleGetStats(state, action as IGetStatsSuccess);
+        case ACTION_TYPES.RESET:
+            return handleReset();
     }
     return {
         ...state,

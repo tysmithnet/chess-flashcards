@@ -73,22 +73,23 @@ function* loadNextItem(action: ILoadNextItemRequest) {
 }
 
 function getNextPosition(state: IRootState): IPosition {
-    if (state.playlists.viewer.playlist.type === PlaylistType.opening) {
-        const index = state.playlists.viewer.opening.positions.indexOf(state.playlists.viewer.position);
-        if (index + 1 >= state.playlists.viewer.opening.positions.length) {
+    const viewerState = state.playlists.viewer;
+    if (viewerState.playlist.type === PlaylistType.opening) {
+        const index = _.findIndex(viewerState.opening.positions, p => _.isEqual(p, viewerState.position));
+        if (index + 1 >= viewerState.opening.positions.length) {
             return null;
         }
-        const nextPosition = state.playlists.viewer.opening.positions[index + 1];
+        const nextPosition = viewerState.opening.positions[index + 1];
         return nextPosition;
-    } else if (state.playlists.viewer.playlist.type === PlaylistType.game) {
-        const index = state.playlists.viewer.game.positions.indexOf(state.playlists.viewer.position);
-        if (index + 1 >= state.playlists.viewer.game.positions.length) {
+    } else if (viewerState.playlist.type === PlaylistType.game) {
+        const index = _.findIndex(viewerState.game.positions, p => _.isEqual(p, viewerState.position));
+        if (index + 1 >= viewerState.game.positions.length) {
             return null;
         }
-        const nextPosition = state.playlists.viewer.game.positions[index + 1];
+        const nextPosition = viewerState.game.positions[index + 1];
         return nextPosition;
     } else {
-        throw new Error(`Unexpected playlist type: ${state.playlists.viewer.playlist.type}`);
+        throw new Error(`Unexpected playlist type: ${viewerState.playlist.type}`);
     }
 }
 
@@ -105,6 +106,19 @@ function* loadNextPosition(action: ILoadNextPositionRequest) {
     }
 }
 
+function isLastMove(state: IRootState): boolean {
+    const viewerState = state.playlists.viewer;
+    if (viewerState.playlist.type === PlaylistType.opening) {
+        const index = _.findIndex(viewerState.opening.positions, p => _.isEqual(p, viewerState.position));
+        return index === viewerState.opening.positions.length - 2;
+    } else if (viewerState.playlist.type === PlaylistType.game) {
+        const index = _.findIndex(viewerState.game.positions, p => _.isEqual(p, viewerState.position));
+        return index === viewerState.game.positions.length - 2;
+    } else {
+        throw new Error(`Unexpected playlist type: ${viewerState.playlist.type}`);
+    }
+}
+
 function* checkMove(action: ICheckMoveRequest) {
     try {
         const state: IRootState = yield select();
@@ -112,24 +126,28 @@ function* checkMove(action: ICheckMoveRequest) {
         const nextPosition = getNextPosition(state);
         const type = viewerState.playlist.type;
         const id = viewerState.game ? viewerState.game.id : viewerState.opening.id;
-        if (!nextPosition) {
-            yield axios.post(`/api/stats/${type}/${id}`, {
-                success: true,
-            });
-            yield put(loadNextItemRequestFactory());
-        }
+        const isLast = isLastMove(state);
         const currentPosition = fenToArray(viewerState.position.pieces);
         const afterMove = applyMove(currentPosition, action.move);
         const correctNextPosition = fenToArray(nextPosition.pieces);
         const isCorrect = _.isEqual(afterMove, correctNextPosition);
         if (isCorrect) {
-            yield put(checkMoveSuccessFactory(action.move, true));
-            yield put(loadNextPositionRequestFactory());
+            if (isLast) {
+                yield axios.post(`/api/stats/${type}/${id}`, {
+                    success: true,
+                });
+                yield put(checkMoveSuccessFactory(action.move, true));
+                yield put(loadNextItemRequestFactory());
+            } else {
+                yield put(checkMoveSuccessFactory(action.move, true));
+                yield put(loadNextPositionRequestFactory());
+            }
         } else {
             yield axios.post(`/api/stats/${type}/${id}`, {
                 success: false,
             });
             yield put(checkMoveSuccessFactory(action.move, false));
+            yield put(loadNextItemRequestFactory());
         }
     } catch (err) {
         yield put(checkMoveFailureFactory(err));
@@ -140,7 +158,7 @@ function* getStats(action: IGetStatsRequest) {
     try {
         const res = yield axios.get(`/api/stats/${action.playlistType}/${action.id}`);
         const data = yield res.data;
-        yield put(getStatsSuccessFactory(data.attempts, data.succeses));
+        yield put(getStatsSuccessFactory(data.attempts, data.successes));
     } catch (err) {
         yield put(getStatsFailureFactory(err));
     }
@@ -167,5 +185,10 @@ function* getStatsSaga() {
 }
 
 export function* rootSaga() {
-    yield all([loadPlaylistSaga(), loadNextItemSaga(), loadNextPositionSaga(), checkMoveSaga(), getStatsSaga()]);
+    yield all([
+        loadPlaylistSaga(),
+        loadNextItemSaga(),
+        loadNextPositionSaga(),
+        checkMoveSaga(),
+        getStatsSaga()]);
 }

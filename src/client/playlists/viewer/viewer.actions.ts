@@ -27,6 +27,7 @@ export const ACTION_TYPES = {
         SUCCESS: "@playlists.viewer/GetStatsSuccess",
         FAILURE: "@playlists.viewer/GetStatsFailure",
     },
+    RESET: "@playlists.viewer/Reset",
     CHANGE_MODE: "@playlists.viewer/ChangeMode",
     CHANGE_LEARN_POSITION: "@playlists.viewer/ChangeLearnPosition",
 };
@@ -220,5 +221,12 @@ export function getStatsFailureFactory(message: string): IGetStatsFailure {
     return {
         type: ACTION_TYPES.GET_STATS.FAILURE,
         message,
+    };
+}
+
+export interface IResetRequest extends IAction { }
+export function resetRequestFactory(): IResetRequest {
+    return {
+        type: ACTION_TYPES.RESET,
     };
 }

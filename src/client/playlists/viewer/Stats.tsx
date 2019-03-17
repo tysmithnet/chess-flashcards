@@ -44,7 +44,10 @@ export class Stats extends React.Component<IProps> {
         const eco = this.props.opening.eco;
         const name = this.props.opening.name;
         const header = `${eco} - ${name}`;
-        const statsLine = `${this.props.successes}/${this.props.attempts}`;
+        let statsLine = null;
+        if (this.props.attempts != null && this.props.successes != null) {
+            statsLine = `${this.props.successes}/${this.props.attempts}`;
+        }
         return (
             <Card>
                 <CardContent>
@@ -64,8 +67,8 @@ function mapStateToProps(state: IRootState): IProps {
     return {
         opening: state.playlists.viewer.opening,
         game: state.playlists.viewer.game,
-        attempts: state.playlists.viewer.attempts || 0,
-        successes: state.playlists.viewer.successes || 0,
+        attempts: state.playlists.viewer.attempts,
+        successes: state.playlists.viewer.successes,
     };
 }
 

@@ -26,6 +26,7 @@ export declare const ACTION_TYPES: {
         SUCCESS: string;
         FAILURE: string;
     };
+    RESET: string;
     CHANGE_MODE: string;
     CHANGE_LEARN_POSITION: string;
 };
@@ -100,3 +101,6 @@ export interface IGetStatsFailure extends IAction {
     message: string;
 }
 export declare function getStatsFailureFactory(message: string): IGetStatsFailure;
+export interface IResetRequest extends IAction {
+}
+export declare function resetRequestFactory(): IResetRequest;

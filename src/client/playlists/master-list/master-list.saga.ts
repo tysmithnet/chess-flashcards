@@ -3,6 +3,7 @@ import cleanDeep from "clean-deep";
 import { push } from "connected-react-router";
 import { all, put, takeLatest } from "redux-saga/effects";
 import { PlaylistType } from "../../root";
+import { resetRequestFactory } from "../viewer";
 import {
     ACTION_TYPES,
     createPlaylistFailureFactory,
@@ -54,6 +55,7 @@ function* getPlaylist(action: IGetPlaylistRequest) {
 
 function* viewPlaylist(action: IViewPlaylistRequest) {
     try {
+        yield put(resetRequestFactory());
         yield put(push(`/playlists/${action.playlist.type}/${action.playlist.id}`));
     } catch (err) {
         yield put(viewPlaylistFailureFactory(err));
