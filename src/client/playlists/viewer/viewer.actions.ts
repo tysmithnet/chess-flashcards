@@ -22,6 +22,11 @@ export const ACTION_TYPES = {
         SUCCESS: "@playlists.viewer/CheckMoveSuccess",
         FAILURE: "@playlists.viewer/CheckMoveFailure",
     },
+    GET_STATS: {
+        REQUEST: "@playlists.viewer/GetStatsRequest",
+        SUCCESS: "@playlists.viewer/GetStatsSuccess",
+        FAILURE: "@playlists.viewer/GetStatsFailure",
+    },
     CHANGE_MODE: "@playlists.viewer/ChangeMode",
     CHANGE_LEARN_POSITION: "@playlists.viewer/ChangeLearnPosition",
 };
@@ -178,5 +183,42 @@ export function changeModeRequestFactory(mode: ViewerMode): IChangeModeRequest {
     return {
         type: ACTION_TYPES.CHANGE_MODE,
         mode,
+    };
+}
+
+export interface IGetStatsRequest extends IAction {
+    playlistType: PlaylistType;
+    id: number;
+}
+
+export function getStatsRequestFactory(playlistType: PlaylistType, id: number): IGetStatsRequest {
+    return {
+        type: ACTION_TYPES.GET_STATS.REQUEST,
+        playlistType,
+        id,
+    };
+}
+
+export interface IGetStatsSuccess extends IAction {
+    attempts: number;
+    successes: number;
+}
+
+export function getStatsSuccessFactory(attempts: number, successes: number): IGetStatsSuccess {
+    return {
+        type: ACTION_TYPES.GET_STATS.SUCCESS,
+        attempts,
+        successes,
+    };
+}
+
+export interface IGetStatsFailure extends IAction {
+    message: string;
+}
+
+export function getStatsFailureFactory(message: string): IGetStatsFailure {
+    return {
+        type: ACTION_TYPES.GET_STATS.FAILURE,
+        message,
     };
 }

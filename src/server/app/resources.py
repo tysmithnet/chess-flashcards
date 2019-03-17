@@ -1,6 +1,6 @@
 from app import api, session_scope
 from app.models import Game, Opening, User, GamePlaylist, OpeningPlaylist, \
-    OpeningPlaylistOpening, GamePlaylistGame
+    OpeningPlaylistOpening, GamePlaylistGame, GameAttempt, OpeningAttempt
 from app.auth import requires_login
 from flask import abort, request, session
 from flask_restful import Resource
@@ -39,6 +39,7 @@ def create_game_response(game):
     return {
         "id": game.id,
         "slug": game.slug,
+        "headers": {h["key"]: h["value"] for h in game.headers},
         "positions": list(map(create_position_response, game.positions))
     }
 
@@ -46,6 +47,8 @@ def create_game_response(game):
 def create_opening_response(opening):
     return {
         "id": opening.id,
+        "eco": opening.eco,
+        "name": opening.name,
         "slug": opening.slug,
         "positions": list(map(create_position_response, opening.positions))
     }
@@ -280,6 +283,46 @@ class PlaylistResource(Resource):
                 return abort(404)
 
 
+class StatsResource(Resource):
+    def __init__(self):
+        self.add_attempt_args = {
+            "success": fields.Boolean(required=True)
+        }
+
+    @requires_login()
+    def get(self, cat, id):
+        user_id = session["user_id"]
+        attempts = []
+        if cat == "game":
+            attempts = GameAttempt.query.filter_by(
+                user_id=user_id, game_id=id).all()
+        if cat == "opening":
+            attempts = OpeningAttempt.query.filter_by(
+                user_id=user_id, opening_id=id).all()
+        if not attempts:
+            attempts = []
+        return {
+            "attempts": len(attempts),
+            "successes": len(list(filter(lambda a: a.success, attempts)))
+        }
+
+    @requires_login()
+    def post(self, cat, id):
+        with session_scope() as s:
+            user_id = session["user_id"]
+            args = parser.parse(self.add_attempt_args)
+            success = args["success"]
+            if cat == "opening":
+                attempt = OpeningAttempt(
+                    user_id=user_id, opening_id=id, success=success)
+            if cat == "game":
+                attempt = GameAttempt(
+                    user_id=user_id, game_id=id, success=success)
+            if attempt:
+                s.add(attempt)
+                s.commit()
+
+
 api.add_resource(LoginResource, "/api/login")
 api.add_resource(GameResource, "/api/game/<int:id>")
 api.add_resource(OpeningResource, "/api/opening/<int:id>")
@@ -287,3 +330,4 @@ api.add_resource(OpeningMetaResource, "/api/opening/meta")
 api.add_resource(PlaylistResource, "/api/playlist",
                  "/api/playlist/<string:cat>",
                  "/api/playlist/<string:cat>/<int:id>")
+api.add_resource(StatsResource, "/api/stats/<string:cat>/<int:id>")

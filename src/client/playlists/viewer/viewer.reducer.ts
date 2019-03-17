@@ -1,5 +1,5 @@
 import { IAction, PlaylistType } from "../../root";
-import { ACTION_TYPES, IChangeLearnPositionRequest, IChangeModeRequest, ILoadNextItemSuccess, ILoadNextPositionSuccess, ILoadPlaylistSuccess } from "./viewer.actions";
+import { ACTION_TYPES, IChangeLearnPositionRequest, IChangeModeRequest, IGetStatsSuccess, ILoadNextItemSuccess, ILoadNextPositionSuccess, ILoadPlaylistSuccess } from "./viewer.actions";
 import { IRootState, ViewerMode } from "./viewer.domain";
 
 function  handleLoadPlaylistSuccess(state: IRootState, action: ILoadPlaylistSuccess): IRootState {
@@ -40,6 +40,14 @@ function handleChangeLearnPosition(state: IRootState, action: IChangeLearnPositi
     };
 }
 
+function handleGetStats(state: IRootState, action: IGetStatsSuccess): IRootState {
+    return {
+        ...state,
+        attempts: action.attempts,
+        successes: action.successes,
+    };
+}
+
 export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
         case ACTION_TYPES.LOAD_PLAYLIST.SUCCESS:
@@ -52,6 +60,8 @@ export function reducer(state: IRootState, action: IAction): IRootState {
             return handleChangeMode(state, action as IChangeModeRequest);
         case ACTION_TYPES.CHANGE_LEARN_POSITION:
             return handleChangeLearnPosition(state, action as IChangeLearnPositionRequest);
+        case ACTION_TYPES.GET_STATS.SUCCESS:
+            return handleGetStats(state, action as IGetStatsSuccess);
     }
     return {
         ...state,

@@ -21,6 +21,7 @@ import {
     IRoutedProps,
     PlaylistType,
 } from "../../root";
+import { connectedComponent as Stats } from "./Stats";
 import {
     changeLearnPositionRequestFactory,
     changeModeRequestFactory,
@@ -112,6 +113,7 @@ export class Viewer extends React.Component<IProps, IState> {
                         {this.getButtons()}
                     </div>
                 </div>
+                <Stats />
             </div>
         );
     }
@@ -128,6 +130,7 @@ export class Viewer extends React.Component<IProps, IState> {
                         {this.getButtons()}
                     </div>
                 </div>
+                <Stats />
             </div>
         );
     }

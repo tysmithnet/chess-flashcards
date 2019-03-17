@@ -8,7 +8,11 @@ import {
     ACTION_TYPES,
     checkMoveFailureFactory,
     checkMoveSuccessFactory,
+    getStatsFailureFactory,
+    getStatsRequestFactory,
+    getStatsSuccessFactory,
     ICheckMoveRequest,
+    IGetStatsRequest,
     ILoadNextItemRequest,
     ILoadNextPositionRequest,
     ILoadPlaylistRequest,
@@ -49,14 +53,16 @@ function* loadNextItem(action: ILoadNextItemRequest) {
         const index = _.random(0, state.playlists.viewer.playlist.ids.length - 1);
         const id = state.playlists.viewer.playlist.ids[index];
         if (state.playlists.viewer.playlist.type === PlaylistType.opening) {
-            const res = yield axios.get(`/api/opening/${id}`);
-            const data = yield res.data;
+            const dataRes = yield axios.get(`/api/opening/${id}`);
+            const data = yield dataRes.data;
             const converted = camelKeys(data);
+            yield put(getStatsRequestFactory(PlaylistType.opening, id));
             yield put(loadNextItemSuccessFactory(converted, null));
         } else if (state.playlists.viewer.playlist.type === PlaylistType.game) {
             const res = yield axios.get(`/api/game/${id}`);
             const data = yield res.data;
             const converted = camelKeys(data);
+            yield put(getStatsRequestFactory(PlaylistType.game, id));
             yield put(loadNextItemSuccessFactory(null, converted));
         } else {
             yield put(loadNextItemFailureFactory(`Unexpected playlist type: ${state.playlists.viewer.playlist.type}`));
@@ -104,7 +110,12 @@ function* checkMove(action: ICheckMoveRequest) {
         const state: IRootState = yield select();
         const viewerState = state.playlists.viewer;
         const nextPosition = getNextPosition(state);
+        const type = viewerState.playlist.type;
+        const id = viewerState.game ? viewerState.game.id : viewerState.opening.id;
         if (!nextPosition) {
+            yield axios.post(`/api/stats/${type}/${id}`, {
+                success: true,
+            });
             yield put(loadNextItemRequestFactory());
         }
         const currentPosition = fenToArray(viewerState.position.pieces);
@@ -115,10 +126,23 @@ function* checkMove(action: ICheckMoveRequest) {
             yield put(checkMoveSuccessFactory(action.move, true));
             yield put(loadNextPositionRequestFactory());
         } else {
+            yield axios.post(`/api/stats/${type}/${id}`, {
+                success: false,
+            });
             yield put(checkMoveSuccessFactory(action.move, false));
         }
     } catch (err) {
         yield put(checkMoveFailureFactory(err));
+    }
+}
+
+function* getStats(action: IGetStatsRequest) {
+    try {
+        const res = yield axios.get(`/api/stats/${action.playlistType}/${action.id}`);
+        const data = yield res.data;
+        yield put(getStatsSuccessFactory(data.attempts, data.succeses));
+    } catch (err) {
+        yield put(getStatsFailureFactory(err));
     }
 }
 
@@ -138,6 +162,10 @@ function* checkMoveSaga() {
     yield takeLatest(ACTION_TYPES.CHECK_MOVE.REQUEST, checkMove);
 }
 
+function* getStatsSaga() {
+    yield takeLatest(ACTION_TYPES.GET_STATS.REQUEST, getStats);
+}
+
 export function* rootSaga() {
-    yield all([loadPlaylistSaga(), loadNextItemSaga(), loadNextPositionSaga(), checkMoveSaga()]);
+    yield all([loadPlaylistSaga(), loadNextItemSaga(), loadNextPositionSaga(), checkMoveSaga(), getStatsSaga()]);
 }

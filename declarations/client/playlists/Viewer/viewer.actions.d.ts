@@ -21,6 +21,11 @@ export declare const ACTION_TYPES: {
         SUCCESS: string;
         FAILURE: string;
     };
+    GET_STATS: {
+        REQUEST: string;
+        SUCCESS: string;
+        FAILURE: string;
+    };
     CHANGE_MODE: string;
     CHANGE_LEARN_POSITION: string;
 };
@@ -81,3 +86,17 @@ export interface IChangeModeRequest extends IAction {
     mode: ViewerMode;
 }
 export declare function changeModeRequestFactory(mode: ViewerMode): IChangeModeRequest;
+export interface IGetStatsRequest extends IAction {
+    playlistType: PlaylistType;
+    id: number;
+}
+export declare function getStatsRequestFactory(playlistType: PlaylistType, id: number): IGetStatsRequest;
+export interface IGetStatsSuccess extends IAction {
+    attempts: number;
+    successes: number;
+}
+export declare function getStatsSuccessFactory(attempts: number, successes: number): IGetStatsSuccess;
+export interface IGetStatsFailure extends IAction {
+    message: string;
+}
+export declare function getStatsFailureFactory(message: string): IGetStatsFailure;

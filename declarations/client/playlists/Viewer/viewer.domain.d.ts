@@ -6,6 +6,8 @@ export interface IRootState {
     game: IGame;
     isLearnMovesMode: boolean;
     learnMovePositionIndex: number;
+    attempts: number;
+    successes: number;
 }
 export declare enum ViewerMode {
     LearnMoves = "LearnMoves",

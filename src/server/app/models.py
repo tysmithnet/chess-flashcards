@@ -210,3 +210,31 @@ class GamePlaylistGame(db.Model):
         "game.id", ondelete="CASCADE"), primary_key=True)
     playlist = db.relationship("GamePlaylist", back_populates="games")
     game = db.relationship("Game")
+
+
+class GameAttempt(db.Model):
+    __tablename__ = "game_attempt"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey(
+        "game.id", ondelete="CASCADE"), nullable=False)
+    success = db.Column(db.Boolean, nullable=False)
+    attempted = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    user = db.relationship("User")
+    game = db.relationship("Game")
+
+
+class OpeningAttempt(db.Model):
+    __tablename__ = "opening_attempt"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.id", ondelete="CASCADE"), nullable=False)
+    opening_id = db.Column(db.Integer, db.ForeignKey(
+        "opening.id", ondelete="CASCADE"), nullable=False)
+    success = db.Column(db.Boolean, nullable=False)
+    attempted = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    user = db.relationship("User")
+    opening = db.relationship("Opening")
