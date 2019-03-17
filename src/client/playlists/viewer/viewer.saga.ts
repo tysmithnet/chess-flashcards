@@ -1,7 +1,7 @@
 import axios from "axios";
 import { camelKeys } from "change-object-case";
 import * as _ from "lodash";
-import { all, put, select, takeLatest } from "redux-saga/effects";
+import { all, delay, put, select, takeLatest } from "redux-saga/effects";
 import { fenToArray } from "../../common/chess";
 import { applyMove, IPlaylist, IPosition, IRootState, PlaylistType } from "../../root";
 import {
@@ -23,7 +23,8 @@ import {
     loadNextPositionRequestFactory,
     loadNextPositionSuccessFactory,
     loadPlaylistFailureFactory,
-    loadPlaylistSuccessFactory} from "./viewer.actions";
+    loadPlaylistSuccessFactory,
+    setMovePositionFactory} from "./viewer.actions";
 
 function* loadPlaylist(action: ILoadPlaylistRequest) {
     try {
@@ -119,6 +120,25 @@ function isLastMove(state: IRootState): boolean {
     }
 }
 
+function getRemainingPositions(state: IRootState): IPosition[] {
+    const viewerState = state.playlists.viewer;
+    if (viewerState.playlist.type === PlaylistType.opening) {
+        const index = _.findIndex(viewerState.opening.positions, p => _.isEqual(p, viewerState.position));
+        if (index + 1 >= viewerState.opening.positions.length) {
+            return [];
+        }
+        return _.drop(viewerState.opening.positions, index);
+    } else if (viewerState.playlist.type === PlaylistType.game) {
+        const index = _.findIndex(viewerState.game.positions, p => _.isEqual(p, viewerState.position));
+        if (index + 1 >= viewerState.game.positions.length) {
+            return [];
+        }
+        return _.drop(viewerState.game.positions, index);
+    } else {
+        throw new Error(`Unexpected playlist type: ${viewerState.playlist.type}`);
+    }
+}
+
 function* checkMove(action: ICheckMoveRequest) {
     try {
         const state: IRootState = yield select();
@@ -146,6 +166,13 @@ function* checkMove(action: ICheckMoveRequest) {
             yield axios.post(`/api/stats/${type}/${id}`, {
                 success: false,
             });
+            const remaining = getRemainingPositions(state);
+            yield delay(333);
+            for (const position of remaining) {
+                yield put(setMovePositionFactory(position));
+                yield delay(333);
+            }
+            yield delay(1000);
             yield put(checkMoveSuccessFactory(action.move, false));
             yield put(loadNextItemRequestFactory());
         }

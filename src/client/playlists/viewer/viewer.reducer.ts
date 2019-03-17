@@ -1,5 +1,5 @@
 import { IAction, PlaylistType } from "../../root";
-import { ACTION_TYPES, IChangeLearnPositionRequest, IChangeModeRequest, IGetStatsSuccess, ILoadNextItemSuccess, ILoadNextPositionSuccess, ILoadPlaylistSuccess } from "./viewer.actions";
+import { ACTION_TYPES, IChangeLearnPositionRequest, IChangeModeRequest, IGetStatsSuccess, ILoadNextItemSuccess, ILoadNextPositionSuccess, ILoadPlaylistSuccess, ISetMovePosition } from "./viewer.actions";
 import { IRootState, ViewerMode } from "./viewer.domain";
 
 function  handleLoadPlaylistSuccess(state: IRootState, action: ILoadPlaylistSuccess): IRootState {
@@ -64,6 +64,13 @@ function handleReset(): IRootState {
     };
 }
 
+function handleSetMovePosition(state: IRootState, action: ISetMovePosition): IRootState {
+    return {
+        ...state,
+        position: action.position,
+    };
+}
+
 export function reducer(state: IRootState, action: IAction): IRootState {
     switch (action.type) {
         case ACTION_TYPES.LOAD_PLAYLIST.SUCCESS:
@@ -80,6 +87,8 @@ export function reducer(state: IRootState, action: IAction): IRootState {
             return handleGetStats(state, action as IGetStatsSuccess);
         case ACTION_TYPES.RESET:
             return handleReset();
+        case ACTION_TYPES.SET_MOVE_POSITION:
+            return handleSetMovePosition(state, action as ISetMovePosition);
     }
     return {
         ...state,

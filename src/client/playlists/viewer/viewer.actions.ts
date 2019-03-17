@@ -30,6 +30,7 @@ export const ACTION_TYPES = {
     RESET: "@playlists.viewer/Reset",
     CHANGE_MODE: "@playlists.viewer/ChangeMode",
     CHANGE_LEARN_POSITION: "@playlists.viewer/ChangeLearnPosition",
+    SET_MOVE_POSITION: "@playlists.viewer/SetMovePosition",
 };
 
 export interface ILoadPlaylistRequest extends IAction {
@@ -228,5 +229,15 @@ export interface IResetRequest extends IAction { }
 export function resetRequestFactory(): IResetRequest {
     return {
         type: ACTION_TYPES.RESET,
+    };
+}
+
+export interface ISetMovePosition extends IAction {
+    position: IPosition;
+}
+export function setMovePositionFactory(position: IPosition): ISetMovePosition {
+    return {
+        type: ACTION_TYPES.SET_MOVE_POSITION,
+        position,
     };
 }

@@ -29,6 +29,7 @@ export declare const ACTION_TYPES: {
     RESET: string;
     CHANGE_MODE: string;
     CHANGE_LEARN_POSITION: string;
+    SET_MOVE_POSITION: string;
 };
 export interface ILoadPlaylistRequest extends IAction {
     playlistType: PlaylistType;
@@ -104,3 +105,7 @@ export declare function getStatsFailureFactory(message: string): IGetStatsFailur
 export interface IResetRequest extends IAction {
 }
 export declare function resetRequestFactory(): IResetRequest;
+export interface ISetMovePosition extends IAction {
+    position: IPosition;
+}
+export declare function setMovePositionFactory(position: IPosition): ISetMovePosition;
