@@ -1,15 +1,13 @@
 import { IGame, IOpening, IPlaylist, IPosition } from "../../root";
-
 export interface IRootState {
     playlist: IPlaylist;
     opening: IOpening;
     position: IPosition;
     game: IGame;
     isLearnMovesMode: boolean;
-    learnMovePositionIndex: number; // todo: this doesn't feel great
+    learnMovePositionIndex: number;
 }
-
-export enum ViewerMode {
+export declare enum ViewerMode {
     LearnMoves = "LearnMoves",
-    MakeMoves = "MakeMoves",
+    MakeMoves = "MakeMoves"
 }

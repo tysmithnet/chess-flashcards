@@ -1,4 +1,5 @@
 import { IAction, IGame, IMove, IOpening, IPlaylist, IPosition, PlaylistType } from "../../root";
+import { ViewerMode } from "./viewer.domain";
 export declare const ACTION_TYPES: {
     LOAD_PLAYLIST: {
         REQUEST: string;
@@ -20,6 +21,8 @@ export declare const ACTION_TYPES: {
         SUCCESS: string;
         FAILURE: string;
     };
+    CHANGE_MODE: string;
+    CHANGE_LEARN_POSITION: string;
 };
 export interface ILoadPlaylistRequest extends IAction {
     playlistType: PlaylistType;
@@ -46,6 +49,10 @@ export interface ILoadNextItemFailure extends IAction {
     message: string;
 }
 export declare function loadNextItemFailureFactory(message: string): ILoadNextItemFailure;
+export interface IChangeLearnPositionRequest extends IAction {
+    index: number;
+}
+export declare function changeLearnPositionRequestFactory(index: number): IChangeLearnPositionRequest;
 export interface ILoadNextPositionRequest extends IAction {
 }
 export declare function loadNextPositionRequestFactory(): ILoadNextPositionRequest;
@@ -70,3 +77,7 @@ export interface ICheckMoveFailure extends IAction {
     message: string;
 }
 export declare function checkMoveFailureFactory(message: string): ICheckMoveFailure;
+export interface IChangeModeRequest extends IAction {
+    mode: ViewerMode;
+}
+export declare function changeModeRequestFactory(mode: ViewerMode): IChangeModeRequest;

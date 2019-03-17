@@ -1,4 +1,10 @@
-import { createStyles, Paper, Theme, withStyles } from "@material-ui/core";
+import { createStyles, Icon, IconButton, Paper, Theme, withStyles } from "@material-ui/core";
+import Flip from "@material-ui/icons/Autorenew";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import ChevronRight from "@material-ui/icons/ChevronRight";
+import Help from "@material-ui/icons/Help";
+import Play from "@material-ui/icons/PlayCircleFilledOutlined";
+import SkipNext from "@material-ui/icons/SkipNext";
 import classNames from "classnames";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -16,16 +22,24 @@ import {
     PlaylistType,
 } from "../../root";
 import {
+    changeLearnPositionRequestFactory,
+    changeModeRequestFactory,
     checkMoveRequestFactory,
     loadNextItemRequestFactory,
     loadNextPositionRequestFactory,
-    loadPlaylistRequestFactory } from "./viewer.actions";
+    loadPlaylistRequestFactory} from "./viewer.actions";
+import { ViewerMode } from "./viewer.domain";
 
 interface IClasses {
+    root: any;
     boardArea: any;
 }
 
 const styles = (theme: Theme) => createStyles({
+    root: {
+        display: "flex",
+        justifyContent: "center",
+    },
     boardArea: {
         width: 500,
         height: 500,
@@ -41,35 +55,151 @@ interface IProps extends IBaseProps {
     position: IPosition;
     classes?: IClasses;
     theme?: Theme;
+    isLearnMovesMode: boolean;
+    learnMovePositionIndex: number;
 }
 
-export class Viewer extends React.Component<IProps> {
+interface IState {
+    isBlackPerspective: boolean;
+}
+
+export class Viewer extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.handleMove = this.handleMove.bind(this);
         this.ensureDataIsLoaded = this.ensureDataIsLoaded.bind(this);
+        this.handleFlipBoard = this.handleFlipBoard.bind(this);
+        this.handleChangeToLearnMovesMode = this.handleChangeToLearnMovesMode.bind(this);
+        this.handleChangeToMakeMovesMode = this.handleChangeToMakeMovesMode.bind(this);
+        this.handleLearnGoForward = this.handleLearnGoForward.bind(this);
+        this.handleLearnGoBack = this.handleLearnGoBack.bind(this);
+        this.handleSkip = this.handleSkip.bind(this);
+        this.state = {
+            isBlackPerspective: false,
+        };
     }
 
     public render() {
         if (!this.props.position) {
             return <p>Loading...</p>;
         }
-        const fen = fenToArray(this.props.position.pieces);
-        return (
-            <Paper>
-                <div className={this.props.classes.boardArea}>
-                    <Board position={fen} legalMoves={[]} onMove={this.handleMove} />
-                </div>
-            </Paper>
-        );
+        if (this.props.isLearnMovesMode) {
+            return this.renderLearnMovesMode();
+        } else {
+            return this.renderMakeMovesMode();
+        }
     }
 
     public componentDidMount() {
         this.ensureDataIsLoaded();
     }
 
-    public componentDidUpdate() {
+    public componentDidUpdate(prevProps: IProps, prevState: IState) {
         this.ensureDataIsLoaded();
+    }
+
+    private renderLearnMovesMode() {
+        const positions = this.props.playlist.type === PlaylistType.game ? this.props.game.positions : this.props.opening.positions;
+        const currentPosition = positions[this.props.learnMovePositionIndex];
+        const fen = fenToArray(currentPosition.pieces);
+        return (
+            <div className={this.props.classes.root}>
+                <div>
+                    <div className={this.props.classes.boardArea}>
+                        <Board position={fen} legalMoves={[]} isBlackPerspective={this.state.isBlackPerspective} />
+                    </div>
+                    <div className={this.props.classes.root}>
+                        {this.getButtons()}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    private renderMakeMovesMode() {
+        const fen = fenToArray(this.props.position.pieces);
+        return (
+            <div className={this.props.classes.root}>
+                <div>
+                    <div className={this.props.classes.boardArea}>
+                        <Board position={fen} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
+                    </div>
+                    <div className={this.props.classes.root}>
+                        {this.getButtons()}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    private getButtons() {
+        let helpOrPlay = null;
+        let learnButtons = null;
+        if (this.props.isLearnMovesMode) {
+            helpOrPlay = (
+                <IconButton onClick={this.handleChangeToMakeMovesMode}>
+                    <Play />
+                </IconButton>
+            );
+            learnButtons = (
+                <React.Fragment>
+                    <IconButton onClick={this.handleLearnGoBack} aria-label="Go Back">
+                        <ChevronLeft />
+                    </IconButton>
+                    <IconButton onClick={this.handleLearnGoForward} aria-label="Go Forward">
+                        <ChevronRight />
+                    </IconButton>
+                </React.Fragment>
+            );
+        } else {
+            helpOrPlay = (
+                <IconButton onClick={this.handleChangeToLearnMovesMode}>
+                    <Help/>
+                </IconButton>
+            );
+        }
+        return (
+            <React.Fragment>
+                <IconButton onClick={this.handleFlipBoard} aria-label="Flip Board">
+                    <Flip />
+                </IconButton>
+                {helpOrPlay}
+                {learnButtons}
+                <IconButton onClick={this.handleSkip} aria-label="Skip">
+                    <SkipNext />
+                </IconButton>
+            </React.Fragment>
+        );
+    }
+
+    private handleSkip() {
+        this.props.dispatch(loadNextItemRequestFactory());
+    }
+
+    private handleLearnGoForward() {
+        const positions = this.props.playlist.type === PlaylistType.game ? this.props.game.positions : this.props.opening.positions;
+        const nextIndex = Math.min(positions.length - 1, this.props.learnMovePositionIndex + 1);
+        this.props.dispatch(changeLearnPositionRequestFactory(nextIndex));
+    }
+
+    private handleLearnGoBack() {
+        const nextIndex = Math.max(0, this.props.learnMovePositionIndex - 1);
+        this.props.dispatch(changeLearnPositionRequestFactory(nextIndex));
+    }
+
+    private handleFlipBoard() {
+        this.setState({
+            ...this.state,
+            isBlackPerspective: !this.state.isBlackPerspective,
+        });
+    }
+
+    private handleChangeToLearnMovesMode() {
+        this.props.dispatch(changeModeRequestFactory(ViewerMode.LearnMoves));
+    }
+
+    private handleChangeToMakeMovesMode() {
+        this.props.dispatch(changeModeRequestFactory(ViewerMode.MakeMoves));
     }
 
     private ensureDataIsLoaded() {
@@ -100,6 +230,8 @@ function mapStateToProps(state: IRootState, ownProps: IRoutedProps): IProps {
         playlist: state.playlists.viewer.playlist,
         position: state.playlists.viewer.position,
         game: state.playlists.viewer.game,
+        isLearnMovesMode: state.playlists.viewer.isLearnMovesMode || false,
+        learnMovePositionIndex: state.playlists.viewer.learnMovePositionIndex || 0,
     };
 }
 
