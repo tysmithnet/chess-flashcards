@@ -3,7 +3,7 @@ import { camelKeys } from "change-object-case";
 import * as _ from "lodash";
 import { all, delay, put, select, takeLatest } from "redux-saga/effects";
 import { fenToArray } from "../../common/chess";
-import { applyMove, IPlaylist, IPosition, IRootState, PlaylistType } from "../../root";
+import { applyMove, IPlaylist, IPosition, IRootState, PlaylistType, IOpening, IGame } from "../../root";
 import {
     ACTION_TYPES,
     checkMoveFailureFactory,
@@ -51,19 +51,18 @@ function* loadPlaylist(action: ILoadPlaylistRequest) {
 function* loadNextItem(action: ILoadNextItemRequest) {
     try {
         const state: IRootState = yield select();
-        const index = _.random(0, state.playlists.viewer.playlist.ids.length - 1);
-        const id = state.playlists.viewer.playlist.ids[index];
+        const playlist = state.playlists.viewer.playlist;
         if (state.playlists.viewer.playlist.type === PlaylistType.opening) {
-            const dataRes = yield axios.get(`/api/opening/${id}`);
-            const data = yield dataRes.data;
+            const dataRes = yield axios.get(`/api/playlist/recommendation/opening/${playlist.id}`);
+            const data = yield dataRes.data as IOpening;
             const converted = camelKeys(data);
-            yield put(getStatsRequestFactory(PlaylistType.opening, id));
+            yield put(getStatsRequestFactory(PlaylistType.opening, data.id));
             yield put(loadNextItemSuccessFactory(converted, null));
         } else if (state.playlists.viewer.playlist.type === PlaylistType.game) {
-            const res = yield axios.get(`/api/game/${id}`);
-            const data = yield res.data;
+            const res = yield axios.get(`/api/playlist/recommendation/game/${playlist.id}`);
+            const data = yield res.data as IGame;
             const converted = camelKeys(data);
-            yield put(getStatsRequestFactory(PlaylistType.game, id));
+            yield put(getStatsRequestFactory(PlaylistType.game, data.id));
             yield put(loadNextItemSuccessFactory(null, converted));
         } else {
             yield put(loadNextItemFailureFactory(`Unexpected playlist type: ${state.playlists.viewer.playlist.type}`));

@@ -122,6 +122,47 @@ class OpeningResource(Resource):
         return create_opening_response(opening)
 
 
+class OpeningBatchResource(Resource):
+    def __init__(self):
+        self.batch_request_args = {
+            "ids": fields.List(fields.Integer, required=True)
+        }
+
+    def post(self):
+        args = parser.parse(self.batch_request_args)
+        ids = args["ids"]
+        openings = Opening.query.filter(Opening.id.in_(ids)).all()
+        return list(map(create_opening_response, openings))
+
+
+class PlaylistItemRecommendation(Resource):
+    def __init__(self):
+        self.opening_query = """with rec_cte as (
+select opo.opening_id,
+    (select count() from opening_attempt oa where oa.opening_id
+        = opo.opening_id and oa.success = 1) as num_success,
+    (select count() from opening_attempt oa where oa.opening_id
+        = opo.opening_id) as total
+from opening_playlist_opening opo
+where opo.playlist_id = :id
+) select * from rec_cte order by num_success asc, total desc"""
+
+    @requires_login()
+    def get(self, cat, id):
+        user_id = session["user_id"]
+        if cat == "opening":
+            with session_scope() as s:
+                playlist = OpeningPlaylist.query.get(id)
+                if not playlist:
+                    return abort(404)
+                if playlist.owner != user_id:
+                    return abort(401)
+                res = s.execute(self.opening_query, {"id": id}).fetchall()
+                opening_id = res[0][0]
+                opening = Opening.query.get(opening_id)
+                return create_opening_response(opening)
+
+
 class LoginResource(Resource):
     def __init__(self):
         self.login_request_args = {
@@ -345,5 +386,7 @@ api.add_resource(OpeningMetaResource, "/api/opening/meta")
 api.add_resource(PlaylistResource, "/api/playlist",
                  "/api/playlist/<string:cat>",
                  "/api/playlist/<string:cat>/<int:id>")
+api.add_resource(PlaylistItemRecommendation,
+                 "/api/playlist/recommendation/<string:cat>/<int:id>")
 api.add_resource(StatsResource, "/api/stats/<string:cat>/<int:id>")
 api.add_resource(GameMetaResource, "/api/game/meta")

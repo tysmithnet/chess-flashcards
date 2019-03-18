@@ -50,6 +50,7 @@ export interface IOpening {
 export interface IGameMeta {
     id: number;
     slug: string;
+    name: string;
     numMoves: number;
 }
 export interface IOpeningMeta {
