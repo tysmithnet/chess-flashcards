@@ -44,21 +44,19 @@ export class Stats extends React.Component<IProps> {
         const eco = this.props.opening.eco;
         const name = this.props.opening.name;
         const header = `${eco} - ${name}`;
-        let statsLine = null;
+        let statsLine = "?/?";
         if (this.props.attempts != null && this.props.successes != null) {
             statsLine = `${this.props.successes}/${this.props.attempts}`;
         }
         return (
-            <Card>
-                <CardContent>
-                    <Typography component="h5" variant="h5">
-                        {header}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                        {statsLine}
-                    </Typography>
-                </CardContent>
-            </Card>
+            <div>
+                <Typography component="h5" variant="h5" align={"center"}>
+                    {header}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary" align={"center"}>
+                    {statsLine}
+                </Typography>
+            </div>
         );
     }
 }

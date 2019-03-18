@@ -3,7 +3,7 @@ import { camelKeys } from "change-object-case";
 import * as _ from "lodash";
 import { all, delay, put, select, takeLatest } from "redux-saga/effects";
 import { fenToArray } from "../../common/chess";
-import { applyMove, IPlaylist, IPosition, IRootState, PlaylistType, IOpening, IGame } from "../../root";
+import { applyMove, IGame, IOpening, IPlaylist, IPosition, IRootState, PlaylistType } from "../../root";
 import {
     ACTION_TYPES,
     checkMoveFailureFactory,

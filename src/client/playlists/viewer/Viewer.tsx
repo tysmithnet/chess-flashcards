@@ -33,11 +33,16 @@ import { ViewerMode } from "./viewer.domain";
 
 interface IClasses {
     root: any;
+    horizontalCenter: any;
     boardArea: any;
 }
 
 const styles = (theme: Theme) => createStyles({
     root: {
+        display: "flex",
+        flexDirection: "column",
+    },
+    horizontalCenter: {
         display: "flex",
         justifyContent: "center",
     },
@@ -105,15 +110,17 @@ export class Viewer extends React.Component<IProps, IState> {
         const fen = fenToArray(currentPosition.pieces);
         return (
             <div className={this.props.classes.root}>
-                <div>
-                    <div className={this.props.classes.boardArea}>
-                        <Board position={fen} legalMoves={[]} isBlackPerspective={this.state.isBlackPerspective} />
-                    </div>
-                    <div className={this.props.classes.root}>
-                        {this.getButtons()}
+                <Stats />
+                <div className={this.props.classes.horizontalCenter}>
+                    <div>
+                        <div className={this.props.classes.boardArea}>
+                            <Board position={fen} legalMoves={[]} isBlackPerspective={this.state.isBlackPerspective} />
+                        </div>
+                        <div className={this.props.classes.horizontalCenter}>
+                            {this.getButtons()}
+                        </div>
                     </div>
                 </div>
-                <Stats />
             </div>
         );
     }
@@ -122,15 +129,17 @@ export class Viewer extends React.Component<IProps, IState> {
         const fen = fenToArray(this.props.position.pieces);
         return (
             <div className={this.props.classes.root}>
-                <div>
-                    <div className={this.props.classes.boardArea}>
-                        <Board position={fen} legalMoves={[]} onMove={this.handleMove} isBlackPerspective={this.state.isBlackPerspective} />
-                    </div>
-                    <div className={this.props.classes.root}>
-                        {this.getButtons()}
+                <Stats />
+                <div className={this.props.classes.horizontalCenter}>
+                    <div>
+                        <div className={this.props.classes.boardArea}>
+                            <Board position={fen} legalMoves={[]} isBlackPerspective={this.state.isBlackPerspective} onMove={this.handleMove} />
+                        </div>
+                        <div className={this.props.classes.horizontalCenter}>
+                            {this.getButtons()}
+                        </div>
                     </div>
                 </div>
-                <Stats />
             </div>
         );
     }

@@ -3,6 +3,7 @@ import * as React from "react";
 import { IBaseProps, IGame, IOpening, IPlaylist, IPosition, IRoutedProps, PlaylistType } from "../../root";
 interface IClasses {
     root: any;
+    horizontalCenter: any;
     boardArea: any;
 }
 interface IProps extends IBaseProps {
@@ -37,5 +38,5 @@ export declare class Viewer extends React.Component<IProps, IState> {
     private ensureDataIsLoaded;
     private handleMove;
 }
-export declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "isLearnMovesMode" | "learnMovePositionIndex" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"root" | "boardArea">>, Pick<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "isLearnMovesMode" | "learnMovePositionIndex" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"root" | "boardArea">, "innerRef"> & IRoutedProps>;
+export declare const connectedComponent: import("react-redux").ConnectedComponentClass<React.ComponentType<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "isLearnMovesMode" | "learnMovePositionIndex" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"root" | "horizontalCenter" | "boardArea">>, Pick<Pick<IProps, "playlistType" | "playlistId" | "playlist" | "opening" | "game" | "position" | "isLearnMovesMode" | "learnMovePositionIndex" | "dispatch" | "createWorker"> & import("@material-ui/core").StyledComponentProps<"root" | "horizontalCenter" | "boardArea">, "innerRef"> & IRoutedProps>;
 export {};
