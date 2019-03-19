@@ -149,6 +149,7 @@ export function applyMove(position: string[], move: IMove): string[] {
     }
 
     // castling
+    let handled = false;
     if (piece.toLowerCase() === "k") {
         if (move.src === "e1") {
             if (move.dst === "g1") {
@@ -156,11 +157,13 @@ export function applyMove(position: string[], move: IMove): string[] {
                 copy[6] = "K";
                 copy[5] = "R";
                 copy[4] = null;
+                handled = true;
             } else if (move.dst === "c1") {
                 copy[0] = null;
                 copy[2] = "K";
                 copy[3] = "R";
                 copy[4] = null;
+                handled = true;
             }
         }
         if (move.src === "e8") {
@@ -169,14 +172,17 @@ export function applyMove(position: string[], move: IMove): string[] {
                 copy[56 + 6] = "k";
                 copy[56 + 5] = "r";
                 copy[56 + 4] = null;
+                handled = true;
             } else if (move.dst === "c8") {
                 copy[56 + 0] = null;
                 copy[56 + 2] = "k";
                 copy[56 + 3] = "r";
                 copy[56 + 4] = null;
+                handled = true;
             }
         }
-    } else {
+    }
+    if (!handled) {
         copy[from.i] = null;
         copy[to.i] = piece;
     }
