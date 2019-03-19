@@ -6,6 +6,7 @@ import { Dispatch } from "redux";
 import { IRootState as IAppState } from "../app";
 import { IRootState as IAuthState } from "../auth";
 import { IRootState as IGameState } from "../games";
+import { IRootState as IHomeState } from "../home";
 import { IRootState as IOpeningsState } from "../openings";
 import { IRootState as IPlaylistsState } from "../playlists";
 
@@ -13,6 +14,7 @@ export interface IRootState {
     app: IAppState;
     auth: IAuthState;
     games: IGameState;
+    home: IHomeState;
     playlists: IPlaylistsState;
     openings: IOpeningsState;
     router: RouterState;

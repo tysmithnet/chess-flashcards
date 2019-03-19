@@ -13,6 +13,7 @@ const store = configureStore({
     app: null,
     auth: null,
     games: null,
+    home: null,
     playlists: {
         masterList: null,
         viewer: null,

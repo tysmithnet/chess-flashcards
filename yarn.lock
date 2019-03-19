@@ -8889,6 +8889,12 @@ react-event-listener@^0.6.2:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
+react-google-charts@^3.0.11:
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/react-google-charts/-/react-google-charts-3.0.11.tgz#f948c97257cf6af375d016e07c47e430f123176a"
+  dependencies:
+    react-load-script "^0.0.6"
+
 react-hot-loader@4.3.4:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.4.tgz#4f9bdd55bb20d77a6ae8931fa1c187e5f0ce6279"
@@ -8914,6 +8920,10 @@ react-is@^16.4.1, react-is@^16.5.2, react-is@^16.6.3, react-is@^16.7.0, react-is
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-load-script@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/react-load-script/-/react-load-script-0.0.6.tgz#db6851236aaa25bb622677a2eb51dad4f8d2c258"
 
 react-performance-observer@1.0.0:
   version "1.0.0"
